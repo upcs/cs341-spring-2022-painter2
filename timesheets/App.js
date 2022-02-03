@@ -49,15 +49,19 @@ export default function App() {
                 : 'ios-information-circle-outline';
             } else if (route.name === 'Settings') {
               iconName = focused ? 'ios-build' : 'ios-build-outline';
-            } else if (route.name === 'Timesheet') {
+            } else if (route.name === 'Timesheets') {
               iconName = focused ? 'ios-document-text':'ios-document-text-outline';
             }
 
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: 'tomato',
-          tabBarInactiveTintColor: 'gray',
+
+          //currently using company colors from website
+          //color of the navigation bar
+          tabBarActiveTintColor: '#ab0e0e',
+          tabBarInactiveTintColor: '#7a7a7a',
         })}>
+          {/*adding the pages to the navigation bar*/ }
         <Tab.Screen name="Timesheets" component={TimesheetScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
