@@ -39,6 +39,7 @@ export default function App() {
     //adds the different tabs to the navigation bar 
     <NavigationContainer>
       <Tab.Navigator
+      initialRouteName='Home' //sets the homepage to appear on startup
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
@@ -56,8 +57,8 @@ export default function App() {
 
           //currently using company colors from website
           //color of the navigation bar
-          tabBarActiveTintColor: '#ab0e0e',
-          tabBarInactiveTintColor: '#7a7a7a',
+          tabBarActiveTintColor: '#ab0e0e', //dark red
+          tabBarInactiveTintColor: '#7a7a7a', // grey
         })}>
           {/*adding the pages to the navigation bar*/ }
         <Tab.Screen name="Timesheets" component={TimesheetScreen} />
