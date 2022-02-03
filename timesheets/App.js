@@ -42,11 +42,9 @@ export default function App() {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
-
+            //setting the icons of the navigation bar
             if (route.name === 'Home') {
-              iconName = focused
-                ? 'ios-information-circle'
-                : 'ios-information-circle-outline';
+              iconName = focused ? 'ios-time': 'ios-time-outline';
             } else if (route.name === 'Settings') {
               iconName = focused ? 'ios-build' : 'ios-build-outline';
             } else if (route.name === 'Timesheets') {
