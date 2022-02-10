@@ -16,7 +16,7 @@ export default function MainContainer() {
         //adds the different tabs to the navigation bar 
     <NavigationContainer>
     <Tab.Navigator
-    initialRouteName={homeName} //sets the homepage to appear on startup
+    initialRouteName={'Home'} //sets the homepage to appear on startup
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -38,8 +38,8 @@ export default function MainContainer() {
         
       })}>
         {/*addng the pages to the navigation bar*/ }
-      <Tab.Screen name={homeName} component={TimesheetScreen} />
-      <Tab.Screen name={timesheetsName} component={HomeScreen} />
+      <Tab.Screen name={homeName} component={HomeScreen} />
+      <Tab.Screen name={timesheetsName} component={TimesheetScreen} />
    
     </Tab.Navigator>
   </NavigationContainer>
