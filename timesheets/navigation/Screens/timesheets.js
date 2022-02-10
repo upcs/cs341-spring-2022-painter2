@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Text, View, StyleSheet, StatusBar} from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
     
-export default function TimesheetScreen({ navigation}) {
-    const data = require("./data.json");
+export default function TimesheetScreen() {
+    const data = require("./data.json"); // in the future data wull be pulled from the database
 
       const Item = ({ name }) => (
         <View style={styles.item}>
@@ -32,14 +32,14 @@ export default function TimesheetScreen({ navigation}) {
       },
       item: {
         borderRadius: 100,
-        borderWidth: 1,
+        borderWidth: 2,
         borderColor: "#000000",
         backgroundColor: '#ffffff',
         padding: 20,
-        marginVertical: 8,
+        marginVertical: 5,
         marginHorizontal: 16,
       },
       title: {
-        fontSize: 32,
+        fontSize: 40,
       },
     });
