@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {StyleSheet,Text,View,TextInput,Button, Alert} from 'react-native';
 import firestore from "@react-native-firebase/firestore";
- 
-
 class App extends Component{
     state = {
         employeeArray:[],
-        message:""
+        message:"",
+        docID:"",
+
 
 
     }
@@ -16,7 +16,8 @@ class App extends Component{
         //this.getEmployeeByID();
         //this.displayAllEmployees();
         //this.getEmployeeByName("william riley");
-        this.createNewEmployee("edwin hubble",143,"hubbleRocks@gmail.com","503-445-3321",48);
+        //this.createNewEmployee("edwin hubble",143,"hubbleRocks@gmail.com","503-445-3321",48);
+        this.editEmployeeEmail(123,"bakers_are_awesome@yahoo.com");
 
         
 
@@ -44,6 +45,53 @@ class App extends Component{
     });
 
     }
+
+    editEmployeeEmailHelper= async(docIDInput,emailInput)=>{
+     console.log(docIDInput);
+        firestore()
+        .collection('employees')
+        .doc(docIDInput)
+        .update({
+            email:emailInput
+        })
+         .then(() => {
+        console.log('User updated!');
+        });   
+
+
+
+    }
+
+    editEmployeeEmail =  async (IDInput,emailInput) =>{
+        
+        firestore()
+        .collection('employees')
+        .where('employeeID','==',IDInput)
+        .get()
+        .then(querySnapshot => {
+            firstDocument=querySnapshot.docs[0];
+            this.editEmployeeEmailHelper(firstDocument.id,emailInput);
+
+
+        });
+
+
+
+        /*
+        firestore()
+        .collection('employees')
+        .doc(docID)
+        .update({
+            email:emailInput
+        })
+         .then(() => {
+        console.log('User updated!');
+        });
+        */
+
+    }
+
+
 
 
 
@@ -106,6 +154,7 @@ class App extends Component{
     
 
     render(){
+        console.log(this.state.docID);
         return(
             <View style={styler.fullPage}>            
                {this.state.employeeArray.map((employee,index)=>
