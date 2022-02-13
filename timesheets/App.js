@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import styles from '../timesheets/styles/style';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -31,8 +32,45 @@ function SettingsScreen() {
 //Timesheets page
 function TimesheetScreen() {
   return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Timesheets Page</Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        {/* header */}
+        <Text style={styles.headerText}>My Timesheet</Text> 
+      </View>
+      <View style={styles.body}>
+        {/* total time label */}
+        <Text style={styles.bodyText}>Total:</Text>
+        <Text style={styles.timeText}>46hrs 10min</Text>
+      </View>
+      {/* labels for Sunday-Saturday */}
+      <View style={styles.body}>
+        <Text style={styles.bodyText}>Sunday, Feb 6: </Text>
+        <Text style={styles.timeText}>3hrs 22min</Text>
+      </View>
+      <View style={styles.body}>
+        <Text style={styles.bodyText}>Monday, Feb 7:</Text>
+        <Text style={styles.timeText}>10hrs 40min</Text>
+      </View>
+      <View style={styles.body}>
+        <Text style={styles.bodyText}>Tuesday, Feb 8:</Text>
+        <Text style={styles.timeText}>6hrs 04min</Text>
+      </View>
+      <View style={styles.body}>
+        <Text style={styles.bodyText}>Wednesday, Feb 9:</Text>
+        <Text style={styles.timeText}>5hrs 30min</Text>
+      </View>
+      <View style={styles.body}>
+        <Text style={styles.bodyText}>Thursday, Feb 10:</Text>
+        <Text style={styles.timeText}>6hrs 32min</Text>
+      </View>
+      <View style={styles.body}>
+        <Text style={styles.bodyText}>Friday, Feb 11:</Text>
+        <Text style={styles.timeText}>6hrs 42min</Text>
+      </View>
+      <View style={styles.body}>
+        <Text style={styles.bodyText}>Saturday, Feb 12: </Text>
+        <Text style={styles.timeText}>7hrs 20min</Text>
+      </View>
     </View>
   )
 }
