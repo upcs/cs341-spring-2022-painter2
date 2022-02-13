@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, StatusBar} from 'react-native';
+import { Text, View, StyleSheet, StatusBar, TouchableOpacity} from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
     
 export default function TimesheetScreen() {
@@ -12,8 +12,11 @@ export default function TimesheetScreen() {
       );
         
       const renderItem = ({ item }) => (
-        <Item name={item.name +": " + item.date}/>
+        <TouchableOpacity onPress={() => alert("Hours Worked: " + item.timein + " - " + item.timeout)}>
+          <Item name={item.name +": " + item.date}/>
+        </TouchableOpacity>
       );
+
         return (
           <View style={styles.container}>
             <FlatList
