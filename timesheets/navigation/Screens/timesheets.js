@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, StatusBar, TouchableOpacity} from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
+import styles from './styles/timesheetStyle.js';
     
 export default function TimesheetScreen() {
     const data = require("./data.json"); // in the future data wull be pulled from the database
 
       const Item = ({ name }) => (
-        <View style={styles.item}>
-          <Text styles={styles.title}>{name}</Text>
+        <View style={styles.body}>
+          <Text styles={styles.bodyText}>{name}</Text>
         </View>
       );
         
-      const renderItem = ({ item }) => (
+       const renderItem = ({ item }) => (
         <TouchableOpacity onPress={() => alert("Hours Worked: " + item.timein + " - " + item.timeout)}>
           <Item name={item.name +": " + item.date}/>
         </TouchableOpacity>
@@ -19,6 +20,9 @@ export default function TimesheetScreen() {
 
         return (
           <View style={styles.container}>
+            <View style={styles.header}>
+              <Text style={styles.headerText}>My Timesheets</Text>
+            </View>
             <FlatList
             data={data}
             renderItem={renderItem}
@@ -28,21 +32,3 @@ export default function TimesheetScreen() {
         );
     }
 
-    const styles = StyleSheet.create({
-      container: {
-        flex: 1,
-        marginTop: StatusBar.currentHeight || 0,
-      },
-      item: {
-        borderRadius: 100,
-        borderWidth: 2,
-        borderColor: "#000000",
-        backgroundColor: '#ffffff',
-        padding: 20,
-        marginVertical: 5,
-        marginHorizontal: 16,
-      },
-      title: {
-        fontSize: 40,
-      },
-    });
