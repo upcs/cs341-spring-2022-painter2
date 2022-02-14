@@ -13,7 +13,7 @@ export default function TimesheetScreen() {
       );
         
        const renderItem = ({ item }) => (
-        <TouchableOpacity onPress={() => alert("Hours Worked: " + item.timein + " - " + item.timeout)}>
+        <TouchableOpacity onPress={() => alert("Hours Worked: " + item.timein + " - " + item.timeout + "\n" + item.id)}>
           <Item name={item.name +": " + item.date}/>
         </TouchableOpacity>
       );
