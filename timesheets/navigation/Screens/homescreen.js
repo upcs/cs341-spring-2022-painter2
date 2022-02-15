@@ -1,5 +1,4 @@
 import * as React from 'react';
-import MainContainer from './navigation/MainContainer';
 import { useState, useEffect } from 'react';
 import { Text, View, TextInput, StyleSheet, Button, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
