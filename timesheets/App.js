@@ -1,4 +1,5 @@
 import * as React from 'react';
+
 import { StyleSheet, Text, View, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -10,6 +11,11 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
+import { Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
+
 
 //The Home Screen
 function HomeScreen() {
@@ -71,6 +77,9 @@ function TimesheetScreen() {
         <Text style={styles.bodyText}>Saturday, Feb 12: </Text>
         <Text style={styles.timeText}>7hrs 20min</Text>
       </View>
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Settings Page</Text>
     </View>
   )
 }
@@ -95,12 +104,30 @@ function CustomDrawerContent(props) {
   );
 }
 
+
 //creates the side menu
 const Drawer = createDrawerNavigator();
 
 function BottomTabs() {
   return(
     <Tab.Navigator
+//Timesheets page
+function TimesheetScreen() {
+  return (
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Text>Timesheets Page</Text>
+    </View>
+  )
+}
+
+//creates the navigation bar
+const Tab = createBottomTabNavigator();
+
+export default function App() {
+  return (
+    //adds the different tabs to the navigation bar 
+    <NavigationContainer>
+      <Tab.Navigator
       initialRouteName='Home' //sets the homepage to appear on startup
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
@@ -113,9 +140,16 @@ function BottomTabs() {
             } else if (route.name === 'Timesheets') {
               iconName = focused ? 'ios-document-text':'ios-document-text-outline';
             }
+
             return <Ionicons name={iconName} size={size} color={color} />;
           },
           headerShown: false,
+
+
+            return <Ionicons name={iconName} size={size} color={color} />;
+          },
+
+
           //currently using company colors from website
           //color of the navigation bar
           tabBarActiveTintColor: '#ab0e0e', //dark red
@@ -125,6 +159,7 @@ function BottomTabs() {
         <Tab.Screen name="Timesheets" component={TimesheetScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
+
     </Tab.Navigator>
   );
 }
@@ -141,6 +176,7 @@ export default function App() {
         >
         <Drawer.Screen name="App Name" component={BottomTabs} />
       </Drawer.Navigator>
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
