@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Expo from 'expo';
+import * as Expo from 'expo';
 import { Text, View, Image, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -14,7 +14,7 @@ const { URLSchemes } = AppAuth;
 function NavigationBar() {
     return (
             //adds the different tabs to the navigation bar
-            <NavigationContainer>
+            <NavigationContainer style={{alignItems:'flex-end'}}>
             <Tab.Navigator
             initialRouteName='Home' //sets the homepage to appear on startup
             screenOptions={({ route }) => ({
@@ -46,11 +46,22 @@ function NavigationBar() {
 }
 
 
+const LoginPage = props => {
+  return (
+    <View style={{ flex: 1, justifyContent: 'center', alignItems:'center'}}>
+      <Button title="Sign in with Google"
+       onPress={() => props.defaultIn()} />
+          <Ionicons name={'ios-log-in'} size={50}/>
+    </View>
+  )
+}
+
+
 //The Home Screen
 function HomeScreen() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home Page</Text>
+          <Text alignItems={'center'}>Home Page</Text>
     </View>
   );
 }
@@ -84,24 +95,24 @@ export default class App extends React.Component {
     
     /*SIGN IN FUNCTION --Not being used-- */
     signIn = async () => {
-      try {
-          const result = await Expo.Google.logInAsync({
-              androidClientId: 5699070269-i41csk7jjigklrvae86mpc2gb4207ncd.apps.googleusercontent.com,
-              iosClientId: 5699070269-c7aa7d19sd11phu97enoej9uv9gjk326.apps.googleusercontent.com,
-              scopes: ["profile", "email"]
+        try {
+          const result = await GoogleSignIn.signInAsync({
+            iosClientId: '5699070269-c7aa7d19sd11phu97enoej9uv9gjk326.apps.googleusercontent.com',
+            androidClientId: '5699070269-i41csk7jjigklrvae86mpc2gb4207ncd.apps.googleusercontent.com',
+            scopes: ["profile", "email"]
           })
           if (result.type === "success") {
-              this.setState({
+            this.setState({
               signedIn: true,
               name: result.user.name,
               photoUrl: result.user.photoUrl
-              })
+            })
           } else {
-              console.log("cancelled")
+            console.log("cancelled")
           }
-      } catch (e) {
+    } catch (e) {
           console.log("error", e)
-      }
+        }
     }
     
     /*Default Sign In*/
@@ -113,21 +124,11 @@ export default class App extends React.Component {
     
     render() {
         return (
-                <View>
+                <View style={{ flex: 1, justifyContent: 'center'}}>
                 { this.state.signedIn ? <NavigationBar/> :
                   <LoginPage defaultIn={this.defaultIn}/>
                 }
-              </View>
-            )
+                </View>
+        )
     }
-}
-
-const LoginPage = props => {
-  return (
-    <View style={{justifyContent: 'center'}}>
-      <Button title="Sign in with Google"
-       onPress={() => props.defaultIn()} />
-          <Ionicons name={'ios-log-in'} size={50}/>
-    </View>
-  )
 }
