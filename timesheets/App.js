@@ -1,8 +1,50 @@
 import * as React from 'react';
-import { Text, View } from 'react-native';
+import Expo from 'expo';
+import { Text, View, Image, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import * as GoogleSignIn from 'expo-google-sign-in';
+import * as AppAuth from 'expo-app-auth';
+
+const { URLSchemes } = AppAuth;
+
+//creates the navigation bar
+
+function NavigationBar() {
+    return (
+            //adds the different tabs to the navigation bar
+            <NavigationContainer>
+            <Tab.Navigator
+            initialRouteName='Home' //sets the homepage to appear on startup
+            screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+                let iconName;
+                //setting the icons of the navigation bar
+                if (route.name === 'Home') {
+                    iconName = focused ? 'ios-time': 'ios-time-outline';
+                } else if (route.name === 'Settings') {
+                    iconName = focused ? 'ios-build' : 'ios-build-outline';
+                } else if (route.name === 'Timesheets') {
+                    iconName = focused ? 'ios-document-text':'ios-document-text-outline';
+                }
+                return <Ionicons name={iconName} size={size} color={color} />;
+            },
+
+            //currently using company colors from website
+            //color of the navigation bar
+            tabBarActiveTintColor: '#ab0e0e', //dark red
+            tabBarInactiveTintColor: '#7a7a7a', // grey
+            })}>
+            {/*adding the pages to the navigation bar*/ }
+            <Tab.Screen name="Timesheets" component={TimesheetScreen} />
+            <Tab.Screen name="Home" component={HomeScreen} />
+            <Tab.Screen name="Settings" component={SettingsScreen} />
+            </Tab.Navigator>
+            </NavigationContainer>
+    );
+}
+
 
 //The Home Screen
 function HomeScreen() {
@@ -31,40 +73,61 @@ function TimesheetScreen() {
   )
 }
 
-//creates the navigation bar
 const Tab = createBottomTabNavigator();
 
-export default function App() {
+export default class App extends React.Component {
+    
+    constructor(props) {
+        super(props)
+        this.state = {signedIn: false, name: "", photoUrl: ""}
+    }
+    
+    /*SIGN IN FUNCTION --Not being used-- */
+    signIn = async () => {
+      try {
+          const result = await Expo.Google.logInAsync({
+              androidClientId: 5699070269-i41csk7jjigklrvae86mpc2gb4207ncd.apps.googleusercontent.com,
+              iosClientId: 5699070269-c7aa7d19sd11phu97enoej9uv9gjk326.apps.googleusercontent.com,
+              scopes: ["profile", "email"]
+          })
+          if (result.type === "success") {
+              this.setState({
+              signedIn: true,
+              name: result.user.name,
+              photoUrl: result.user.photoUrl
+              })
+          } else {
+              console.log("cancelled")
+          }
+      } catch (e) {
+          console.log("error", e)
+      }
+    }
+    
+    /*Default Sign In*/
+    defaultIn = async () => {
+        this.setState({
+            signedIn: true
+        })
+    }
+    
+    render() {
+        return (
+                <View>
+                { this.state.signedIn ? <NavigationBar/> :
+                  <LoginPage defaultIn={this.defaultIn}/>
+                }
+              </View>
+            )
+    }
+}
+
+const LoginPage = props => {
   return (
-    //adds the different tabs to the navigation bar 
-    <NavigationContainer>
-      <Tab.Navigator
-      initialRouteName='Home' //sets the homepage to appear on startup
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-            //setting the icons of the navigation bar
-            if (route.name === 'Home') {
-              iconName = focused ? 'ios-time': 'ios-time-outline';
-            } else if (route.name === 'Settings') {
-              iconName = focused ? 'ios-build' : 'ios-build-outline';
-            } else if (route.name === 'Timesheets') {
-              iconName = focused ? 'ios-document-text':'ios-document-text-outline';
-            }
-
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-
-          //currently using company colors from website
-          //color of the navigation bar
-          tabBarActiveTintColor: '#ab0e0e', //dark red
-          tabBarInactiveTintColor: '#7a7a7a', // grey
-        })}>
-          {/*adding the pages to the navigation bar*/ }
-        <Tab.Screen name="Timesheets" component={TimesheetScreen} />
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
+    <View style={{justifyContent: 'center'}}>
+      <Button title="Sign in with Google"
+       onPress={() => props.defaultIn()} />
+          <Ionicons name={'ios-log-in'} size={50}/>
+    </View>
+  )
 }
