@@ -8,7 +8,7 @@ import styles from './styles/timesheetStyle.js';
 
 
 
-export default function DetailScreen() {
+export default function DetailScreen({ navigation }) {
     
     return (
         <View>
@@ -18,8 +18,8 @@ export default function DetailScreen() {
            
             <View style={styles.header}>
                 <Text style={styles.headerText}>
-                    2/18/2022{"\n"}Phi Nguyen 
-                    {"\n"}Editing
+                    {"\n"}Phi Nguyen 
+                    
                 </Text>
             </View> 
         </View>

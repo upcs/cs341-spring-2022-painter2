@@ -7,7 +7,7 @@ const Stack = createStackNavigator();
 
 export default function StackNav() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen  name="TimesheetScreen" component={TimesheetScreen} />
       <Stack.Screen name="DetailScreen" component={DetailScreen} />
     </Stack.Navigator>
