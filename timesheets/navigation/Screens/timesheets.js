@@ -1,9 +1,13 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, StatusBar, TouchableOpacity} from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { FlatList } from 'react-native-gesture-handler';
 import styles from './styles/timesheetStyle.js';
-    
-export default function TimesheetScreen() {
+import DetailScreen from './DetailScreen.js';
+import { NavigationContainer } from '@react-navigation/native';
+
+
+export default function TimesheetScreen({ navigation }) {
     const data = require("./data.json"); // in the future data wull be pulled from the database
 
       const Item = ({ name }) => (
@@ -13,7 +17,7 @@ export default function TimesheetScreen() {
       );
         
        const renderItem = ({ item }) => (
-        <TouchableOpacity onPress={() => alert("Hours Worked: " + item.timein + " - " + item.timeout + "\n" + item.id)}>
+        <TouchableOpacity onPress={() =>navigation.navigate('DetailScreen')}>
           <Item name={item.name +": " + item.date}/>
         </TouchableOpacity>
       );
