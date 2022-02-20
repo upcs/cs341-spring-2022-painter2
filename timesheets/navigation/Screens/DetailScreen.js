@@ -8,31 +8,23 @@ import styles from './styles/timesheetStyle.js';
 
 
 
-export default function DetailScreen({ navigation }) {
+export default function DetailScreen({ route, navigation }) {
     
+    const [editable, setEditable] = useState(false);
+    const {name, date, timein, timeout, id } = route.params;
     return (
         <View>
-            <TouchableOpacity style={styles2.container} onPress={() => alert("editing")}>
-                <Ionicons name= "create-outline" size={40}/>
-            </TouchableOpacity>
-           
+                 
             <View style={styles.header}>
                 <Text style={styles.headerText}>
-                    {"\n"}Phi Nguyen 
-                    
+                    {JSON.stringify(date)}{"\n"}{JSON.stringify(name)}
+    
                 </Text>
             </View> 
+            <Button title= "Edit" style={{height:65,marginTop:15,position:"absolute"}}onPress={() => setEditable(!editable)}/>
+            { editable ? 
+            <TextInput value = {JSON.stringify(timein)}/> :
+            <Text>{JSON.stringify(timein)} - {JSON.stringify(timeout)}</Text>}
         </View>
     )
 }
-
-const styles2 = StyleSheet.create({
-    container: {
-      ...StyleSheet.absoluteFillObject,
-      alignSelf: 'flex-end',
-      marginTop: -5,
-      position: 'absolute',
-      zIndex: 1,
-    }
-  
-  })
