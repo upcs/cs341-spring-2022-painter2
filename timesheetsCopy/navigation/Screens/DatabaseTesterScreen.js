@@ -160,7 +160,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
 
 
  export const clockIn= async(newName,newEmployeeID,newDate
-,newClockInTime,)=>{
+,newClockInTime)=>{
     var clockRecords= await firebase.firestore()
     .collection('clocking')
     .where('employeeID','==',newEmployeeID)
@@ -217,14 +217,55 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
 
      }
 
-
-     
-
-    
-     
 }          
  
-         
+ export const clockOut = async(newEmployeeID,
+    newClockOutTime)=>{
+var clockRecords= await firebase.firestore()
+.collection('clocking')
+.where('employeeID','==',newEmployeeID)
+.get()
+
+console.log((clockRecords.docs).length);
+
+if((clockRecords.docs).length!=0){
+var maxClockID=-100;
+var index=-100;
+for(let i=0;i<(clockRecords.docs).length;i++){
+var data= (clockRecords.docs[i]).data();
+if(data.clockID>maxClockID){
+    maxClockID= data.clockID;
+    index=i;
+}
+
+}
+
+console.log(maxClockID);
+console.log(index);
+
+var clockOutField=((clockRecords.docs[index]).data()).clockOut;
+var clockDocumentID=(clockRecords.docs[index]).id;
+if(clockOutField==="420"){
+    firebase.firestore()
+    .collection('clocking')
+    .doc(clockDocumentID)
+    .update({
+        clockOut:newClockOutTime
+    })
+     .then(() => {
+    console.log('clock record updated!');
+    });   
+
+
+
+
+}
+
+
+
+}
+
+}      
 
 
 
@@ -238,8 +279,8 @@ export default DatabaseTesterScreen= ()=>{
      //let b= await displayAllEmployees();
       //console.log(b);
       //console.log("say hello to my little firend");
-      clockIn("David Le",227,"1-6-22","6:45");
-
+      //clockIn("David Le",227,"1-6-22","6:45");
+        clockOut(227,"11:00")
      
 
 
