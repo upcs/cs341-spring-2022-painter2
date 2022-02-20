@@ -22,6 +22,7 @@ export default function HomeScreen() {
     useEffect(() => {
             if(clockIn)
             {
+              
                 var hours = new Date().getHours()
                 var min = new Date().getMinutes()
                 var sec = new Date().getSeconds()
@@ -66,7 +67,7 @@ export default function HomeScreen() {
                 }
             }
 
-        }, [clockIn])
+        },[clockIn])
 
 
   function clockInClockOut()

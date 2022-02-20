@@ -12,6 +12,8 @@ import {
 
 import TimesheetScreen from './Screens/timesheets';
 import HomeScreen from './Screens/homescreen';
+import DatabaseTesterScreen from './Screens/DatabaseTesterScreen';
+
 
 
 const homeName = 'Home';
@@ -55,6 +57,12 @@ function BottomTabs() {
             else if (route.name === 'Timesheets') {
               iconName = focused ? 'ios-document-text':'ios-document-text-outline';
             }
+            else if (route.name === 'TimesheetsOne') {
+              iconName = focused ? 'ios-document-text':'ios-document-text-outline';
+            }
+           
+
+
             return <Ionicons name={iconName} size={size} color={color} />;
           },
           headerShown: false,
@@ -66,6 +74,8 @@ function BottomTabs() {
           {/*adding the pages to the navigation bar*/ }
         <Tab.Screen name="Timesheets" component={TimesheetScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="DatabaseTester" component={DatabaseTesterScreen} />
+
     </Tab.Navigator>
   );
 }
