@@ -13,7 +13,7 @@ import {
 import TimesheetScreen from './Screens/timesheets';
 import HomeScreen from './Screens/homescreen';
 import DatabaseTesterScreen from './Screens/DatabaseTesterScreen';
-
+import ClockTesterScreen from './Screens/clockTest';
 
 
 const homeName = 'Home';
@@ -57,9 +57,10 @@ function BottomTabs() {
             else if (route.name === 'Timesheets') {
               iconName = focused ? 'ios-document-text':'ios-document-text-outline';
             }
-            else if (route.name === 'TimesheetsOne') {
+            else if (route.name === 'DatabaseTester') {
               iconName = focused ? 'ios-document-text':'ios-document-text-outline';
             }
+           
            
 
 
@@ -75,6 +76,8 @@ function BottomTabs() {
         <Tab.Screen name="Timesheets" component={TimesheetScreen} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="DatabaseTester" component={DatabaseTesterScreen} />
+
+        <Tab.Screen name="ClockTest" component={ClockTesterScreen} />
 
     </Tab.Navigator>
   );
