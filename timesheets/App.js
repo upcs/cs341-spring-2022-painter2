@@ -1,67 +1,123 @@
 import * as React from 'react';
 import react from 'react';
-import { Text, View, Image, Button } from 'react-native';
-import * as GoogleSignIn from 'expo-google-sign-in';
-import * as AppAuth from 'expo-app-auth';
+import { StyleSheet, Text,  View, TextInput, Button,  TouchableHighlight, Image, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import MainContainer from './navigation/MainContainer';
-const { URLSchemes } = AppAuth;
-
-//creates the navigation bar
 
 const LoginPage = props => {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems:'center'}}>
-      <Button title="Sign in with Google"
-       onPress={() => props.defaultIn()} />
-          <Ionicons name={'ios-log-in'} size={50}/>
-    </View>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems:'center', backgroundColor:'#A00000'}}>
+          <View style={styles.inputContainer}>
+            <TextInput style={styles.inputs}
+                placeholder="Email"
+                keyboardType="email-address"
+                underlineColorAndroid='transparent'
+                onChangeText={(email) => props.setEmail(email)}/>
+          </View>
+          <View style={styles.inputContainer}>
+            <TextInput style={styles.inputs}
+                placeholder="Password"
+                secureTextEntry={true}
+                underlineColorAndroid='transparent'
+                onChangeText={(password) => props.setPassword(password)}/>
+          </View>
+          <TouchableHighlight onPress={() => props.onClickListener("login")} style={{activeOpacity: 0.5, underlayColor:'#FFFFFF' }}>
+          <Ionicons name={'ios-log-in-outline'} size={80} style={{color:'#FFFFFF'}} />
+          </TouchableHighlight>
+          <TouchableHighlight style={styles.buttonContainer} onPress={() => props.onClickListener("restore_password")}>
+            <Text style={{color:'#FFFFFF'}}>Forgot your password?</Text>
+          </TouchableHighlight>
+          <TouchableHighlight style={styles.buttonContainer} onPress={() => props.onClickListener("register")}>
+            <Text style={{color:'#FFFFFF'}}>Register</Text>
+          </TouchableHighlight>
+          </View>
+          /*
+          */
+          
   )
 }
 
 export default class App extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {signedIn: false, name: "", email: "", password: ""}
+    }
     
-  constructor(props) {
-      super(props)
-      this.state = {signedIn: false, name: "", photoUrl: ""}
-  }
-  
-  /*SIGN IN FUNCTION --Not being used-- */
-  signIn = async () => {
-      try {
-        const result = await GoogleSignIn.signInAsync({
-          iosClientId: '5699070269-c7aa7d19sd11phu97enoej9uv9gjk326.apps.googleusercontent.com',
-          androidClientId: '5699070269-i41csk7jjigklrvae86mpc2gb4207ncd.apps.googleusercontent.com',
-          scopes: ["profile", "email"]
+    onClickListener = (viewId) => {
+        Alert.alert("Alert", "Button pressed "+viewId);
+        this.setState({
+            signedIn: true
         })
-        if (result.type === "success") {
-          this.setState({
-            signedIn: true,
-            name: result.user.name,
-            photoUrl: result.user.photoUrl
-          })
-        } else {
-          console.log("cancelled")
-        }
-  } catch (e) {
-        console.log("error", e)
-      }
-  }
-  
-  /*Default Sign In*/
-  defaultIn = async () => {
-      this.setState({
-          signedIn: true
-      })
-  }
-  
-  render() {
-      return (
-              <View style={{ flex: 1, justifyContent: 'center'}}>
-              {this.state.signedIn ? <MainContainer/> :
-                <LoginPage defaultIn={this.defaultIn}/>
-              }
-              </View>
-      )
-  }
+    }
+    
+    setName = async (n) => {
+        this.setState({name: n})}
+
+    setEmail = async (e) => {
+        this.setState({email: e})}
+
+    setPassword = async (p) => {
+        this.setState({password: p})}
+    
+    signIn = async () => {
+    }
+    
+    render() {
+        return (
+                this.state.signedIn ? <MainContainer/> : <LoginPage
+                 setName={this.setName}
+                 setEmail={this.setEmail}
+                 setPassword={this.setPassword}
+                 onClickListener={this.onClickListener}/>
+        )
+    }
 }
+
+        
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#DCDCDC',
+  },
+  inputContainer: {
+      borderBottomColor: '#F5FCFF',
+      backgroundColor: '#FFFFFF',
+      borderRadius:30,
+      borderBottomWidth: 1,
+      width:250,
+      height:45,
+      marginBottom:20,
+      flexDirection: 'row',
+      alignItems:'center'
+  },
+  inputs:{
+      height:45,
+      marginLeft:16,
+      borderColor: '#FF0000',
+      flex:1,
+  },
+  inputIcon:{
+    width:30,
+    height:30,
+    marginLeft:15,
+    justifyContent: 'center'
+  },
+  buttonContainer: {
+    height:25,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom:0,
+    width:250,
+    borderRadius:0,
+  },
+  loginButton: {
+    backgroundColor: "#00b5ec",
+  },
+  loginText: {
+    color: 'white',
+  }
+});
