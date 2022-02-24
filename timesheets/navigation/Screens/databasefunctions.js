@@ -52,7 +52,6 @@ const firebaseConfig = {
 
 
 
-
 //edits email field of record in the database
 export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
     console.log(docIDInput);
@@ -103,6 +102,51 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
        */
  
    }
+   export const editClockIn = async (Id,newTime) => {
+       firebase.firestore()
+       .collection('clocking')
+       .where('clockID','==',Id)
+       .get()
+       .then(querySnapshot => {
+           editClockInHelper(querySnapshot.docs[0].id,newTime)
+       })
+   }
+
+   export const editClockInHelper= async (docIDInput,newTimeIn)=>{
+    console.log(docIDInput);
+    firebase.firestore()
+       .collection('clocking')
+       .doc(docIDInput)
+       .update({
+           clockIn:newTimeIn
+       })
+        .then(() => {
+       console.log('Time in Updated!');
+       });   
+   }
+
+   export const editClockOut = async (Id,newTime,) => {
+    firebase.firestore()
+    .collection('clocking')
+    .where('clockID','==',Id)
+    .get()
+    .then(querySnapshot => {
+        editClockInHelper(querySnapshot.docs[0].id,newTime)
+    })
+}
+
+export const editClockOutHelper= async (docIDInput,newTimeOut)=>{
+ console.log(docIDInput);
+ firebase.firestore()
+    .collection('clocking')
+    .doc(docIDInput)
+    .update({
+        clockOut:newTimeOut
+    })
+     .then(() => {
+    console.log('Time Out Updated!');
+    });   
+}
  
  
    export const getTimesheets = async () => {

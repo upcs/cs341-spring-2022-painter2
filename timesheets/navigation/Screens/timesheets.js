@@ -20,9 +20,8 @@ const firebaseConfig = {
   measurementId: "G-S9ZRZDN57B"
 };
 
-if(firebase.apps.length==0){
-  firebase.initializeApp(firebaseConfig);
- }
+firebase.initializeApp(firebaseConfig);
+ 
 
 
 export default function TimesheetScreen({ navigation }) {
@@ -37,7 +36,7 @@ export default function TimesheetScreen({ navigation }) {
     setTSData(timesheetsData);
 }
 
-getTimesheets();  
+    getTimesheets();  
     const data = require("./data.json");  // in the future data wull be pulled from the database
       const Item = ({ name }) => (
         <View style={styles.body}>
