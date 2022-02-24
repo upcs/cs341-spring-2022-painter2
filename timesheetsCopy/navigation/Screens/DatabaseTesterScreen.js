@@ -5,6 +5,7 @@ displayAllEmployees,getEmployeeByID,clockIn,clockOut,returnDailyClockRecords} fr
     
 export default DatabaseTesterScreen= ()=>{
 
+//all these are state variable for the values in the input text fields
 
 const [nameText,setName]=useState("");
 const [IDText,setID]=useState(0);
@@ -71,13 +72,7 @@ return (
     <Button onPress={()=>editEmployeeEmail(changeIDText,changeEmailText)} title='submit'/>
 
 
-       {/*}        
-       {this.state.employeeArray.map((employee,index)=>
-       <View key={index}>
-           <Text>{employee.name} {employee.email} {employee.phone} {employee.age}</Text>
-           </View>
-           )}
-       */}
+       
            
     </View>
 

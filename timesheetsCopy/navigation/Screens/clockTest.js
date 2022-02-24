@@ -4,6 +4,8 @@ import { clockIn, clockOut } from './databaseFunctions';
 
 
 export default ClockTesterScreen=()=>{
+    //all these are state variable for the values in the input text fields
+
     const[nameIn,setNameIn]=useState("");
     const [employeeIDIn,setIDIn]=useState(0);
 
