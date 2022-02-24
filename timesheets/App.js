@@ -4,7 +4,7 @@ import { StyleSheet, Text,  View, TextInput, Button,  TouchableHighlight, Image,
 import { Ionicons } from '@expo/vector-icons';
 import MainContainer from './navigation/MainContainer';
 import Register from './navigation/Screens/register';
-import Forgot from './navigation/Screens/register';
+import Forgot from './navigation/Screens/forgot';
 import styles from './navigation/Screens/styles/loginStyle.js';
 
 
@@ -64,9 +64,6 @@ export default class App extends React.Component {
             this.setState({ forgot: true })
         }
     }
-    
-    setName = async (n) => {
-        this.setState({name: n})}
 
     setEmail = async (e) => {
         this.setState({email: e})}

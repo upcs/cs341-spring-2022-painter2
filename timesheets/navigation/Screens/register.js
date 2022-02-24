@@ -3,6 +3,7 @@ import react from 'react';
 import { StyleSheet, Text,  View, TextInput, Button,  TouchableHighlight, Image, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from './styles/loginStyle.js';
+import App from './../../App';
 
 const RegisterPage = props => {
   return (
@@ -13,7 +14,7 @@ const RegisterPage = props => {
             <TextInput style={styles.inputs}
                 placeholder="Name"
                 underlineColorAndroid='transparent'
-                //onChangeText={(email) => props.setEmail(email)}
+                onChangeText={(name) => props.setName(name)}
           />
           </View>
           <View style={styles.inputContainer}>
@@ -22,7 +23,7 @@ const RegisterPage = props => {
                 placeholder="Email"
                 keyboardType="email-address"
                 underlineColorAndroid='transparent'
-                //onChangeText={(email) => props.setEmail(email)}
+                onChangeText={(email) => props.setREmail(email)}
           />
           </View>
           <View style={styles.inputContainer}>
@@ -31,7 +32,7 @@ const RegisterPage = props => {
                 placeholder="Password"
                 secureTextEntry={true}
                 underlineColorAndroid='transparent'
-                //onChangeText={(password) => props.setPassword(password)}
+                onChangeText={(password) => props.setP1(password)}
           />
           </View>
           <View style={styles.inputContainer}>
@@ -40,10 +41,10 @@ const RegisterPage = props => {
                 placeholder="Re-Password"
                 secureTextEntry={true}
                 underlineColorAndroid='transparent'
-                //onChangeText={(password) => props.setPassword(password)}
+                onChangeText={(password2) => props.setP2(password2)}
           />
           </View>
-          <TouchableHighlight onPress={() => props.onClickListener("login")} style={{activeOpacity: 0.5, underlayColor:'#FFFFFF'}}>
+          <TouchableHighlight onPress={() => props.onClickListener()} style={{activeOpacity: 0.5, underlayColor:'#FFFFFF'}}>
             <Ionicons name={'ios-log-in-outline'} size={80} style={{color:'#FFFFFF'}} />
           </TouchableHighlight>
     </View>
@@ -52,16 +53,37 @@ const RegisterPage = props => {
 export default class Register extends React.Component{
     constructor(props) {
         super(props)
-        this.state = {signedIn:false, register:false, forgot:false, name: "", email: "", password1: "", password: ""}
+        this.state = {registered:false, rName: "", rEmail: "", password1: "", password: ""}
     }
     
-    onClickListener = (viewId) => {
-        Alert.alert("Alert", "Button pressed "+viewId);
+    setName = async (n) => {
+        this.setState({name: n})}
+
+    setREmail = async (e) => {
+        this.setState({email: e})}
+
+    setP1 = async (p1) => {
+        this.setState({password1: p1})}
+    
+    setP2 = async (p2) => {
+        this.setState({password2: p2})}
+    
+    onClickListener = () => {
+        this.setState({ registered: true })
+        Alert.alert("Credentials", this.state.name + "\n"
+                    + this.state.email + "\n"
+                    + this.state.password1);
     }
     
     render() {
-        return <RegisterPage
+        return (this.state.registered ? <App/> :
+            <RegisterPage
+            setREmail={this.setREmail}
+            setP1={this.setP1}
+            setP2={this.setP2}
+            setName={this.setName}
             onClickListener={this.onClickListener}
             />
+        )
     }
 }
