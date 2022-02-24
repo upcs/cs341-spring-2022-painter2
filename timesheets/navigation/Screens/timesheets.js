@@ -20,8 +20,9 @@ const firebaseConfig = {
   measurementId: "G-S9ZRZDN57B"
 };
 
-firebase.initializeApp(firebaseConfig);
- 
+if(firebase.apps.length==0){
+  firebase.initializeApp(firebaseConfig);
+ }
 
 
 export default function TimesheetScreen({ navigation }) {
