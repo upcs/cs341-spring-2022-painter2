@@ -9,7 +9,7 @@ import 'firebase/firestore';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-import { editClockIn,editClockOut,editEmployeeEmail } from './databasefunctions';
+import { editClockIn,editClockOut,editEmployeeEmail } from './databaseFunctions';
 
 const firebaseConfig = {
     apiKey: "AIzaSyCVu8npmz8_Mes5xQC6LBYTEBaw55ucAxRJXc",
