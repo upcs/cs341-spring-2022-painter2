@@ -12,6 +12,7 @@ import {
 
 import TimesheetScreen from './Screens/timesheets';
 import HomeScreen from './Screens/homescreen';
+import StackNav from './Screens/Stack'
 
 
 const homeName = 'Home';
@@ -64,7 +65,7 @@ function BottomTabs() {
           tabBarInactiveTintColor: '#7a7a7a', // grey
         })}>
           {/*adding the pages to the navigation bar*/ }
-        <Tab.Screen name="Timesheets" component={TimesheetScreen} />
+        <Tab.Screen name="Timesheets" component={StackNav} />
         <Tab.Screen name="Home" component={HomeScreen} />
     </Tab.Navigator>
   );

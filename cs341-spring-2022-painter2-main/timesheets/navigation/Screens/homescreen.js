@@ -24,19 +24,20 @@ export default function HomeScreen() {
     
     
 
-  
-
 
     useEffect(() => {
+            //when they clock in, store their time
             if(clockIn)
             {
                 var hours = new Date().getHours()
                 var min = new Date().getMinutes()
                 var sec = new Date().getSeconds()
+                //sets time
                 setClockInTime(timeCheck(hours,min,sec))
                 setColor('red')
                 setClockOutTime()
             }
+            //when they clock out, store their time
             if(clockIn == false){
                 var hours = new Date().getHours()
                 var min = new Date().getMinutes()
@@ -52,6 +53,7 @@ export default function HomeScreen() {
     return clockIn ? setButtonText("Clock in")  : setButtonText("Clock out") 
 
   }
+  //formats the time
   function timeCheck(hours, min,sec)
   {
     if(hours > 0 && hours<=12)
@@ -83,7 +85,7 @@ export default function HomeScreen() {
       placeholder="e.g. Apartment "
       /* required text field */
       onChangeText={text => {
-
+      //if text input is empty, null
       if(text === "")
       {
         setRequiredText(null);
@@ -103,12 +105,14 @@ export default function HomeScreen() {
           setOther(false);
           setOtherText("");
           setRequiredText2(true);
+          //if the didn't select a task return null
           if(itemValue ==="")
           {
           
             setRequiredText2(null);
             
           }
+          //if they select "other" task, activate text input box to allow them to enter in task
           if(itemValue === "Other")
           {
             setRequiredText2(null);
