@@ -7,10 +7,14 @@ import App from './../../App';
 
 const RegisterPage = props => {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems:'center', backgroundColor:'#A00000'}}>
+    <View style={{flex: 1, justifyContent: 'center', backgroundColor:'#A00000'}}>
+          <TouchableHighlight onPress={() => props.onClickListener("back")} style={styles.backButton}>
+            <Ionicons name={'ios-arrow-back'} size={50} style={{color:'#FFFFFF'}} />
+          </TouchableHighlight>
+    <View style={styles.background}>
           <Text style={styles.title}>Register</Text>
           <View style={styles.inputContainer}>
-          <Ionicons name={'person-outline'} size={30} style={styles.inputIcon}/>
+          <Ionicons name={'person-outline'} size={30} style={styles.inputLineIcon}/>
             <TextInput style={styles.inputs}
                 placeholder="Name"
                 underlineColorAndroid='transparent'
@@ -18,7 +22,7 @@ const RegisterPage = props => {
           />
           </View>
           <View style={styles.inputContainer}>
-          <Ionicons name={'at-circle-outline'} size={30} style={styles.inputIcon}/>
+          <Ionicons name={'at-circle-outline'} size={30} style={styles.inputLineIcon}/>
             <TextInput style={styles.inputs}
                 placeholder="Email"
                 keyboardType="email-address"
@@ -27,7 +31,7 @@ const RegisterPage = props => {
           />
           </View>
           <View style={styles.inputContainer}>
-          <Ionicons name={'lock-open-outline'} size={30} style={styles.inputIcon}/>
+          <Ionicons name={'lock-open-outline'} size={30} style={styles.inputLineIcon}/>
             <TextInput style={styles.inputs}
                 placeholder="Password"
                 secureTextEntry={true}
@@ -36,7 +40,7 @@ const RegisterPage = props => {
           />
           </View>
           <View style={styles.inputContainer}>
-          <Ionicons name={'lock-closed-sharp'} size={30} style={styles.inputIcon}/>
+          <Ionicons name={'lock-closed-sharp'} size={30} style={styles.inputLineIcon}/>
             <TextInput style={styles.inputs}
                 placeholder="Re-Password"
                 secureTextEntry={true}
@@ -44,10 +48,11 @@ const RegisterPage = props => {
                 onChangeText={(password2) => props.setP2(password2)}
           />
           </View>
-          <TouchableHighlight onPress={() => props.onClickListener()} style={{activeOpacity: 0.5, underlayColor:'#FFFFFF'}}>
+          <TouchableHighlight onPress={() => props.onClickListener("submit")}>
             <Ionicons name={'ios-log-in-outline'} size={80} style={{color:'#FFFFFF'}} />
           </TouchableHighlight>
     </View>
+          </View>
 )}
 
 export default class Register extends React.Component{
@@ -68,11 +73,16 @@ export default class Register extends React.Component{
     setP2 = async (p2) => {
         this.setState({password2: p2})}
     
-    onClickListener = () => {
-        this.setState({ registered: true })
-        Alert.alert("Credentials", this.state.name + "\n"
+    onClickListener = (viewID) => {
+        if (viewID == "back"){
+            this.setState({ registered: true })
+        }
+        else {
+            this.setState({ registered: true })
+            Alert.alert("Credentials", this.state.name + "\n"
                     + this.state.email + "\n"
                     + this.state.password1);
+        }
     }
     
     render() {

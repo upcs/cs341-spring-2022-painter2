@@ -7,10 +7,14 @@ import App from './../../App';
 
 const ForgotPage = props => {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems:'center', backgroundColor:'#A00000'}}>
+          <View style={{flex: 1, justifyContent: 'center', backgroundColor:'#A00000'}}>
+          <TouchableHighlight onPress={() => props.onClickListener("back")} style={styles.backButton}>
+            <Ionicons name={'ios-arrow-back'} size={50} style={{color:'#FFFFFF'}} />
+          </TouchableHighlight>
+    <View style={styles.background}>
           <Text style={styles.title}>Forgot Password?</Text>
           <View style={styles.inputContainer}>
-          <Ionicons name={'at-circle-outline'} size={30} style={styles.inputIcon}/>
+          <Ionicons name={'at-circle-outline'} size={30} style={styles.inputLineIcon}/>
             <TextInput style={styles.inputs}
                 placeholder="Email"
                 keyboardType="email-address"
@@ -18,10 +22,11 @@ const ForgotPage = props => {
                 onChangeText={(email) => props.setEmail(email)}
           />
           </View>
-          <TouchableHighlight onPress={() => props.onClickListener()} style={{activeOpacity: 0.5, underlayColor:'#FFFFFF'}}>
+          <TouchableHighlight onPress={() => props.onClickListener("submit")} >
             <Ionicons name={'ios-log-in-outline'} size={80} style={{color:'#FFFFFF'}} />
           </TouchableHighlight>
     </View>
+          </View>
 )}
 
 export default class Forgot extends React.Component{
@@ -30,17 +35,22 @@ export default class Forgot extends React.Component{
         this.state = {toForget:false, fEmail: ""}
     }
     
-    onClickListener = () => {
-        if (this.state.fEmail.length <= 0){
-            Alert.alert("Please enter your email")
+    onClickListener = (viewID) => {
+        if(viewID == "submit"){
+            if (this.state.fEmail.length <= 0){
+                Alert.alert("Please enter your email")
+            }
+            else if (!(this.state.fEmail.includes("@"))){
+                Alert.alert("Please enter a valid email")
+            }
+            //else if check if its in the database
+            else{
+                this.setState({ toForget:true })
+                Alert.alert("Please check your email!")
+            }
         }
-        else if (!(this.state.fEmail.includes("@"))){
-            Alert.alert("Please enter a valid email")
-        }
-        //else if check if its in the database
         else{
             this.setState({ toForget:true })
-            Alert.alert("Please check your email!")
         }
     }
     

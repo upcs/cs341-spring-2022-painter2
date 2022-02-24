@@ -11,9 +11,9 @@ import styles from './navigation/Screens/styles/loginStyle.js';
 /*LOGIN PAGE*/
 const LoginPage = props => {
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems:'center', backgroundColor:'#A00000'}}>
+    <View style={styles.background}>
           <View style={styles.inputContainer}>
-          <Ionicons name={'at-circle-outline'} size={30} style={styles.inputIcon}/>
+          <Ionicons name={'at-circle-outline'} size={30} style={styles.inputLineIcon}/>
             <TextInput style={styles.inputs}
                 placeholder="Email"
                 keyboardType="email-address"
@@ -21,21 +21,21 @@ const LoginPage = props => {
                 onChangeText={(email) => props.setEmail(email)}/>
           </View>
           <View style={styles.inputContainer}>
-          <Ionicons name={'lock-open-outline'} size={30} style={styles.inputIcon}/>
+          <Ionicons name={'lock-open-outline'} size={30} style={styles.inputLineIcon}/>
             <TextInput style={styles.inputs}
                 placeholder="Password"
                 secureTextEntry={true}
                 underlineColorAndroid='transparent'
                 onChangeText={(password) => props.setPassword(password)}/>
           </View>
-          <TouchableHighlight onPress={() => props.onClickListener("login")} style={{activeOpacity: 0.5, underlayColor:'#FFFFFF' }}>
-            <Ionicons name={'ios-log-in-outline'} size={80} style={{color:'#FFFFFF'}} />
+          <TouchableHighlight onPress={() => props.onClickListener("login")}>
+            <Ionicons name={'ios-log-in-outline'} size={100} style={{color:'#FFFFFF'}} />
           </TouchableHighlight>
           <TouchableHighlight style={styles.buttonContainer} onPress={() => props.onClickListener("restore_password")}>
-            <Text style={{color:'#FFFFFF'}}>Forgot your password?</Text>
+            <Text style={styles.touchable}>Forgot your password?</Text>
           </TouchableHighlight>
           <TouchableHighlight style={styles.buttonContainer} onPress={() => props.onClickListener("register")}>
-            <Text style={{color:'#FFFFFF'}}>Register</Text>
+            <Text style={styles.touchable}>Register</Text>
           </TouchableHighlight>
           </View>
   )
@@ -92,52 +92,3 @@ export default class App extends React.Component {
         )
     }
 }
-
-        
-
-//const styles = StyleSheet.create({
-//  container: {
-//    flex: 1,
-//    justifyContent: 'center',
-//    alignItems: 'center',
-//    backgroundColor: '#DCDCDC',
-//  },
-//  inputContainer: {
-//      borderBottomColor: '#F5FCFF',
-//      backgroundColor: '#FFFFFF',
-//      borderRadius:30,
-//      borderBottomWidth: 1,
-//      width:250,
-//      height:45,
-//      marginBottom:20,
-//      flexDirection: 'row',
-//      alignItems:'center'
-//  },
-//  inputs:{
-//      height:45,
-//      marginLeft:16,
-//      borderColor: '#FF0000',
-//      flex:1,
-//  },
-//  inputIcon:{
-//    width:30,
-//    height:30,
-//    marginLeft:15,
-//    justifyContent: 'center'
-//  },
-//  buttonContainer: {
-//    height:25,
-//    flexDirection: 'row',
-//    justifyContent: 'center',
-//    alignItems: 'center',
-//    marginBottom:0,
-//    width:250,
-//    borderRadius:0,
-//  },
-//  loginButton: {
-//    backgroundColor: "#00b5ec",
-//  },
-//  loginText: {
-//    color: 'white',
-//  }
-//});
