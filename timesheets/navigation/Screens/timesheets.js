@@ -35,10 +35,7 @@ export default function TimesheetScreen({ navigation }) {
         timesheetsData.push(doc.data());
     });
     setTSData(timesheetsData);
-}
-
-    getTimesheets();  
-    const data = require("./data.json");  // in the future data wull be pulled from the database
+}     
       const Item = ({ name }) => (
         <View style={styles.body}>
           <Text styles={styles.bodyText}>{name}</Text>
@@ -64,4 +61,4 @@ export default function TimesheetScreen({ navigation }) {
           </View>
         );
     }
-
+  
