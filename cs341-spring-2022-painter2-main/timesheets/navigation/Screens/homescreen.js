@@ -21,8 +21,8 @@ export default function HomeScreen() {
     const[selectedValue, setSelectedValue]=useState("");
     const[other,setOther]=useState(false);
     const[otherText,setOtherText] =useState("");
-
-
+    
+    
 
 
     useEffect(() => {
@@ -50,27 +50,27 @@ export default function HomeScreen() {
   function clockInClockOut()
   {
     setClock(!clockIn)
-    return clockIn ? setButtonText("Clock in")  : setButtonText("Clock out")
+    return clockIn ? setButtonText("Clock in")  : setButtonText("Clock out") 
 
   }
   //formats the time
   function timeCheck(hours, min,sec)
   {
     if(hours > 0 && hours<=12)
-    {
+    {         
       return hours + ":" + min + ":" +sec+ "am"
     }
     else if(hours>12)
-    {
-      return hours-12 + ":" + min + ":" +sec+ "pm"
+    {        
+      return hours-12 + ":" + min + ":" +sec+ "pm"     
     }
     else if(hours == 0)
     {
       return  12 + ":" + min + ":" +sec+ "am"
     }
   }
-
-
+ 
+  
   return (
     <View style={styles.container}>
 
@@ -96,7 +96,7 @@ export default function HomeScreen() {
       }
       }}
       />
-
+      
       <Picker
         selectedValue={selectedValue}
         style={styles.selectMenu} itemStyle= {{height:150}}
@@ -108,9 +108,9 @@ export default function HomeScreen() {
           //if the didn't select a task return null
           if(itemValue ==="")
           {
-
+          
             setRequiredText2(null);
-
+            
           }
           //if they select "other" task, activate text input box to allow them to enter in task
           if(itemValue === "Other")
@@ -131,11 +131,11 @@ export default function HomeScreen() {
           <Picker.Item label ="Office" value = "Office" />
           <Picker.Item label ="Shop" value = "Shop" />
           <Picker.Item label ="Other" value = "Other" />
-
+          
         </Picker>
-
-        <TextInput
-          editable={other}
+        
+        <TextInput 
+          editable={other}  
           style={styles.input}
           placeholder={otherText}
           placeholderTextColor="black"
@@ -147,18 +147,18 @@ export default function HomeScreen() {
             else{
               setRequiredText2(true);
             }
-
+            
           }}
       />
       <Button color ={color} title ={buttonText} onPress={() => {
 
-
+      
 
       if(requiredText != null && requiredText2!=null)
       {
         clockInClockOut();
       }
-
+      
       else if(requiredText == null && requiredText2 == null)
       {
         Alert.alert("Please Enter Jobsite and Select Task");
@@ -166,7 +166,7 @@ export default function HomeScreen() {
       else if(requiredText == null)
       {
         Alert.alert("Please Enter Jobsite");
-      }
+      }  
       else if(requiredText2 == null && other ==true)
       {
         Alert.alert("Please type in Task")
@@ -175,7 +175,7 @@ export default function HomeScreen() {
       {
         Alert.alert("Please select Task")
       }
-
+    
       }}
       />
     </View>
