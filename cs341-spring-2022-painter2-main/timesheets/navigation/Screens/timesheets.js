@@ -9,6 +9,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import { useState, useEffect } from 'react';
+import { findUserByEmail } from './databaseFunctions.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyCVu8npmz8_Mes5xQC6LBYTEBaw55ucAxRJXc",
@@ -36,8 +37,6 @@ export default function TimesheetScreen({ navigation }) {
     });  
     return timesheetsData;
 }     
-
-setTSData(timesheetsData);
       const Item = ({ name }) => (
         <View style={styles.body}>
           <Text styles={styles.bodyText}>{name}</Text>

@@ -25,7 +25,7 @@ const firebaseConfig = {
   }
 //creates a new employee record in the database with 
 //the paramters name, ID, email address,phonenumber and age
-  export const createNewEmployee= async(nameInput,employeeIDInput,emailInput,phoneInput,ageInput)=>  {
+  export const createNewEmployee= async(nameInput,employeeIDInput,emailInput,passwordInput,roleInput)=>  {
    //gets all records corresponding to a certain employee ID
     var employees= await firebase.firestore()
     .collection('employees')
@@ -45,8 +45,8 @@ const firebaseConfig = {
     name:nameInput,
     employeeID:employeeIDInput,
     email:emailInput,
-    phone:phoneInput,
-    age:ageInput    
+    password:passwordInput,
+    role:roleInput    
     });
 
      }
@@ -54,6 +54,8 @@ const firebaseConfig = {
 
     }
 
+
+   
 
 
 
@@ -125,9 +127,8 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
         alertEmployeeInfo+="\nName: "+ employeeData.name
         +"\nemployeeID: "+employeeData.employeeID
         +"\nemail: "+employeeData.email
-        +"\nphone number: "+employeeData.phone
-        +"\nage: "+employeeData.age;
-        //for each record prints alert message
+        +"\nphone number: "+employeeData.phone;
+                //for each record prints alert message
         //of employee enformation for each record
 
 
@@ -138,6 +139,23 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
 
 
        }
+
+  //searches for a user by email
+  export const findUserByEmail = async(emailInput)=> {
+      var fetchedEmployee= await firebase.firestore()
+      .collection('employees')
+      .where('email','==',emailInput)
+      .get();
+      emailEmployeeArray = [];
+      for(let i = 0; i <(fetchedEmployee.docs).length;i++) {
+        let data =(fetchedEmployee.docs[i].data());
+        emailEmployeeArray.push(data);
+      }
+
+      console.log(emailEmployeeArray);
+      return emailEmployeeArray;
+  }
+  
  //gets employee record based on input paramter for ID
  export const getEmployeeByID =  async (IDInput) =>{
     var fetchedEmployee=await firebase.firestore()
@@ -151,9 +169,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
           IDEmployeeArray.push(data);
           IDMessage+="\nName: "+ data.name
         +"\nemployeeID: "+data.employeeID
-        +"\nemail: "+data.email
-        +"\nphone number: "+data.phone
-        +"\nage: "+data.age;
+        +"\nemail: "+data.email;
 
 
     }
