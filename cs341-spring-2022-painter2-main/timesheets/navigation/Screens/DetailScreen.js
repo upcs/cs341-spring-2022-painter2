@@ -9,7 +9,6 @@ import 'firebase/firestore';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-import { editClockIn,editClockOut,editEmployeeEmail } from './databaseFunctions';
 
 const firebaseConfig = {
     apiKey: "AIzaSyCVu8npmz8_Mes5xQC6LBYTEBaw55ucAxRJXc",
@@ -41,12 +40,12 @@ export default function DetailScreen({ route, navigation }) {
                     <TextInput style={styles2.input} 
                     placeholder = {clockIn} 
                     editable ={true} 
-                    onSubmitEditing = {newTimeIn => editClockIn(id,newTimeIn.nativeEvent.text)}/> 
+                    onSubmitEditing = {newTimeIn => alert(newTimeIn.nativeEvent.text)}/> 
                 <Text>Time Out:</Text>
                     <TextInput style={styles2.input} 
                     placeholder = {clockOut} 
                     editable ={true} 
-                    onSubmitEditing ={newTimeOut => editClockOut(id,newTimeOut.nativeEvent.text)}/> 
+                    onSubmitEditing ={newTimeOut => alert(id,newTimeOut.nativeEvent.text)}/> 
             </View>:
             <View>
                 <Text>Time In:</Text>

@@ -28,15 +28,16 @@ if(firebase.apps.length==0){
 export default function TimesheetScreen({ navigation }) {
   const [tsData, setTSData] = useState([]);
 
- const getTimesheets = async () => {
+ const getTimesheets = async () => { //need to optimize this code to use less reads
     const snapshot = await firebase.firestore().collection('clocking').get()
     const timesheetsData = []
     snapshot.forEach(doc => {
         timesheetsData.push(doc.data());
-    });
-    setTSData(timesheetsData);
+    });  
+    return timesheetsData;
 }     
-getTimesheets();
+
+setTSData(timesheetsData);
       const Item = ({ name }) => (
         <View style={styles.body}>
           <Text styles={styles.bodyText}>{name}</Text>
