@@ -54,8 +54,24 @@ const firebaseConfig = {
 
     }
 
+    //gets all the timesheets
+    export const getTimesheets = async () => { //need to optimize this code to use less reads
+      const snapshot = await firebase.firestore().collection('clocking').get()
+      const timesheetsData = []
+      snapshot.forEach(doc => {
+          timesheetsData.push(doc.data());
+      });  
+      return timesheetsData;
+  }     
 
-   
+    export const getTimesheetsForID = async (idInput) => { //need to optimize this code to use less reads
+      const snapshot = await firebase.firestore().collection('clocking').where('employeeID', '==', idInput).get()
+      const timesheetsData = []
+      snapshot.forEach(doc => {
+          timesheetsData.push(doc.data());
+      });  
+      return timesheetsData;
+}     
 
 
 
@@ -127,7 +143,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
         alertEmployeeInfo+="\nName: "+ employeeData.name
         +"\nemployeeID: "+employeeData.employeeID
         +"\nemail: "+employeeData.email
-        +"\nphone number: "+employeeData.phone;
+
                 //for each record prints alert message
         //of employee enformation for each record
 

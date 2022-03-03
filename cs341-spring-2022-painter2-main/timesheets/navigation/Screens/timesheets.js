@@ -1,15 +1,14 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, StatusBar, TouchableOpacity} from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { FlatList } from 'react-native-gesture-handler';
 import styles from './styles/timesheetStyle.js';
-import DetailScreen from './DetailScreen.js';
 import 'firebase/firestore';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import { useState, useEffect } from 'react';
-import { findUserByEmail } from './databaseFunctions.js';
+import { getTimesheets, getTimesheetsForID} from './databaseFunctions.js';
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyCVu8npmz8_Mes5xQC6LBYTEBaw55ucAxRJXc",
@@ -25,18 +24,10 @@ if(firebase.apps.length==0){
   firebase.initializeApp(firebaseConfig);
  }
 
-
 export default function TimesheetScreen({ navigation }) {
+  const data = getTimesheets().then(ts => setTSData(ts))
   const [tsData, setTSData] = useState([]);
 
- const getTimesheets = async () => { //need to optimize this code to use less reads
-    const snapshot = await firebase.firestore().collection('clocking').get()
-    const timesheetsData = []
-    snapshot.forEach(doc => {
-        timesheetsData.push(doc.data());
-    });  
-    return timesheetsData;
-}     
       const Item = ({ name }) => (
         <View style={styles.body}>
           <Text styles={styles.bodyText}>{name}</Text>
