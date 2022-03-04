@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Text, View, TextInput, StyleSheet, Button, Alert, TouchableHighlight} from 'react-native';
+import { Text, View, TextInput, StyleSheet, Alert, TouchableHighlight} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from './styles/loginStyle.js';
 
 //The Home Screen
-
-
 export default function LoginScreen({ navigation }) {
     const [creds, setCreds] = useState({
         email: "", password: ""
