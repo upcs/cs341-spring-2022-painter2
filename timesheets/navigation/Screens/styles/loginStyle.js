@@ -64,10 +64,5 @@ export default StyleSheet.create({
     inputLineIcon: {
         marginLeft: 5,
         color:'#A00000',
-    },
-    backButton: {
-        marginTop: 20,
-        marginLeft: 5,
-        marginRight: 315,
     }
 });
