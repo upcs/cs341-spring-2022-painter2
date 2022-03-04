@@ -3,7 +3,9 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, Text,  View, TextInput,  TouchableHighlight, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from './styles/loginStyle.js';
-
+import {createNewEmployee} from './databaseFunctions';
+import JWT from 'expo-jwt';
+import {encodePass, decodePass} from './styles/base64';
 
 
 export default function RegisterScreen({ navigation }) {
@@ -13,9 +15,32 @@ export default function RegisterScreen({ navigation }) {
 
     const onClickListener = (viewID) => {
         //Alert.alert("Register")
-        navigation.navigate("Login");
+        validateReg()
+        //navigation.navigate("Login");
     }
 
+    
+    //Helper function that does all the validating for the login
+    const validateReg = async() => {
+        if (creds.p1.includes(' ') || creds.p2.includes(' ')){
+           Alert.alert("Error", "Passwords should not contain spaces")
+        }
+        else if (creds.p1 != creds.p2){
+            Alert.alert("Error", "Passwords do not match")
+        }
+        else if (creds.name.length != 0 &&
+            creds.email.length != 0 &&
+            creds.p1.length != 0 &&
+            creds.p2.length != 0){
+            console.log("P1: ", creds.p1);
+            var log = encodePass(creds.p1);
+            console.log("P1-en: ", log);
+            var log2 = decodePass(log);
+            console.log("P1-de: ", log2);
+        }
+    }
+    
+    
     return (
         <View style={styles.background}>
               <Text style={styles.title}>Register</Text>
@@ -46,13 +71,14 @@ export default function RegisterScreen({ navigation }) {
                     })}
               />
               </View>
+            <Text style={styles.notes}>Passwords can be letters(case sensitive) and numbers. No special characters.</Text>
               <View style={styles.inputContainer}>
               <Ionicons name={'lock-open-outline'} size={30} style={styles.inputLineIcon}/>
                 <TextInput style={styles.inputs}
                     placeholder="Password"
                     secureTextEntry={true}
                     underlineColorAndroid='transparent'
-                    onChangeText={(dos) => setCreds({
+                    onChangeText={(uno) => setCreds({
                         name: creds.name,
                         email: creds.email,
                         p1: uno,
@@ -66,7 +92,7 @@ export default function RegisterScreen({ navigation }) {
                     placeholder="Re-Password"
                     secureTextEntry={true}
                     underlineColorAndroid='transparent'
-                    onChangeText={(uno) => setCreds({
+                    onChangeText={(dos) => setCreds({
                         name: creds.name,
                         email: creds.email,
                         p1: creds.p1,
@@ -79,3 +105,5 @@ export default function RegisterScreen({ navigation }) {
               </TouchableHighlight>
         </View>
     )}
+
+

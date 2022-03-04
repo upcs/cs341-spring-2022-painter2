@@ -25,7 +25,7 @@ return(
                  />
                  </View>
                  <TouchableHighlight onPress={() => onClickListener("submit")} >
-                   <Ionicons name={'ios-log-in-outline'} size={80} style={{color:'#FFFFFF'}} />
+                   <Ionicons name={'ios-log-in-outline'} size={100} style={{color:'#FFFFFF'}} />
                  </TouchableHighlight>
            </View>
        )

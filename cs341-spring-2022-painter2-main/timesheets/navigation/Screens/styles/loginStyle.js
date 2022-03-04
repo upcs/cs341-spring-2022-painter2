@@ -30,7 +30,7 @@ export default StyleSheet.create({
         borderBottomWidth: 1,
         width:300,
         height:60,
-        marginBottom:30,
+        marginBottom:20,
         flexDirection: 'row',
         alignItems:'center'
     },
@@ -64,5 +64,11 @@ export default StyleSheet.create({
     inputLineIcon: {
         marginLeft: 5,
         color:'#A00000',
+    },
+    notes: {
+        color:'#FFFFFF',
+        textAlign:'center',
+        marginBottom: 25,
+        paddingHorizontal: 30
     }
 });
