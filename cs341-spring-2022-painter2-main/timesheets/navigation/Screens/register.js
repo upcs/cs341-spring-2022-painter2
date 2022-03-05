@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text,  View, TextInput,  TouchableHighlight, Alert } from 'react-native';
+import { StyleSheet, Text,  View, TextInput,  TouchableHighlight, Alert, Linking} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from './styles/loginStyle.js';
-import {createNewEmployee} from './databaseFunctions';
-import JWT from 'expo-jwt';
-import {encodePass, decodePass} from './styles/base64';
+import {createNewEmployee, findUserByEmail} from './databaseFunctions';
+import {encodePass} from './styles/base64';
+
 
 
 export default function RegisterScreen({ navigation }) {
@@ -35,11 +35,18 @@ export default function RegisterScreen({ navigation }) {
             console.log("P1: ", creds.p1);
             var log = encodePass(creds.p1);
             console.log("P1-en: ", log);
-            var log2 = decodePass(log);
-            console.log("P1-de: ", log2);
+            console.log("P1-de: ", creds.p2);
+            console.log("Email: ", creds.email )
+            if (Object.keys(await findUserByEmail(creds.email)).length > 0){
+                console.log("Result: ", "Account exists")
+                Alert.alert("Error", "Email already exists")
+            }
+            else {
+                console.log("P1-set: ", log);
+            createNewEmployee(creds.name,2,creds.email,log,"Employee")
+            }
         }
     }
-    
     
     return (
         <View style={styles.background}>
