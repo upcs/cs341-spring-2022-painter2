@@ -50,8 +50,8 @@ export default function LoginScreen({ navigation }) {
 
     //Render
     return(
-           <View style={styles.background}>
-                 <View style={styles.inputContainer}>
+           <View style={styles.login}>
+           <View style={styles.inputContainer}>
                  <Ionicons name={'at-circle-outline'} size={30} style={styles.inputLineIcon}/>
                    <TextInput style={styles.inputs}
                        placeholder="Email"

@@ -43,13 +43,16 @@ export default function RegisterScreen({ navigation }) {
             }
             else {
                 console.log("P1-set: ", log);
-            createNewEmployee(creds.name,2,creds.email,log,"Employee")
+                createNewEmployee(creds.name,2,creds.email,log,"Employee")
+                navigate.pop()
             }
+        } else {
+            Alert.alert("Error", "Please input valid credentials")
         }
     }
     
     return (
-        <View style={styles.background}>
+        <View style={styles.reg}>
               <Text style={styles.title}>Register</Text>
               <View style={styles.inputContainer}>
               <Ionicons name={'person-outline'} size={30} style={styles.inputLineIcon}/>
