@@ -19,9 +19,9 @@ export default function RegisterScreen({ navigation }) {
         //navigation.navigate("Login");
     }
 
-    
     //Helper function that does all the validating for the login
     const validateReg = async() => {
+        //console.log("Email: ", validateEmail(creds.email))
         if (creds.p1.includes(' ') || creds.p2.includes(' ')){
            Alert.alert("Error", "Passwords should not contain spaces")
         }
@@ -31,7 +31,8 @@ export default function RegisterScreen({ navigation }) {
         else if (creds.name.length != 0 &&
             creds.email.length != 0 &&
             creds.p1.length != 0 &&
-            creds.p2.length != 0){
+            creds.p2.length != 0 &&
+            validateEmail(creds.email) == true){
             console.log("P1: ", creds.p1);
             var log = encodePass(creds.p1);
             console.log("P1-en: ", log);
@@ -44,11 +45,26 @@ export default function RegisterScreen({ navigation }) {
             else {
                 console.log("P1-set: ", log);
                 createNewEmployee(creds.name,2,creds.email,log,"Employee")
-                navigate.pop()
+                navigation.pop()
             }
         } else {
             Alert.alert("Error", "Please input valid credentials")
         }
+    }
+    
+    const validateEmail = (input) => {
+        const re =
+          /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        setCreds({
+            name: creds.name,
+            email: creds.email.toLowerCase(),
+            p1: creds.p1,
+            p2: creds.p2
+        })
+        if (String(input).toLowerCase().match(re) == null){
+            return false
+        }
+        return true
     }
     
     return (

@@ -58,7 +58,7 @@ export default function LoginScreen({ navigation }) {
                        keyboardType="email-address"
                        underlineColorAndroid='transparent'
                         onChangeText={(em) => setCreds({
-                            email: em,
+                            email: em.toLowerCase(),
                             password: creds.password
                         })}/>
                  </View>
