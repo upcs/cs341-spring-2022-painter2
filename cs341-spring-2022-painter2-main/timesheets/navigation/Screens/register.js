@@ -35,8 +35,19 @@ export default function RegisterScreen({ navigation }) {
             console.log("P1: ", creds.p1);
             var log = encodePass(creds.p1);
             console.log("P1-en: ", log);
-            var log2 = decodePass(log);
-            console.log("P1-de: ", log2);
+            console.log("P1-de: ", creds.p2);
+            console.log("Email: ", creds.email )
+            if (Object.keys(await findUserByEmail(creds.email)).length > 0){ //<----
+                console.log("Result: ", "Account exists")
+                Alert.alert("Error", "Email already exists")
+            }
+            else {
+                console.log("P1-set: ", log);
+                createNewEmployee(creds.name,2,creds.email,log,"Employee") //<----
+                navigation.pop()
+            }
+        } else {
+            Alert.alert("Error", "Please input valid credentials")
         }
     }
     

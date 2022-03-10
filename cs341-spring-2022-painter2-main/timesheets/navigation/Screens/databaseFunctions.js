@@ -25,14 +25,15 @@ const firebaseConfig = {
   }
 //creates a new employee record in the database with 
 //the paramters name, ID, email address,phonenumber and age
-  export const createNewEmployee= async(nameInput,employeeIDInput,emailInput,passwordInput,roleInput)=>  {
+  export const createNewEmployee= async(nameInput,emailInput,passwordInput,roleInput)=>  {
    //gets all records corresponding to a certain employee ID
     var employees= await firebase.firestore()
     .collection('employees')
     .where('employeeID','==',employeeIDInput)
     .get();
     var sameIDCount=(employees.docs).length;
-    
+    const d = new Date()
+    let id = d.getTime(); 
      
 
     //if there is a record aldready under the ID given, 
@@ -43,7 +44,7 @@ const firebaseConfig = {
     .collection("employees")
     .add({
     name:nameInput,
-    employeeID:employeeIDInput,
+    employeeID:id,
     email:emailInput,
     password:passwordInput,
     role:roleInput    
@@ -55,14 +56,7 @@ const firebaseConfig = {
     }
 
     //gets all the timesheets
-    export const getTimesheets = async () => { //need to optimize this code to use less reads
-      const snapshot = await firebase.firestore().collection('clocking').get()
-      const timesheetsData = []
-      snapshot.forEach(doc => {
-          timesheetsData.push(doc.data());
-      });  
-      return timesheetsData;
-  }     
+   
 
     export const getTimesheetsForID = async (idInput) => { //need to optimize this code to use less reads
       const snapshot = await firebase.firestore().collection('clocking').where('employeeID', '==', idInput).get()
@@ -143,18 +137,31 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
         alertEmployeeInfo+="\nName: "+ employeeData.name
         +"\nemployeeID: "+employeeData.employeeID
         +"\nemail: "+employeeData.email
-
-                //for each record prints alert message
+        //for each record prints alert message
         //of employee enformation for each record
-
 
      }
      //console.log(employeeArray);
      alert(alertEmployeeInfo);
      return employeeArray;
-
-
        }
+
+       export const getTimesheets = async () =>{
+        //gets all employee records from collection employees
+      var allTimesheets= await firebase.firestore()
+      .collection('clocking')
+      .get();
+      var timesheetsArray=[];
+      for(let i=0;i<(allTimesheets.docs).length;i++){
+          let timesheetData=(all.docs[i]).data();
+         timesheetsArray.push(timesheetData);
+  
+                 //for each record prints alert message
+         //of employee enformation for each record
+      }
+      //console.log(employeeArray);
+      return timesheetsArray;
+    }
 
   //searches for a user by email
   export const findUserByEmail = async(emailInput)=> {
