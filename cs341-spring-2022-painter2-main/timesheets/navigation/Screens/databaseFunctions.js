@@ -160,6 +160,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
          //of employee enformation for each record
       }
       //console.log(employeeArray);
+      console.log("Timesheets Fetched")
       return timesheetsArray;
     }
 
