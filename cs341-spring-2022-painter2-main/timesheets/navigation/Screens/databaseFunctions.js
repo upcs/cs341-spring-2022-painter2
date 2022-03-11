@@ -56,16 +56,25 @@ const firebaseConfig = {
     }
 
     //gets all the timesheets
-   
+    export const getTimesheets = async () =>{
+      //gets all employee records from collection employees
+    var allTimesheets= await firebase.firestore()
+    .collection('employees')
+    .get();
+    var timesheetsArray=[];
+    for(let i=0;i<(allTimesheets.docs).length;i++){
+        let timesheetsData=(allTimesheets.docs[i]).data();
+       timesheetsArray.push(timesheetsData);
+               //for each record prints alert message
+       //of employee enformation for each record
 
-    export const getTimesheetsForID = async (idInput) => { //need to optimize this code to use less reads
-      const snapshot = await firebase.firestore().collection('clocking').where('employeeID', '==', idInput).get()
-      const timesheetsData = []
-      snapshot.forEach(doc => {
-          timesheetsData.push(doc.data());
-      });  
-      return timesheetsData;
-}     
+
+    }
+    console.log("Timesheets fetched");
+    return timesheetsArray;
+
+
+      }
 
 
 

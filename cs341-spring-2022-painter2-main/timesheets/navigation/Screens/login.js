@@ -30,7 +30,8 @@ export default function LoginScreen({ navigation }) {
     }
    
     //Helper function that does all the validating for the login
-    const validateLogin = () => {
+    const validateLogin = async() => {
+        navigation.navigate("Main", creds);
         if(creds.email.length != 0 && creds.password.length != 0){
             var user = await findUserByEmail(creds.email); //<-----
             console.log(user);

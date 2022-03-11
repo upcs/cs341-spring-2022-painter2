@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, StatusBar, TouchableOpacity} from 'react-native';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, TextInput } from 'react-native-gesture-handler';
 import styles from './styles/timesheetStyle.js';
 import 'firebase/firestore';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import { useState, useEffect } from 'react';
-import { getTimesheets, getTimesheetsForID} from './databaseFunctions.js';
+import { getTimesheets} from './databaseFunctions.js';
+import timesheetStyle from './styles/timesheetStyle.js';
+import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 
 
 const firebaseConfig = {
@@ -24,6 +26,7 @@ if(firebase.apps.length==0){
   firebase.initializeApp(firebaseConfig);
  }
 
+<<<<<<< Updated upstream
 export default function TimesheetScreen({ navigation }) {
   var tsData = [];
   //getTimesheets().then(ts => tsData.push(ts)); <----
@@ -32,7 +35,17 @@ export default function TimesheetScreen({ navigation }) {
   //if (tsData.length > 0) {
   //const filterData = tsData.filter(sameName)
   //}
+=======
+>>>>>>> Stashed changes
 
+export default function TimesheetScreen({ navigation }) {
+      
+      const getData = async () => {
+        data = await getTimesheets()
+        console.log(data)
+        return data;
+      }
+      
       const Item = ({ name }) => (
         <View style={styles.body}>
           <Text styles={styles.bodyText}>{name}</Text>
@@ -49,9 +62,14 @@ export default function TimesheetScreen({ navigation }) {
           <View style={styles.container}>
             <View style={styles.header}>
               <Text style={styles.headerText}>My Timesheets</Text>
+              
             </View>
+            <TextInput 
+              style={styles.searchBackground}
+              placeholder='Enter Employee Name'
+              onEndEditing={text=>console.log(text)}/>
             <FlatList
-            data={tsData}
+            data={getData()}
             renderItem={renderItem}
             keyExtractor={item => item.clockID}
             />
