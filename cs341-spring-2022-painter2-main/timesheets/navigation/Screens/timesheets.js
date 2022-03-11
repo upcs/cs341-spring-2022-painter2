@@ -26,26 +26,18 @@ if(firebase.apps.length==0){
   firebase.initializeApp(firebaseConfig);
  }
 
-<<<<<<< Updated upstream
-export default function TimesheetScreen({ navigation }) {
-  var tsData = [];
-  //getTimesheets().then(ts => tsData.push(ts)); <----
-
-  //filters data based on name
-  //if (tsData.length > 0) {
-  //const filterData = tsData.filter(sameName)
-  //}
-=======
->>>>>>> Stashed changes
 
 export default function TimesheetScreen({ navigation }) {
       
+      componentDid
       const getData = async () => {
         data = await getTimesheets()
         console.log(data)
         return data;
       }
       
+      const flatlistData = getData();
+
       const Item = ({ name }) => (
         <View style={styles.body}>
           <Text styles={styles.bodyText}>{name}</Text>
@@ -69,7 +61,7 @@ export default function TimesheetScreen({ navigation }) {
               placeholder='Enter Employee Name'
               onEndEditing={text=>console.log(text)}/>
             <FlatList
-            data={getData()}
+            data={flatlistData}
             renderItem={renderItem}
             keyExtractor={item => item.clockID}
             />
