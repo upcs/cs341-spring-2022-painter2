@@ -57,16 +57,15 @@ const firebaseConfig = {
 
     //gets all the timesheets
     export const getTimesheets = async () =>{
-      //gets all employee records from collection employees
+  
     var allTimesheets= await firebase.firestore()
-    .collection('employees')
+    .collection('clocking')
     .get();
     var timesheetsArray=[];
     for(let i=0;i<(allTimesheets.docs).length;i++){
         let timesheetsData=(allTimesheets.docs[i]).data();
        timesheetsArray.push(timesheetsData);
-               //for each record prints alert message
-       //of employee enformation for each record
+
 
 
     }
@@ -155,24 +154,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
      return employeeArray;
        }
 
-       export const getTimesheets = async () =>{
-        //gets all employee records from collection employees
-      var allTimesheets= await firebase.firestore()
-      .collection('clocking')
-      .get();
-      var timesheetsArray=[];
-      for(let i=0;i<(allTimesheets.docs).length;i++){
-          let timesheetData=(all.docs[i]).data();
-         timesheetsArray.push(timesheetData);
-  
-                 //for each record prints alert message
-         //of employee enformation for each record
-      }
-      //console.log(employeeArray);
-      console.log("Timesheets Fetched")
-      return timesheetsArray;
-    }
-
+     
   //searches for a user by email
   export const findUserByEmail = async(emailInput)=> {
       var fetchedEmployee= await firebase.firestore()

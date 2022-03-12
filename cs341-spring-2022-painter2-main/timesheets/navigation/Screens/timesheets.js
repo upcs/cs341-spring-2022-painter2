@@ -26,18 +26,20 @@ if(firebase.apps.length==0){
   firebase.initializeApp(firebaseConfig);
  }
 
-
 export default function TimesheetScreen({ navigation }) {
       
-      componentDid
-      const getData = async () => {
-        data = await getTimesheets()
-        console.log(data)
-        return data;
-      }
-      
-      const flatlistData = getData();
+      const [timesheetsData, setTimeSheetsData] = useState([])
+      useEffect(() => {
+        const getData = async () => {
+          data = await getTimesheets()
+          console.log(data);
+          setTimeSheetsData(data);
+        }
 
+        getData()
+     }, [])
+    
+      
       const Item = ({ name }) => (
         <View style={styles.body}>
           <Text styles={styles.bodyText}>{name}</Text>
@@ -50,22 +52,23 @@ export default function TimesheetScreen({ navigation }) {
         </TouchableOpacity>
       );
 
-        return (
-          <View style={styles.container}>
-            <View style={styles.header}>
-              <Text style={styles.headerText}>My Timesheets</Text>
-              
-            </View>
-            <TextInput 
-              style={styles.searchBackground}
-              placeholder='Enter Employee Name'
-              onEndEditing={text=>console.log(text)}/>
-            <FlatList
-            data={flatlistData}
-            renderItem={renderItem}
-            keyExtractor={item => item.clockID}
-            />
-          </View>
-        );
-    }
+            return (
+              <View style={styles.container}>
+                <View style={styles.header}>
+                  <Text style={styles.headerText}>My Timesheets</Text>
+                  
+                </View>
+                <TextInput 
+                  style={styles.searchBackground}
+                  placeholder='Enter Employee Name'
+                  onEndEditing={text=>console.log(text)}/>
+                <FlatList
+                data={timesheetsData}
+                renderItem={renderItem}
+                keyExtractor={item => item.clockID}
+                />
+              </View>
+            );
+          }
+    
   
