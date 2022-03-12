@@ -53,15 +53,39 @@ export default function DatabaseTesterScreen() {
       
   
       }
-  
+  async function getStreetAddress(inputLat,inputLong){
+    let coordCollection = await Location.reverseGeocodeAsync({
+      latitude:inputLat,
+      longitude:inputLong
+    });
+let streetInfo="";
+let cityName=""
+let stateName="";
+let zipCode="";
+coordCollection.forEach(record=>{
+  streetInfo=record.name;
+  cityName=record.city;
+  stateName=record.region;
+  zipCode=record.postalCode;
+});
+let streetAddress=streetInfo+" "+cityName+" "+stateName+" "+zipCode;
+console.log("The street Address is :" +streetAddress);
+return streetAddress;
+  }
    
   
 async function onClick(){
+  //gets latitude and longitude coordinates of your location
   getOurCoords();
-
+//coordinates of painting co jobsite
   let latArg=45.41567513430611;
   let longArg= -122.74994738832297 
+  // gets distance from painting co jobsite
   getDistFromSite(latArg,longArg);
+  //gets street address from coordinates of painting co jobsite
+  getStreetAddress(45.41567513430611,-122.74994738832297);
+  getStreetAddress((await  getOurCoords())[0],(await  getOurCoords())[1]);
+
 
 
 
