@@ -25,8 +25,8 @@ if(firebase.apps.length==0){
  }
 
 export default function TimesheetScreen({ navigation }) {
-  const data = getTimesheets().then(ts => setTSData(ts))
-  const [tsData, setTSData] = useState([]);
+  // const data = getTimesheets().then(ts => setTSData(ts))
+  // const [tsData, setTSData] = useState([]);
 
       const Item = ({ name }) => (
         <View style={styles.body}>
