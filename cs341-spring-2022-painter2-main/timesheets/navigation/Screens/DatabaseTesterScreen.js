@@ -7,19 +7,26 @@ export default function DatabaseTesterScreen() {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
+  (async () => {
+    let locationServiceEnabled = await Location.hasServicesEnabledAsync();
 
-    })();
-  }, []);
+    if (!locationServiceEnabled) {
+
+      Alert.alert("Your Location services are turned off. Turn them on Please");
+      
+    }
+
+
+    
+  })();
+
+}, []);
+
   
     
       async function getOurCoords(){
-     
+       
+    
 
       let coords = await Location.getCurrentPositionAsync({});
       console.log("Latitude is: "+coords.coords.latitude)
@@ -31,10 +38,31 @@ export default function DatabaseTesterScreen() {
      return arrCoord;
 
     }
+    async function getDistFromSite(siteLat,siteLong){
+      // 3963.0 * arccos[(sin(lat1) * sin(lat2)) + cos(lat1) * cos(lat2) * cos(long2 – long1)]
+      let ourLoc= await getOurCoords();
+      let xRad1=(siteLat/180)*Math.PI;
+      let xRad2=(ourLoc[0]/180)*Math.PI;
+      let yRad1=(siteLong/180)*Math.PI;
+      let yRad2=(ourLoc[1]/180)*Math.PI;
+      let productOfSines=Math.sin(xRad1)*Math.sin(xRad2);
+      let productOfCosines=Math.cos(xRad1)*Math.cos(xRad2)*Math.cos(yRad2-yRad1);
+      let distance=3963.00*Math.acos(productOfSines+productOfCosines);
+       console.log("Your distance from the site is: "+distance+" miles");
+       return distance;
+      
+  
+      }
+  
    
   
 async function onClick(){
   getOurCoords();
+
+  let latArg=45.41567513430611;
+  let longArg= -122.74994738832297 
+  getDistFromSite(latArg,longArg);
+
 
 
 }
