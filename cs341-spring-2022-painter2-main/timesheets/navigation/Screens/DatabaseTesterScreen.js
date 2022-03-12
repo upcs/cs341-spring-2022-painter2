@@ -4,30 +4,32 @@ import * as Location from 'expo-location';
  import {Platform,StyleSheet,Text,View,TextInput,Button, Alert} from 'react-native';
 
 export default function DatabaseTesterScreen() {
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
-  useEffect(() => {
-  (async () => {
-    let locationServiceEnabled = await Location.hasServicesEnabledAsync();
-
-    if (!locationServiceEnabled) {
-
-      Alert.alert("Your Location services are turned off. Turn them on Please");
-      
-    }
-
-
-    
-  })();
-
-}, []);
-
+  //state variable for text field of site location, siteLocation
+  //state var for coordinates of site location, siteCoord
+  // state var for your location,yourLocation
+  //state var for your coordinates,yourCoord
+  //state var for distance between yourself and site,distanceFromSite
+const [siteLocation,setSiteLocation]=useState("");
+const[siteCoord,setSiteCoord]=useState([]);
+const[yourLocation,setYourLocation]=useState("");
+const [yourCoord,setYourCoord]=useState([]);
+const [distanceFromSite,setDistanceFromSite]=useState(0);
   
-    
       async function getOurCoords(){
-       
-    
-
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+          Alert.alert('Permission to access location was denied');
+          return;
+        }
+        
+        let locationServiceEnabled = await Location.hasServicesEnabledAsync();
+        
+          if (!locationServiceEnabled) {
+        
+            Alert.alert("Your Location services are turned off. Turn them on Please");
+            return;
+          }
+        
       let coords = await Location.getCurrentPositionAsync({});
       console.log("Latitude is: "+coords.coords.latitude)
       console.log("Longitude is: "+coords.coords.longitude)
@@ -38,7 +40,22 @@ export default function DatabaseTesterScreen() {
      return arrCoord;
 
     }
+
     async function getDistFromSite(siteLat,siteLong){
+      let { status } = await Location.requestForegroundPermissionsAsync();
+if (status !== 'granted') {
+  Alert.alert('Permission to access location was denied');
+  return;
+}
+
+let locationServiceEnabled = await Location.hasServicesEnabledAsync();
+
+  if (!locationServiceEnabled) {
+
+    Alert.alert("Your Location services are turned off. Turn them on Please");
+    return;
+  }
+  
       // 3963.0 * arccos[(sin(lat1) * sin(lat2)) + cos(lat1) * cos(lat2) * cos(long2 – long1)]
       let ourLoc= await getOurCoords();
       let xRad1=(siteLat/180)*Math.PI;
@@ -54,6 +71,20 @@ export default function DatabaseTesterScreen() {
   
       }
   async function getStreetAddress(inputLat,inputLong){
+    let { status } = await Location.requestForegroundPermissionsAsync();
+if (status !== 'granted') {
+  Alert.alert('Permission to access location was denied');
+  return;
+}
+
+let locationServiceEnabled = await Location.hasServicesEnabledAsync();
+
+  if (!locationServiceEnabled) {
+
+    Alert.alert("Your Location services are turned off. Turn them on Please");
+    return;
+  }
+  
     let coordCollection = await Location.reverseGeocodeAsync({
       latitude:inputLat,
       longitude:inputLong
@@ -73,31 +104,64 @@ console.log("The street Address is :" +streetAddress);
 return streetAddress;
   }
    
-  
-async function onClick(){
-  //gets latitude and longitude coordinates of your location
-  getOurCoords();
-//coordinates of painting co jobsite
-  let latArg=45.41567513430611;
-  let longArg= -122.74994738832297 
-  // gets distance from painting co jobsite
-  getDistFromSite(latArg,longArg);
-  //gets street address from coordinates of painting co jobsite
-  getStreetAddress(45.41567513430611,-122.74994738832297);
-  getStreetAddress((await  getOurCoords())[0],(await  getOurCoords())[1]);
-
-
-
-
+  async function getCoordFromAddress(inputStreetLocation){
+    let { status } = await Location.requestForegroundPermissionsAsync();
+if (status !== 'granted') {
+  Alert.alert('Permission to access location was denied');
+  return;
 }
+
+let locationServiceEnabled = await Location.hasServicesEnabledAsync();
+
+  if (!locationServiceEnabled) {
+
+    Alert.alert("Your Location services are turned off. Turn them on Please");
+    return;
+  }
+  
+  
+    let extractedCoord = await Location.geocodeAsync(inputStreetLocation);
+    let extractedLatitude=0;
+    let extractedLongitude=0;
+    extractedCoord.forEach(each=>{
+      extractedLatitude=each.latitude;
+      extractedLongitude=each.longitude;
+    });
+
+    let extractedCoordArray=[extractedLatitude,extractedLongitude];
+    console.log("lat : "+extractedLatitude+" long: "+extractedLongitude);
+    return extractedCoordArray;
+  
+ 
+
+
+
+  }
+
+async function handler(siteInput){
+ let siteCoordinates= await getCoordFromAddress(siteInput);
+ setSiteCoord(siteCoordinates);
+  let yourLat=(await getOurCoords())[0];
+  let yourLong=(await getOurCoords())[1];
+  setYourLocation(await getStreetAddress(yourLat,yourLong));
+  setYourCoord([yourLat,yourLong]);
+  setDistanceFromSite(await getDistFromSite(siteCoordinates[0],siteCoordinates[1]))
+}
+
 
 
  
   return (
     <View style={styler.fullPage}>
-          <Button onPress={()=>onClick()} title='submit'/>
+      <Text> Enter Site Address</Text>
+    <TextInput onChangeText={(val)=>{setSiteLocation(val)}}style={styler.inputStyle}> </TextInput>
+    <Button onPress={()=>handler(siteLocation)}title="Get Info About Site"/>
+    <Text>Coordinates of Job site are : ({siteCoord[0]},{siteCoord[1]})</Text>
+    <Text>Your Current Location is  : {yourLocation}</Text>
+    <Text>Your Current Coordinates Are  : ({yourCoord[0]},{yourCoord[1]}) </Text>
+    <Text>Your Distance From The Job site is  : {distanceFromSite} miles</Text>
 
-    </View>
+   </View>
 
   );
 }
