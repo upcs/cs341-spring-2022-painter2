@@ -29,17 +29,30 @@ if(firebase.apps.length==0){
 export default function TimesheetScreen({ navigation }) {
       
       const [timesheetsData, setTimeSheetsData] = useState([])
+      const [useData, setUseData] = useState ([])
+
+
+      //sets the initial data
       useEffect(() => {
         const getData = async () => {
           data = await getTimesheets()
-          console.log(data);
           setTimeSheetsData(data);
+          setUseData(data);
         }
-
         getData()
+
+        return;
      }, [])
+
+     const filterData = (searchName) => {
+        const copy = timesheetsData.filter(ts => ts.name.toLowerCase().includes(searchName.toString().toLowerCase()));
+        console.log(copy)
+        setUseData(copy)
+     }
     
-      
+
+
+
       const Item = ({ name }) => (
         <View style={styles.body}>
           <Text styles={styles.bodyText}>{name}</Text>
@@ -61,11 +74,13 @@ export default function TimesheetScreen({ navigation }) {
                 <TextInput 
                   style={styles.searchBackground}
                   placeholder='Enter Employee Name'
-                  onEndEditing={}/>
+                  onChangeText={input => filterData(input)}
+                  />
                 <FlatList
-                data={timesheetsData}
+                data={useData}
                 renderItem={renderItem}
                 keyExtractor={item => item.clockID}
+      
                 />
               </View>
             );
