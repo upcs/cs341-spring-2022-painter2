@@ -61,7 +61,7 @@ export default function TimesheetScreen({ navigation }) {
                 <TextInput 
                   style={styles.searchBackground}
                   placeholder='Enter Employee Name'
-                  onEndEditing={text=>console.log(text)}/>
+                  onEndEditing={}/>
                 <FlatList
                 data={timesheetsData}
                 renderItem={renderItem}
