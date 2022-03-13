@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { StyleSheet, Text,  View, TextInput,  TouchableHighlight, Alert } from 'react-native';
+import { StyleSheet, Text,  View, TextInput,  TouchableHighlight, Alert, Linking} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from './styles/loginStyle.js';
-import {createNewEmployee} from './databaseFunctions';
-import JWT from 'expo-jwt';
-import {encodePass, decodePass} from './styles/base64';
+import {createNewEmployee, findUserByEmail} from './databaseFunctions';
+import {encodePass} from './styles/base64';
+
 
 
 export default function RegisterScreen({ navigation }) {
@@ -19,9 +19,9 @@ export default function RegisterScreen({ navigation }) {
         //navigation.navigate("Login");
     }
 
-    
     //Helper function that does all the validating for the login
     const validateReg = async() => {
+        //console.log("Email: ", validateEmail(creds.email))
         if (creds.p1.includes(' ') || creds.p2.includes(' ')){
            Alert.alert("Error", "Passwords should not contain spaces")
         }
@@ -31,18 +31,44 @@ export default function RegisterScreen({ navigation }) {
         else if (creds.name.length != 0 &&
             creds.email.length != 0 &&
             creds.p1.length != 0 &&
-            creds.p2.length != 0){
+            creds.p2.length != 0 &&
+            validateEmail(creds.email) == true){
             console.log("P1: ", creds.p1);
             var log = encodePass(creds.p1);
             console.log("P1-en: ", log);
-            var log2 = decodePass(log);
-            console.log("P1-de: ", log2);
+            console.log("P1-de: ", creds.p2);
+            console.log("Email: ", creds.email )
+            if (Object.keys(await findUserByEmail(creds.email)).length > 0){
+                console.log("Result: ", "Account exists")
+                Alert.alert("Error", "Email already exists")
+            }
+            else {
+                console.log("P1-set: ", log);
+                createNewEmployee(creds.name,2,creds.email,log,"Employee")
+                navigation.pop()
+            }
+        } else {
+            Alert.alert("Error", "Please input valid credentials")
         }
     }
     
+    const validateEmail = (input) => {
+        const re =
+          /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+        setCreds({
+            name: creds.name,
+            email: creds.email.toLowerCase(),
+            p1: creds.p1,
+            p2: creds.p2
+        })
+        if (String(input).toLowerCase().match(re) == null){
+            return false
+        }
+        return true
+    }
     
     return (
-        <View style={styles.background}>
+        <View style={styles.reg}>
               <Text style={styles.title}>Register</Text>
               <View style={styles.inputContainer}>
               <Ionicons name={'person-outline'} size={30} style={styles.inputLineIcon}/>

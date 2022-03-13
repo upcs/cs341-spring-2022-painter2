@@ -13,7 +13,7 @@ const onClickListener = (viewID) => {
 }
 
 return(
-       <View style={styles.background}>
+       <View style={styles.forgot}>
                  <Text style={styles.title}>Forgot Password?</Text>
                  <View style={styles.inputContainer}>
                  <Ionicons name={'at-circle-outline'} size={30} style={styles.inputLineIcon}/>
@@ -21,7 +21,7 @@ return(
                        placeholder={ "Email" }
                        keyboardType="email-address"
                        underlineColorAndroid='transparent'
-                        onChangeText={(em) => setEmail({ em })}
+                        onChangeText={(em) => setEmail(em.toLowerCase)}
                  />
                  </View>
                  <TouchableHighlight onPress={() => onClickListener("submit")} >

@@ -38,7 +38,7 @@ const LoginStack = createStackNavigator(screens, {
         },
         headerStyle: {
             backgroundColor: '#A00000',
-            height: 70,
+            height: 100,
         }
         
     }

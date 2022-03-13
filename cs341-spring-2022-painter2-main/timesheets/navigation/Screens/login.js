@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import { Text, View, TextInput, StyleSheet, Alert, TouchableHighlight} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from './styles/loginStyle.js';
-import getUserByEmail from './databaseFunctions';
+import {findUserByEmail} from './databaseFunctions';
+import {encodePass, decodePass} from './styles/base64';
 
 //The Home Screen
 export default function LoginScreen({ navigation }) {
@@ -30,25 +31,34 @@ export default function LoginScreen({ navigation }) {
     }
    
     //Helper function that does all the validating for the login
-    const validateLogin = () => {
+    const validateLogin = async() => {
         if(creds.email.length != 0 && creds.password.length != 0){
-            navigation.navigate("Main", creds);
-        } else {
-            Alert.alert("Try Again", "Invalid email or password" )
+            var user = await findUserByEmail(creds.email);
+            console.log(user);
+            if (Object.keys(user).length > 0){
+                //console.log("Password: ", user.map(a => a.password)[0])
+                var pass = user.map(a => a.password)[0];
+                //console.log(decodePass(pass))
+                if(creds.password == decodePass(pass)){
+                    navigation.navigate("Main", creds);
+                    return;
+                }
+            }
         }
+        Alert.alert("Try Again", "Invalid email or password" )
     }
 
     //Render
     return(
-           <View style={styles.background}>
-                 <View style={styles.inputContainer}>
+           <View style={styles.login}>
+           <View style={styles.inputContainer}>
                  <Ionicons name={'at-circle-outline'} size={30} style={styles.inputLineIcon}/>
                    <TextInput style={styles.inputs}
                        placeholder="Email"
                        keyboardType="email-address"
                        underlineColorAndroid='transparent'
                         onChangeText={(em) => setCreds({
-                            email: em,
+                            email: em.toLowerCase(),
                             password: creds.password
                         })}/>
                  </View>
