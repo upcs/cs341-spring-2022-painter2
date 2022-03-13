@@ -163,7 +163,6 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
         let data =(fetchedEmployee.docs[i].data());
         emailEmployeeArray.push(data);
       }
-
       console.log(emailEmployeeArray);
       return emailEmployeeArray;
   }

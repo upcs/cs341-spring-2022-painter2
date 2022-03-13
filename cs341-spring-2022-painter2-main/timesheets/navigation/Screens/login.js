@@ -3,12 +3,13 @@ import { useState, useEffect } from 'react';
 import { Text, View, TextInput, StyleSheet, Alert, TouchableHighlight} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from './styles/loginStyle.js';
-import getUserByEmail from './databaseFunctions';
+import {findUserByEmail} from './databaseFunctions';
+import {encodePass, decodePass} from './styles/base64';
 
 //The Home Screen
 export default function LoginScreen({ navigation }) {
     const [creds, setCreds] = useState({
-        email: "", password: ""
+        email: "", password: "", ID: 0, Role: ""
     });
     
 
@@ -45,19 +46,20 @@ export default function LoginScreen({ navigation }) {
                 }
             }
         }
+        Alert.alert("Try Again", "Invalid email or password" )
     }
 
     //Render
     return(
-           <View style={styles.background}>
-                 <View style={styles.inputContainer}>
+           <View style={styles.login}>
+           <View style={styles.inputContainer}>
                  <Ionicons name={'at-circle-outline'} size={30} style={styles.inputLineIcon}/>
                    <TextInput style={styles.inputs}
                        placeholder="Email"
                        keyboardType="email-address"
                        underlineColorAndroid='transparent'
                         onChangeText={(em) => setCreds({
-                            email: em,
+                            email: em.toLowerCase(),
                             password: creds.password
                         })}/>
                  </View>

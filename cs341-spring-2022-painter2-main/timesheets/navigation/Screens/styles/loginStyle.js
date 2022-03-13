@@ -1,16 +1,30 @@
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-    background: {
+    login: {
         flex: 1,
         justifyContent: 'center',
         alignItems:'center',
         backgroundColor:'#A00000'
     },
+    forgot: {
+        flex: 1,
+        paddingTop: 100,
+        justifyContent: 'flex-start',
+        alignItems:'center',
+        backgroundColor:'#A00000'
+    },
+    reg: {
+        //paddingTop: 50,
+        flex: 1,
+        justifyContent: 'flex-start',
+        alignItems:'center',
+        backgroundColor:'#A00000'
+    },
     title: {
-        fontSize:40,
+        fontSize:30,
         alignItems: 'center',
-        marginBottom:20,
+        marginBottom:5,
         color:'#FFFFFF',
     },
     touchable: {
@@ -68,7 +82,7 @@ export default StyleSheet.create({
     notes: {
         color:'#FFFFFF',
         textAlign:'center',
-        marginBottom: 25,
+        marginBottom: 10,
         paddingHorizontal: 30
     }
 });
