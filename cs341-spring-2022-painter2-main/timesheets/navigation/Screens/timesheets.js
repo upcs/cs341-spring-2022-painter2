@@ -80,7 +80,6 @@ export default function TimesheetScreen({ navigation }) {
                 data={useData}
                 renderItem={renderItem}
                 keyExtractor={item => item.clockID}
-      
                 />
               </View>
             );

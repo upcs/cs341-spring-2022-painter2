@@ -65,9 +65,6 @@ const firebaseConfig = {
     for(let i=0;i<(allTimesheets.docs).length;i++){
         let timesheetsData=(allTimesheets.docs[i]).data();
        timesheetsArray.push(timesheetsData);
-
-
-
     }
     console.log("Timesheets fetched");
     return timesheetsArray;

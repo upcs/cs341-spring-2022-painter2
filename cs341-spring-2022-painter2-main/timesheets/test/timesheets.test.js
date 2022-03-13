@@ -1,8 +1,16 @@
-import React from 'react';
-import renderer from 'react-test-renderer';
-import TimesheetScreen from '../navigation/Screens/timesheets'
+import { enableIndexedDbPersistence } from "firebase/firestore";
 
-test('Timesheets screen renders correctly', () => {
-    const timesheets = renderer.create(<TimesheetScreen/>).toJSON;
-    expect(timesheets).toMatchSnapshot
+
+
+const filterData = (arr,searchName) => {
+    const copy = arr.filter(ts => ts.toLowerCase().includes(searchName.toString().toLowerCase()));
+    console.log(copy)
+    return copy
+ }
+
+test('Data filters correctly', () => {
+    const testarr = ["Test 1", "Test 2","Name 1", "Name 2" ]
+    const comp = filterData(testarr, "Test");
+    expect(["Test 1", "Test 2"]).toStrictEqual(comp);
 })
+
