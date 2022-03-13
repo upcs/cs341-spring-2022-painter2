@@ -9,7 +9,7 @@ import {encodePass, decodePass} from './styles/base64';
 //The Home Screen
 export default function LoginScreen({ navigation }) {
     const [creds, setCreds] = useState({
-        email: "", password: ""
+        email: "", password: "", ID: 0, Role: ""
     });
     
 
@@ -33,14 +33,22 @@ export default function LoginScreen({ navigation }) {
     //Helper function that does all the validating for the login
     const validateLogin = async() => {
         if(creds.email.length != 0 && creds.password.length != 0){
-            var user = await findUserByEmail(creds.email);
+//              *******************************************
+            var user = await findUserByEmail(creds.email)
+//            .then(setCreds({
+//                email: creds.email,
+//                password: creds.password,
+//                ID: user.employeeID,
+//                Role: user.role
+//            }));
             console.log(user);
             if (Object.keys(user).length > 0){
-                //console.log("Password: ", user.map(a => a.password)[0])
+                console.log("Password: ", user.map(a => a.password)[0])
                 var pass = user.map(a => a.password)[0];
                 //console.log(decodePass(pass))
                 if(creds.password == decodePass(pass)){
-                    navigation.navigate("Main", creds);
+                    Alert.alert("Logged In")
+                    //navigation.navigate("Main", creds);
                     return;
                 }
             }

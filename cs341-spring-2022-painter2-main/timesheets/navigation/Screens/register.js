@@ -33,18 +33,21 @@ export default function RegisterScreen({ navigation }) {
             creds.p1.length != 0 &&
             creds.p2.length != 0 &&
             validateEmail(creds.email) == true){
-            console.log("P1: ", creds.p1);
+//            console.log("P1: ", creds.p1);
             var log = encodePass(creds.p1);
-            console.log("P1-en: ", log);
-            console.log("P1-de: ", creds.p2);
-            console.log("Email: ", creds.email )
-            if (Object.keys(await findUserByEmail(creds.email)).length > 0){
+//            console.log("P1-en: ", log);
+//            console.log("P1-de: ", creds.p2);
+//            console.log("Email: ", creds.email )
+//              *******************************************
+            var value = await findUserByEmail(creds.email)
+            if (Object.keys(value).length > 0){
                 console.log("Result: ", "Account exists")
                 Alert.alert("Error", "Email already exists")
             }
             else {
                 console.log("P1-set: ", log);
-                createNewEmployee(creds.name,2,creds.email,log,"Employee")
+//              *******************************************
+                await createNewEmployee(creds.name,17,creds.email,log,"Employee")
                 navigation.pop()
             }
         } else {
@@ -60,11 +63,11 @@ export default function RegisterScreen({ navigation }) {
             email: creds.email.toLowerCase(),
             p1: creds.p1,
             p2: creds.p2
-        })
+        }).then(
         if (String(input).toLowerCase().match(re) == null){
             return false
         }
-        return true
+        return true)
     }
     
     return (
@@ -91,7 +94,7 @@ export default function RegisterScreen({ navigation }) {
                     underlineColorAndroid='transparent'
                     onChangeText={(em) => setCreds({
                         name: creds.name,
-                        email: em,
+                        email: em.toLowerCase(),
                         p1: creds.p1,
                         p2: creds.p2
                     })}
