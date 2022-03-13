@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import  {Picker}  from '@react-native-picker/picker';
+import { clockInFunc } from './databaseFunctions'
 
 //The Home Screen
 
@@ -21,7 +22,7 @@ export default function HomeScreen() {
     const[selectedValue, setSelectedValue]=useState("");
     const[other,setOther]=useState(false);
     const[otherText,setOtherText] =useState("");
-    
+    const[otherTextVal,setOtherTextVal] =useState("");
     
 
 
@@ -32,6 +33,12 @@ export default function HomeScreen() {
                 var hours = new Date().getHours()
                 var min = new Date().getMinutes()
                 var sec = new Date().getSeconds()
+                if(selectedValue == "Other") {
+                  clockInFunc("Tyler", 228, "3/13/22", timeCheck(hours,min,sec), otherTextVal)
+                }
+                else {
+                  clockInFunc("Tyler", 228, "3/13/22", timeCheck(hours,min,sec), selectedValue)
+                } 
                 //sets time
                 setClockInTime(timeCheck(hours,min,sec))
                 setColor('red')
@@ -143,6 +150,7 @@ export default function HomeScreen() {
               setRequiredText2(null);
             }
             else{
+              setOtherTextVal(text);
               setRequiredText2(true);
             }
             
