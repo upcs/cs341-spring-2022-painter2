@@ -150,7 +150,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
 
      }
      //console.log(employeeArray);
-     alert(alertEmployeeInfo);
+     Alert.alert(alertEmployeeInfo);
      return employeeArray;
 
 
@@ -190,7 +190,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
     }
         
          console.log(IDEmployeeArray);
-         alert(IDMessage);
+         Alert.alert(IDMessage);
          return IDEmployeeArray;
       
             }

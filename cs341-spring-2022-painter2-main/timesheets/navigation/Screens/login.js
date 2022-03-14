@@ -40,6 +40,10 @@ export default function LoginScreen({ navigation }) {
                 var pass = user.map(a => a.password)[0];
                 //console.log(decodePass(pass))
                 if(creds.password == decodePass(pass)){
+<<<<<<< Updated upstream
+=======
+                    Alert.alert("Logged In")
+>>>>>>> Stashed changes
                     navigation.navigate("Main", creds);
                     return;
                 }

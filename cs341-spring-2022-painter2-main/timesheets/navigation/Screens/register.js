@@ -64,7 +64,13 @@ export default function RegisterScreen({ navigation }) {
         if (String(input).toLowerCase().match(re) == null){
             return false
         }
+<<<<<<< Updated upstream
         return true
+=======
+        
+        return true
+
+>>>>>>> Stashed changes
     }
     
     return (
