@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { StyleSheet, Text,  View, TextInput,  TouchableHighlight, Alert, Linking} from 'react-native';
@@ -134,5 +135,3 @@ export default function RegisterScreen({ navigation }) {
               </TouchableHighlight>
         </View>
     )}
-
-
