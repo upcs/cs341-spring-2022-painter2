@@ -153,15 +153,40 @@ async function handler(siteInput){
  
   return (
     <View style={styler.fullPage}>
-      <Text> Enter Site Address</Text>
-    <TextInput onChangeText={(val)=>{setSiteLocation(val)}}style={styler.inputStyle}> </TextInput>
-    <Button onPress={()=>handler(siteLocation)}title="Get Info About Site"/>
-    <Text>Coordinates of Job site are : ({siteCoord[0]},{siteCoord[1]})</Text>
-    <Text>Your Current Location is  : {yourLocation}</Text>
-    <Text>Your Current Coordinates Are  : ({yourCoord[0]},{yourCoord[1]}) </Text>
-    <Text>Your Distance From The Job site is  : {distanceFromSite} miles</Text>
+      <View
+        style={{flexDirection: "row", height: 30 }}>
+        <Text style={styler.headerText}> Enter Site Address: </Text>
+        <TextInput onChangeText={(val)=>{setSiteLocation(val)}}style={styler.inputStyle}> </TextInput>
+      </View>
+      <Button onPress={()=>handler(siteLocation)}title="Get Info About Site"/>
 
-   </View>
+      <Text style={styler.line}>_______________________________________________</Text>
+
+      <Text> </Text>
+
+      <Text style={styler.labelText}> Current Location:</Text>
+      <Text style={styler.boldText}> {yourLocation} </Text>
+      <Text style={styler.text}> ({yourCoord[0].toFixed(7)},{yourCoord[1].toFixed(7)}) </Text>
+
+      <Text> </Text>
+      <Text> </Text>
+
+      <Text style={styler.labelText}> Coordinates of Job site:</Text>
+      <Text style={styler.text}> ({siteCoord[0].toFixed(7)},{siteCoord[1].toFixed(7)}) </Text>
+
+      <Text> </Text>
+
+      <Text style={styler.labelText}> Distance from job site:</Text>
+      <Text style={styler.text}> {distanceFromSite.toFixed(2)} miles</Text>
+
+
+      {/* <Text style={styler.labelText}>Coordinates of Job site are : ({siteCoord[0]},{siteCoord[1]})</Text> */}
+    
+      {/* <Text style={styler.labelText}>Your Current Location is  : {yourLocation}</Text>
+      <Text style={styler.labelText}>Your Current Coordinates Are  : ({yourCoord[0]},{yourCoord[1]}) </Text> */}
+      {/* <Text style={styler.labelText}>Your Distance From The Job site is  : {distanceFromSite} miles</Text> */}
+
+    </View>
 
   );
 }
@@ -169,21 +194,45 @@ async function handler(siteInput){
 const styler = StyleSheet.create({
         fullPage:{
         flex:1,
-        backgroundColor:'#cdf',
         alignItems:'center',
         justifyContent:'center',
-        
         },
         inputStyle:{
         borderWidth:1,
         borderColor:'#777',
         padding:8,
         margin: 0,
-        width:200,
-        
-    
-        
+        width:190,
+        },
+        headerText:{
+          fontWeight: 'bold',
+          fontSize: 20,
+          color: 'black',
+        },
+        labelText:{
+          fontWeight: 'bold',
+          fontSize: 22,
+          borderWidth: 1,
+          borderColor: "black",
+          backgroundColor: '#ab0e0e',
+          color: '#fff'
+        },
+        line:{
+          fontWeight: 'bold',
+          color: 'black'
+        },
+        text: {
+          textAlign: 'center',
+          fontSize: 20,
+          color: 'black'
+        },
+        boldText: {
+          textAlign: 'center',
+          fontWeight: 'bold',
+          fontSize: 20,
+          color: 'black'
         }
+
         });
         
 
