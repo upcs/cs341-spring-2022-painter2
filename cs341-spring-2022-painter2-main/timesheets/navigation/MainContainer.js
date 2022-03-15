@@ -16,6 +16,7 @@ import StackNav from './Screens/Stack'
 import DatabaseTesterScreen from './Screens/DatabaseTesterScreen';
 import ClockTesterScreen from './Screens/clockTest';
 
+
 const homeName = 'Home';
 const timesheetsName = 'Timesheets';
 

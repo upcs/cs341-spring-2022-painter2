@@ -48,7 +48,6 @@ export default function LoginScreen({ navigation }) {
                 //console.log(decodePass(pass))
                 if(creds.password == decodePass(pass)){
 
-                    
                     tsContext.setCurrName(user[0].name);
                     tsContext.setCurrEmail(user[0].email);
                     tsContext.setCurrRole(user[0].role);

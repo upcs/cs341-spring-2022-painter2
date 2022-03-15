@@ -43,6 +43,7 @@ export default function TimesheetScreen({ navigation }) {
         const getData = async () => {
           data = await getTimesheets();
 
+          //filters data if employee
           if(tsContext.currentRole == 'Employee') {
           const filteredData = timesheetsData.filter(ts => ts.employeeID == tsContext.currentId);
           setTimeSheetsData(filteredData);
@@ -51,10 +52,8 @@ export default function TimesheetScreen({ navigation }) {
           setTimeSheetsData(data);
           setUseData(data);
         }
-
         }
         getData()
-
         return;
      }, [])
 

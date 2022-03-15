@@ -104,7 +104,6 @@ console.log("The street Address is :" +streetAddress);
 return streetAddress;
   }
    
-<<<<<<< Updated upstream
   async function getCoordFromAddress(inputStreetLocation){
     let { status } = await Location.requestForegroundPermissionsAsync();
 if (status !== 'granted') {
@@ -138,9 +137,6 @@ let locationServiceEnabled = await Location.hasServicesEnabledAsync();
 
 
   }
-=======
-//this async function is a click handler
->>>>>>> Stashed changes
 
 async function handler(siteInput){
  let siteCoordinates= await getCoordFromAddress(siteInput);
