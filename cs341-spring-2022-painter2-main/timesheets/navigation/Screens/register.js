@@ -47,7 +47,7 @@ export default function RegisterScreen({ navigation }) {
             else {
                 console.log("P1-set: ", log);
 //              *******************************************
-                await createNewEmployee(creds.name,17,creds.email,log,"Employee")
+                await createNewEmployee(creds.name,creds.email,log,"Employee")
                 navigation.pop()
             }
         } else {

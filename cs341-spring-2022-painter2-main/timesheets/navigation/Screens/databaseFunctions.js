@@ -151,7 +151,6 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
      return employeeArray;
        }
 
-     
   //searches for a user by email
   export const findUserByEmail = async(emailInput)=> {
       var fetchedEmployee= await firebase.firestore()
@@ -199,7 +198,6 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
     //gets all clock records for a given employee
     var clockRecords= await firebase.firestore()
     .collection('clocking')
-    .where('employeeID','==',newEmployeeID)
     .get();
     //if employee has more than zero clock records
     //then the maximum clock ID of the records is calculated
@@ -212,11 +210,8 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
             maxClockID=data.clockID;
             index=i;
          }
-
      }
    
-
-
      console.log(maxClockID);
          //clock id of newly inserted clock in record is incremented by one
          //so that all clock IDs of a give employee remain unique

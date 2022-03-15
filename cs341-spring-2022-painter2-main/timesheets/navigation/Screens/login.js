@@ -5,9 +5,16 @@ import { Ionicons } from '@expo/vector-icons';
 import styles from './styles/loginStyle.js';
 import {findUserByEmail} from './databaseFunctions';
 import {encodePass, decodePass} from './styles/base64';
+import AppContext from '../Context.js';
+import { useContext } from 'react';
 
 //The Home Screen
 export default function LoginScreen({ navigation }) {
+
+
+
+    const tsContext = useContext(AppContext);
+
     const [creds, setCreds] = useState({
         email: "", password: "", ID: 0, Role: ""
     });
@@ -32,7 +39,6 @@ export default function LoginScreen({ navigation }) {
    
     //Helper function that does all the validating for the login
     const validateLogin = async() => {
-        navigation.navigate("Main", creds);
         if(creds.email.length != 0 && creds.password.length != 0){
             var user = await findUserByEmail(creds.email); //<-----
             console.log(user);
@@ -41,6 +47,13 @@ export default function LoginScreen({ navigation }) {
                 var pass = user.map(a => a.password)[0];
                 //console.log(decodePass(pass))
                 if(creds.password == decodePass(pass)){
+
+                    
+                    tsContext.setCurrName(user[0].name);
+                    tsContext.setCurrEmail(user[0].email);
+                    tsContext.setCurrRole(user[0].role);
+                    tsContext.setCurrId(user[0].employeeID);
+
                     navigation.navigate("Main", creds);
                     return;
                 }
