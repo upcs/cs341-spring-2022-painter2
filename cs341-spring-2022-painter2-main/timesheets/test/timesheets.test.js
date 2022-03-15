@@ -14,3 +14,5 @@ test('Data filters correctly', () => {
     expect(["Test 1", "Test 2"]).toStrictEqual(comp);
 })
 
+
+

@@ -104,6 +104,7 @@ console.log("The street Address is :" +streetAddress);
 return streetAddress;
   }
    
+<<<<<<< Updated upstream
   async function getCoordFromAddress(inputStreetLocation){
     let { status } = await Location.requestForegroundPermissionsAsync();
 if (status !== 'granted') {
@@ -137,14 +138,21 @@ let locationServiceEnabled = await Location.hasServicesEnabledAsync();
 
 
   }
+=======
+//this async function is a click handler
+>>>>>>> Stashed changes
 
 async function handler(siteInput){
  let siteCoordinates= await getCoordFromAddress(siteInput);
+ //gets coordinates of jobsite entered into input text field
  setSiteCoord(siteCoordinates);
   let yourLat=(await getOurCoords())[0];
   let yourLong=(await getOurCoords())[1];
+  //gets your actual current street address and displays to screen
   setYourLocation(await getStreetAddress(yourLat,yourLong));
+  //gets your current latitude corrdinates at displays
   setYourCoord([yourLat,yourLong]);
+  //displays your distance from jobsite you entered into text field
   setDistanceFromSite(await getDistFromSite(siteCoordinates[0],siteCoordinates[1]))
 }
 
