@@ -15,7 +15,7 @@ import AppContext from '../Context.js';
 export default function DetailScreen({ route, navigation }) {
     
     const [edit, setEdit] = useState(false);
-    const {name, date, clockIn, clockOut, id } = route.params;
+    const {name, date, clockIn, clockOut, id, jobSite } = route.params;
     const tsContext = useContext(AppContext);
 
     if(tsContext.currentRole == 'Employee') {
@@ -32,12 +32,12 @@ export default function DetailScreen({ route, navigation }) {
                         <TextInput style={styles2.input} 
                         placeholder = {clockIn} 
                         editable ={true} 
-                        onSubmitEditing = {newTimeIn => alert(newTimeIn.nativeEvent.text)}/> 
+                        onSubmitEditing = {newTimeIn => alert(newTimeIn.text)}/> 
                     <Text>Time Out:</Text>
                         <TextInput style={styles2.input} 
                         placeholder = {clockOut} 
                         editable ={true} 
-                        onSubmitEditing ={newTimeOut => alert(id,newTimeOut.nativeEvent.text)}/> 
+                        onSubmitEditing ={newTimeOut => alert(newTimeOut.text)}/> 
                 </View>:
                 <View>
                     <Text>Time In:</Text>
@@ -49,6 +49,7 @@ export default function DetailScreen({ route, navigation }) {
                         value = {clockOut} 
                         editable ={false}/> 
                 </View>}
+                <Text>Job Site: {jobSite}</Text>
             </View>
         )
     } else {
@@ -82,6 +83,7 @@ export default function DetailScreen({ route, navigation }) {
                         value = {clockOut} 
                         editable ={false}/> 
                 </View>}
+                <Text>Job Site: {jobSite}</Text>
                 <Button title= "Edit" style={{height:65,marginTop:15,position:"absolute"}}onPress={() => setEdit(!edit)}/>
             </View>
         )

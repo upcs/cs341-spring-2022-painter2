@@ -67,7 +67,7 @@ export default function TimesheetScreen({ navigation }) {
 
      const toCsv = async () => {
       const headerString = "Name,Clock-In Time,Clock-Out Time,Date";
-      const rowArr = []
+      const rowArr = [];
       //converts each entry into a string and stores it into an array
       timesheetsData.forEach(ts => {
         rowArr.push(ts.name + "," + ts.clockIn + "," + ts.clockOut + "," + ts.date + "\n");

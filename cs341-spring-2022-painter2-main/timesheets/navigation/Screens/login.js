@@ -66,7 +66,7 @@ export default function LoginScreen({ navigation }) {
            <View style={styles.login}>
            <View style={styles.inputContainer}>
                  <Ionicons name={'at-circle-outline'} size={30} style={styles.inputLineIcon}/>
-                   <TextInput style={styles.inputs}
+                      <TextInput style={styles.inputs}
                        placeholder="Email"
                        keyboardType="email-address"
                        underlineColorAndroid='transparent'
