@@ -1,0 +1,15 @@
+name: Continuous Integration
+on: [pull_request]
+
+jobs:
+  build:
+    name: Test
+    runs-on: macOS-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Node
+        run: npm install -g expo-cli
+      - name: Install node dependencies
+        run: npm install
+      - name: Unit Tests
+        run: npm test

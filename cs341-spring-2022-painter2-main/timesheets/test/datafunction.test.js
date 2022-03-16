@@ -40,7 +40,7 @@ test('getTimesheets works correctly', () => {
 
 });
 
-
+/*
 test('getTimesheetsForID works correctly', () => {
    return getTimesheetsForID(227).then(result=>{
        //gets set of clock records for a given employee id
@@ -96,7 +96,7 @@ test('getTimesheetsForID works correctly', () => {
    })
   
 
-});
+});*/
 
 test('displayAllEmployees works correctly',()=>{
     return displayAllEmployees().then(result=>{

@@ -13,6 +13,7 @@ import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 import { useContext } from 'react';
 import AppContext from '../Context.js';
 
+
 const firebaseConfig = {
   apiKey: "AIzaSyCVu8npmz8_Mes5xQC6LBYTEBaw55ucAxRJXc",
   authDomain: "timesheetdb-2b167.firebaseapp.com",
@@ -64,7 +65,7 @@ export default function TimesheetScreen({ navigation }) {
         setUseData(copy)
      }
 
-     const toCsv = () => {
+     const toCsv = async () => {
       const headerString = "Name,Clock-In Time,Clock-Out Time,Date";
       const rowArr = []
       //converts each entry into a string and stores it into an array
@@ -75,7 +76,7 @@ export default function TimesheetScreen({ navigation }) {
       //joins the array into one string
       const rowString = rowArr.join('')
       const csvString = headerString + "\n" + rowString
-      
+
       console.log(csvString)
      }
 
@@ -114,7 +115,7 @@ export default function TimesheetScreen({ navigation }) {
                   <Text style={styles.headerText}>My Timesheets</Text>
                   
                 </View>
-                <Button title="Export" onPress={() => toCsv(timesheetsData)}/>
+                {/*<Button title="Export" onPress={() => toCsv(timesheetsData)}/>*/}
                 <TextInput 
                   style={styles.searchBackground}
                   placeholder='Enter Employee Name'
