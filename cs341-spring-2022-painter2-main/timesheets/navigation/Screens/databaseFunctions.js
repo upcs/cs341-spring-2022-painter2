@@ -27,13 +27,14 @@ const firebaseConfig = {
 //the paramters name, ID, email address,phonenumber and age
   export const createNewEmployee= async(nameInput,emailInput,passwordInput,roleInput)=>  {
    //gets all records corresponding to a certain employee ID
+   const d = new Date()
+   let id = d.getTime(); 
     var employees= await firebase.firestore()
     .collection('employees')
-    .where('employeeID','==',employeeIDInput)
+    .where('employeeID','==', d)
     .get();
     var sameIDCount=(employees.docs).length;
-    const d = new Date()
-    let id = d.getTime(); 
+   
      
 
     //if there is a record aldready under the ID given, 

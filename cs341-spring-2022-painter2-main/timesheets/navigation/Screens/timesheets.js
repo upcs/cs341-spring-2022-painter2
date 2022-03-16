@@ -38,22 +38,23 @@ export default function TimesheetScreen({ navigation }) {
       const [useData, setUseData] = useState ([])
       const tsContext = useContext(AppContext);
 
-
+      
       //sets the initial data
       useEffect(() => {
         const getData = async () => {
           data = await getTimesheets();
-
           //filters data if employee
           if(tsContext.currentRole == 'Employee') {
-          const filteredData = timesheetsData.filter(ts => ts.employeeID == tsContext.currentId);
+          const filteredData = data.filter(ts => ts.employeeID == tsContext.currentId);
           setTimeSheetsData(filteredData);
           setUseData(filteredData);
+          console.log(filteredData);
         } else {
           setTimeSheetsData(data);
           setUseData(data);
         }
         }
+        console.log(tsContext.currentId);
         getData()
         return;
      }, [])
