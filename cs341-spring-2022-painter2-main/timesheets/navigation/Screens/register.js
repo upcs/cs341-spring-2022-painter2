@@ -64,12 +64,16 @@ export default function RegisterScreen({ navigation }) {
             email: creds.email.toLowerCase(),
             p1: creds.p1,
             p2: creds.p2
-        }).then(
-        if (String(input).toLowerCase().match(re) == null){
+        })
+            
+        if(String(input).toLowerCase().match(re) == null){
             return false
         }
-        return true)
+        return true
+        
+        
     }
+    
     
     return (
         <View style={styles.reg}>

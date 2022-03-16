@@ -48,7 +48,7 @@ export default function LoginScreen({ navigation }) {
                 //console.log(decodePass(pass))
                 if(creds.password == decodePass(pass)){
                     Alert.alert("Logged In")
-                    //navigation.navigate("Main", creds);
+                    navigation.navigate("Main", creds);
                     return;
                 }
             }

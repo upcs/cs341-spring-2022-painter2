@@ -104,43 +104,7 @@ console.log("The street Address is :" +streetAddress);
 return streetAddress;
   }
    
-<<<<<<< Updated upstream
-  async function getCoordFromAddress(inputStreetLocation){
-    let { status } = await Location.requestForegroundPermissionsAsync();
-if (status !== 'granted') {
-  Alert.alert('Permission to access location was denied');
-  return;
-}
-
-let locationServiceEnabled = await Location.hasServicesEnabledAsync();
-
-  if (!locationServiceEnabled) {
-
-    Alert.alert("Your Location services are turned off. Turn them on Please");
-    return;
-  }
-  
-  
-    let extractedCoord = await Location.geocodeAsync(inputStreetLocation);
-    let extractedLatitude=0;
-    let extractedLongitude=0;
-    extractedCoord.forEach(each=>{
-      extractedLatitude=each.latitude;
-      extractedLongitude=each.longitude;
-    });
-
-    let extractedCoordArray=[extractedLatitude,extractedLongitude];
-    console.log("lat : "+extractedLatitude+" long: "+extractedLongitude);
-    return extractedCoordArray;
-  
- 
-
-
-
-  }
-=======
 //this async function is a click handler
->>>>>>> Stashed changes
 
 async function handler(siteInput){
  let siteCoordinates= await getCoordFromAddress(siteInput);
