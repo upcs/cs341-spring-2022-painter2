@@ -207,8 +207,8 @@ export const editClockOutHelper= async (docIDInput,newTimeOut)=>{
             }
 
 
- export const clockIn= async(newName,newEmployeeID,newDate
-,newClockInTime)=>{
+ export const clockInFunc= async(newName,newEmployeeID,newDate
+,newClockInTime,newJobSite)=>{
     var clockRecords= await firebase.firestore()
     .collection('clocking')
     .where('employeeID','==',newEmployeeID)
@@ -225,14 +225,11 @@ export const editClockOutHelper= async (docIDInput,newTimeOut)=>{
          }
 
      }
-   
-
-
      console.log(maxClockID);
      
          maxClockID=maxClockID+1;
       var employeeClockOutData = ((clockRecords.docs[index]).data()).clockOut;
-      if(!(employeeClockOutData==="420")){
+      if(!(employeeClockOutData===null)){
         firebase.firestore()
         .collection("clocking")
         .add({
@@ -241,8 +238,9 @@ export const editClockOutHelper= async (docIDInput,newTimeOut)=>{
         date:newDate,
         clockID:maxClockID,
         clockIn:newClockInTime,
-        clockOut:"420", 
-        hoursWorked:0  
+        clockOut:null, 
+        hoursWorked:0,
+        jobSite:newJobSite  
         });
       }
     
@@ -258,7 +256,7 @@ export const editClockOutHelper= async (docIDInput,newTimeOut)=>{
         date:newDate,
         clockID:0,
         clockIn:newClockInTime,
-        clockOut:"420",
+        clockOut:null,
         hoursWorked:0  
    
         });
@@ -270,7 +268,7 @@ export const editClockOutHelper= async (docIDInput,newTimeOut)=>{
 
 }          
  
- export const clockOut = async(newEmployeeID,
+ export const clockOutFunc = async(newEmployeeID,
     newClockOutTime,newHoursWorked)=>{
 var clockRecords= await firebase.firestore()
 .collection('clocking')
@@ -296,7 +294,7 @@ console.log(index);
 
 var clockOutField=((clockRecords.docs[index]).data()).clockOut;
 var clockDocumentID=(clockRecords.docs[index]).id;
-if(clockOutField==="420"){
+if(clockOutField===null){
     firebase.firestore()
     .collection('clocking')
     .doc(clockDocumentID)

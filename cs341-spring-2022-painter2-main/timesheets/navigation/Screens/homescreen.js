@@ -6,72 +6,81 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import  {Picker}  from '@react-native-picker/picker';
 import { color } from 'react-native-reanimated';
-
+import {clockInFunc, clockOutFunc, returnDailyClockRecords} from './databasefunctions';
 //The Home Screen
 
 
 export default function HomeScreen() {
     const [jobSite, setJobSite] = useState(' ');
-    const [clockIn, setClock] = useState(null);
+    const [clockIn, setClock] = useState(false);
     const [color, setColor] = useState('green');
     const [buttonText, setButtonText] = useState("Clock in");
-    const [clockInTime, setClockInTime] = useState("");
-    const [clockOutTime, setClockOutTime] = useState("");
     const [requiredText, setRequiredText] = useState(null);
     const [requiredText2, setRequiredText2] = useState(null);
     const[selectedValue, setSelectedValue]=useState("");
     const[other,setOther]=useState(false);
     const[otherText,setOtherText] =useState("");
-
     const[time,setTime]=useState(0);
     const[totalTime,setTotalTime]=useState(0);
-    const[dbTime,setdbTime]=useState(0);
-
+    
+    function getDay()
+    {
+      var month = new Date().getMonth()
+      var day = new Date().getDate()
+      var year = new Date().getFullYear()
+      month = month +1
+      var string = month+"/"+day+"/"+year
+      return string
+    }
+    const[count,setCounter] =useState(0);
     useEffect(() => {
             //when they clock in, store their time
             if(clockIn)
             {
                 var hours = new Date().getHours()
                 var min = new Date().getMinutes()
-
-
-                //test
                 hours = 9
-                min = 0
+                min = 6
 
-
-                //sets time
-                setClockInTime(timeCheck(hours,min)) // changes frontend UI (PUSH TO DATABASE)
+            
+                clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite)
                 setColor('red') // Changes button color
-                setClockOutTime() // reset clockout ui to blank
-
+                
+                
                 //stores the total minutes work for later
                 hours = (hours)*60 + min
                 setTime(hours)
-
             }
             //when they clock out, store their time
             if(clockIn == false){
                 var hours = new Date().getHours()
                 var min = new Date().getMinutes()
-
-
-                //test
-                hours = 11
-                min = 30
+                hours = 17
+                min = 13
                 setColor('green') //changes button color
-                setClockOutTime(timeCheck(hours,min)) // changes frontendUI (PUSH TO DATABASE)
-
-
-                hours = hours*60 + min
-                hours =(hours-time)/60
-                setTotalTime(totalTime+ hours ) // calculates total time of the work day
-                setdbTime(hours) // PUSH TO DATABASE
-
+                var dbhours = hours*60 + min
+                dbhours =(dbhours-time)/60
+                setCounter(prevCount=>prevCount +1)
+                clockOutFunc("2",timeCheck(hours,min),dbhours)
             }
-
-
         }, [clockIn])
+
+    
+    const[dbData,setdbData] = useState();
+    useEffect(()=>{
+      const getData = async() => {
+        
+        data = await returnDailyClockRecords("2",getDay())
+        const length = data.length
+        
+        
+        setdbData(data)
+      }
+      getData()
+      
+      return;
+    },[dbData])
+
 
   function clockInClockOut()
   {
@@ -79,9 +88,15 @@ export default function HomeScreen() {
     return clockIn ? setButtonText("Clock in")  : setButtonText("Clock out")
 
   }
+  
   //formats the time
-  function timeCheck(hours, min,sec)
+  function timeCheck(hours, min)
   {
+    
+    if(min <10)
+    {
+      min = '0'+min
+    }
     if(hours > 0 && hours<=12)
     {
       return hours + ":" + min + ":" + "am"
@@ -95,50 +110,15 @@ export default function HomeScreen() {
       return  12 + ":" + min + ":" + "am"
     }
   }
-  module.exports = timeCheck
-  const Data = [
-    {
-      id:1,
-      timeIn: '9:00 am',
-      out: '12:00 pm',
-      time: '3.0'
-    },
-    {
-      id:2,
-      timeIn: '12:00 pm',
-      out: '2:00 pm',
-      time: '2.0'
-    },
-    {
-      id:3,
-      timeIn: '2:00pm',
-      out: '3:30 pm',
-      time: '1.5'
-    },
-    {
-      id:4,
-      timeIn: '2:00pm',
-      out: '3:30 pm',
-      time: '1.5'
-    },
-    {
-      id:5,
-      timeIn: '2:00pm',
-      //out: '3:30 pm',
-      //time: '1.5'
-    },
-
-  ];
+  
 
 
   return (
     <View style={styles.container}>
       <Text style={styles.totalTimeText} > Total time:{totalTime} </Text>
-      <Text> Clock in time: {clockInTime} </Text>
-      <Text> </Text>
-      <Text> Clock out time: {clockOutTime} </Text>
-      <Text> Total time: {totalTime} </Text>
-      <Text> DB TIME: {dbTime}</Text>
+      <Text></Text>
+
+
       <Text> </Text>
       <Text style={styles.textLabel} > Enter Jobsite: </Text>
       <TextInput
@@ -154,6 +134,7 @@ export default function HomeScreen() {
       else
       {
         setRequiredText(true);
+        setJobSite(text);
       }
       }}
       />
@@ -161,7 +142,7 @@ export default function HomeScreen() {
         <Picker
           selectedValue={selectedValue}
           style={styles.selectMenu} itemStyle= {{height:150}}
-          onValueChange={(itemValue, itemIndex) => {
+          onValueChange={(itemValue) => {
             setSelectedValue(itemValue);
             setOther(false);
             setOtherText("");
@@ -221,24 +202,23 @@ export default function HomeScreen() {
           </View>
 
       <FlatList
-        data={Data}
-        keyExtractor={(item, index) => item.id}
+        data={dbData}
+        keyExtractor={(item) => item.clockID}
         renderItem={({item}) =>
           <View style = {styles.listWrapper}>
-            <Text style={styles.title}>{item.timeIn}</Text>
-            <Text style={styles.title}>{item.out}</Text>
-            <Text style={styles.title}>{item.time}</Text>
+            
+            <Text style={styles.title}>{item.clockIn}</Text>
+            <Text style={styles.title}>{item.clockOut}</Text>
+            <Text style={styles.title}>{item.hoursWorked}</Text>
           </View>
         }
       />
-
-
-
 
       <Button color ={color} title ={buttonText}  onPress={() => {
 
       if(requiredText != null && requiredText2!=null)
       {
+        
         clockInClockOut();
       }
 
@@ -262,16 +242,11 @@ export default function HomeScreen() {
       }}
 
       />
-
-
-
     </View>
 
   );
 
 }
-
-
 const styles = StyleSheet.create({
     container: {
     flex: 1,
