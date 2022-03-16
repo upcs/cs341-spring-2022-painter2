@@ -115,7 +115,7 @@ export default function TimesheetScreen({ navigation }) {
                   <Text style={styles.headerText}>My Timesheets</Text>
                   
                 </View>
-                {/*<Button title="Export" onPress={() => toCsv(timesheetsData)}/>*/}
+                <Button title="Export" onPress={() => toCsv(timesheetsData)}/>
                 <TextInput 
                   style={styles.searchBackground}
                   placeholder='Enter Employee Name'
