@@ -194,8 +194,8 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
 //clocks in employee by adding a record to the database
 //with the employee name, employee ID, date and 
 //clock in time as the parameter
- export const clockIn= async(newName,newEmployeeID,newDate
-,newClockInTime)=>{
+ export const clockInFunc= async(newName,newEmployeeID,newDate
+,newClockInTime, newTask)=>{
     //gets all clock records for a given employee
     var clockRecords= await firebase.firestore()
     .collection('clocking')
@@ -233,7 +233,8 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
         date:newDate,
         clockID:maxClockID,
         clockIn:newClockInTime,
-        clockOut:"420", 
+        clockOut:"420",
+        task:newTask, 
         hoursWorked:0  
         });
       }
