@@ -48,7 +48,7 @@ export default function RegisterScreen({ navigation }) {
             else {
                 console.log("P1-set: ", log);
 //              *******************************************
-                await createNewEmployee(creds.name,17,creds.email,log,"Employee")
+                await createNewEmployee(creds.name,creds.email,log,"Employee")
                 navigation.pop()
             }
         } else {
@@ -65,13 +65,11 @@ export default function RegisterScreen({ navigation }) {
             p1: creds.p1,
             p2: creds.p2
         })
-            
-        if(String(input).toLowerCase().match(re) == null){
-            return false
+
+        if (String(input).toLowerCase().match(re) == null){
+            return false;
         }
-        return true
-        
-        
+        return true;
     }
     
     
@@ -139,3 +137,4 @@ export default function RegisterScreen({ navigation }) {
               </TouchableHighlight>
         </View>
     )}
+

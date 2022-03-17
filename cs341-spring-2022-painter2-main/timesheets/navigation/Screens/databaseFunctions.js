@@ -25,14 +25,16 @@ const firebaseConfig = {
   }
 //creates a new employee record in the database with 
 //the paramters name, ID, email address,phonenumber and age
-  export const createNewEmployee= async(nameInput,employeeIDInput,emailInput,passwordInput,roleInput)=>  {
+  export const createNewEmployee= async(nameInput,emailInput,passwordInput,roleInput)=>  {
    //gets all records corresponding to a certain employee ID
+   const d = new Date()
+   let id = d.getTime(); 
     var employees= await firebase.firestore()
     .collection('employees')
-    .where('employeeID','==',employeeIDInput)
+    .where('employeeID','==', d)
     .get();
     var sameIDCount=(employees.docs).length;
-    
+   
      
 
     //if there is a record aldready under the ID given, 
@@ -43,7 +45,7 @@ const firebaseConfig = {
     .collection("employees")
     .add({
     name:nameInput,
-    employeeID:employeeIDInput,
+    employeeID:id,
     email:emailInput,
     password:passwordInput,
     role:roleInput    
@@ -55,23 +57,21 @@ const firebaseConfig = {
     }
 
     //gets all the timesheets
-    export const getTimesheets = async () => { //need to optimize this code to use less reads
-      const snapshot = await firebase.firestore().collection('clocking').get()
-      const timesheetsData = []
-      snapshot.forEach(doc => {
-          timesheetsData.push(doc.data());
-      });  
-      return timesheetsData;
-  }     
+    export const getTimesheets = async () =>{
+  
+    var allTimesheets= await firebase.firestore()
+    .collection('clocking')
+    .get();
+    var timesheetsArray=[];
+    for(let i=0;i<(allTimesheets.docs).length;i++){
+        let timesheetsData=(allTimesheets.docs[i]).data();
+       timesheetsArray.push(timesheetsData);
+    }
+    console.log("Timesheets fetched");
+    return timesheetsArray;
 
-    export const getTimesheetsForID = async (idInput) => { //need to optimize this code to use less reads
-      const snapshot = await firebase.firestore().collection('clocking').where('employeeID', '==', idInput).get()
-      const timesheetsData = []
-      snapshot.forEach(doc => {
-          timesheetsData.push(doc.data());
-      });  
-      return timesheetsData;
-}     
+
+      }
 
 
 
@@ -143,17 +143,13 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
         alertEmployeeInfo+="\nName: "+ employeeData.name
         +"\nemployeeID: "+employeeData.employeeID
         +"\nemail: "+employeeData.email
-
-                //for each record prints alert message
+        //for each record prints alert message
         //of employee enformation for each record
-
 
      }
      //console.log(employeeArray);
      Alert.alert(alertEmployeeInfo);
      return employeeArray;
-
-
        }
 
   //searches for a user by email
@@ -203,7 +199,6 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
     //gets all clock records for a given employee
     var clockRecords= await firebase.firestore()
     .collection('clocking')
-    .where('employeeID','==',newEmployeeID)
     .get();
     //if employee has more than zero clock records
     //then the maximum clock ID of the records is calculated
@@ -216,11 +211,8 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
             maxClockID=data.clockID;
             index=i;
          }
-
      }
    
-
-
      console.log(maxClockID);
          //clock id of newly inserted clock in record is incremented by one
          //so that all clock IDs of a give employee remain unique

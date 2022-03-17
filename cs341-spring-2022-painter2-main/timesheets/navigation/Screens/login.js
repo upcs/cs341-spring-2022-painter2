@@ -5,9 +5,16 @@ import { Ionicons } from '@expo/vector-icons';
 import styles from './styles/loginStyle.js';
 import {findUserByEmail} from './databaseFunctions';
 import {encodePass, decodePass} from './styles/base64';
+import AppContext from '../Context.js';
+import { useContext } from 'react';
 
 //The Home Screen
 export default function LoginScreen({ navigation }) {
+
+
+
+    const tsContext = useContext(AppContext);
+
     const [creds, setCreds] = useState({
         email: "", password: "", ID: 0, Role: ""
     });
@@ -33,21 +40,19 @@ export default function LoginScreen({ navigation }) {
     //Helper function that does all the validating for the login
     const validateLogin = async() => {
         if(creds.email.length != 0 && creds.password.length != 0){
-//              *******************************************
-            var user = await findUserByEmail(creds.email)
-//            .then(setCreds({
-//                email: creds.email,
-//                password: creds.password,
-//                ID: user.employeeID,
-//                Role: user.role
-//            }));
+            var user = await findUserByEmail(creds.email); //<-----
             console.log(user);
             if (Object.keys(user).length > 0){
-                console.log("Password: ", user.map(a => a.password)[0])
+                //console.log("Password: ", user.map(a => a.password)[0])
                 var pass = user.map(a => a.password)[0];
                 //console.log(decodePass(pass))
                 if(creds.password == decodePass(pass)){
-                    Alert.alert("Logged In")
+
+
+                    tsContext.setCurrName(user[0].name);
+                    tsContext.setCurrEmail(user[0].email);
+                    tsContext.setCurrRole(user[0].role);
+                    tsContext.setCurrId(user[0].employeeID);
                     navigation.navigate("Main", creds);
                     return;
                 }
@@ -61,7 +66,7 @@ export default function LoginScreen({ navigation }) {
            <View style={styles.login}>
            <View style={styles.inputContainer}>
                  <Ionicons name={'at-circle-outline'} size={30} style={styles.inputLineIcon}/>
-                   <TextInput style={styles.inputs}
+                      <TextInput style={styles.inputs}
                        placeholder="Email"
                        keyboardType="email-address"
                        underlineColorAndroid='transparent'
