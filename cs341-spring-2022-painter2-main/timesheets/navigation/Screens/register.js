@@ -65,11 +65,13 @@ export default function RegisterScreen({ navigation }) {
             p1: creds.p1,
             p2: creds.p2
         })
+
         if (String(input).toLowerCase().match(re) == null){
             return false;
         }
         return true;
     }
+    
     
     return (
         <View style={styles.reg}>
