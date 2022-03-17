@@ -224,7 +224,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
       //otherwise employee is allowed to clock in
       //the 420 represents a clocked in time that has no corresponding
       //clock out time
-      if(!(employeeClockOutData==="420")){
+      if(!(employeeClockOutData===null)){
         firebase.firestore()
         .collection("clocking")
         .add({
@@ -233,7 +233,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
         date:newDate,
         clockID:maxClockID,
         clockIn:newClockInTime,
-        clockOut:"420",
+        clockOut:null,
         jobSite:newJobSite, 
         hoursWorked:0  
         });
@@ -252,7 +252,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
         date:newDate,
         clockID:0,
         clockIn:newClockInTime,
-        clockOut:"420",
+        clockOut:null,
         hoursWorked:0  
    
         });
@@ -303,7 +303,7 @@ var clockDocumentID=(clockRecords.docs[index]).id;
 //so a clock out can be performed
 //otherwise, the employee has aldready clockout out and a clock out
 //action would not be performed
-if(clockOutField==="420"){
+if(clockOutField===null){
     firebase.firestore()
     .collection('clocking')
     .doc(clockDocumentID)
