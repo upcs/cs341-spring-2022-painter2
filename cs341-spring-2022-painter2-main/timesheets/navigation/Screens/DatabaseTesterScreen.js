@@ -10,7 +10,7 @@ import { FontAwesome } from '@expo/vector-icons';
 export default function DatabaseTesterScreen() {
   //state variable for text field of site location, siteLocation
   //state var for coordinates of site location, siteCoord
-  //state var for your location,yourLocation
+  // state var for your location,yourLocation
   //state var for your coordinates,yourCoord
   //state var for distance between yourself and site,distanceFromSite
 const [siteLocation,setSiteLocation]=useState("");
@@ -141,22 +141,47 @@ let streetAddress=streetInfo+" "+cityName+" "+stateName+" "+zipCode;
 return streetAddress;
   }
    
+  async function getCoordFromAddress(inputStreetLocation){
+    let { status } = await Location.requestForegroundPermissionsAsync();
+if (status !== 'granted') {
+  Alert.alert('Permission to access location was denied');
+  return;
+}
+
+let locationServiceEnabled = await Location.hasServicesEnabledAsync();
+
+  if (!locationServiceEnabled) {
+
+    Alert.alert("Your Location services are turned off. Turn them on Please");
+    return;
+  }
+  
+  
+    let extractedCoord = await Location.geocodeAsync(inputStreetLocation);
+    let extractedLatitude=0;
+    let extractedLongitude=0;
+    extractedCoord.forEach(each=>{
+      extractedLatitude=each.latitude;
+      extractedLongitude=each.longitude;
+    });
+
+    let extractedCoordArray=[extractedLatitude,extractedLongitude];
+    //console.log("lat : "+extractedLatitude+" long: "+extractedLongitude);
+    return extractedCoordArray;
+  
+ 
 
 
-//this async function is a click handler
 
+  }
 
 async function handler(siteInput){
  let siteCoordinates= await getCoordFromAddress(siteInput);
- //gets coordinates of jobsite entered into input text field
  setSiteCoord(siteCoordinates);
   let yourLat=(await getOurCoords())[0];
   let yourLong=(await getOurCoords())[1];
-  //gets your actual current street address and displays to screen
   setYourLocation(await getStreetAddress(yourLat,yourLong));
-  //gets your current latitude corrdinates at displays
   setYourCoord([yourLat,yourLong]);
-  //displays your distance from jobsite you entered into text field
   setDistanceFromSite(await getDistFromSite(siteCoordinates[0],siteCoordinates[1]))
   //let siteCoord = (await getOurCoords())
   setSiteMarker({latitude: siteCoord[0], longitude: siteCoord[1]})
@@ -397,6 +422,3 @@ const styler = StyleSheet.create({
     
 //     });
     
-
-
-
