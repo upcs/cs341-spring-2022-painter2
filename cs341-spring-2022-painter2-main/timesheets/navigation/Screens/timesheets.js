@@ -48,13 +48,11 @@ export default function TimesheetScreen({ navigation }) {
           const filteredData = data.filter(ts => ts.employeeID == tsContext.currentId);
           setTimeSheetsData(filteredData);
           setUseData(filteredData);
-          console.log(filteredData);
         } else {
           setTimeSheetsData(data);
           setUseData(data);
         }
         }
-        console.log(tsContext.currentId);
         getData()
         return;
      }, [])

@@ -6,7 +6,7 @@ import * as Location from 'expo-location';
 export default function DatabaseTesterScreen() {
   //state variable for text field of site location, siteLocation
   //state var for coordinates of site location, siteCoord
-  // state var for your location,yourLocation
+  //state var for your location,yourLocation
   //state var for your coordinates,yourCoord
   //state var for distance between yourself and site,distanceFromSite
 const [siteLocation,setSiteLocation]=useState("");

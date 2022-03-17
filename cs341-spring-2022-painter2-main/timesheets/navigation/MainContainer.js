@@ -14,7 +14,7 @@ import TimesheetScreen from './Screens/timesheets';
 import HomeScreen from './Screens/homescreen';
 import StackNav from './Screens/Stack'
 import DatabaseTesterScreen from './Screens/DatabaseTesterScreen';
-import ClockTesterScreen from './Screens/clockTest';
+
 
 
 const homeName = 'Home';
@@ -73,7 +73,7 @@ function BottomTabs() {
         <Tab.Screen name="Timesheets" component={StackNav} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="DatabaseTester" component={DatabaseTesterScreen} />
-        <Tab.Screen name="ClockTest" component={ClockTesterScreen} />
+        
 
     </Tab.Navigator>
   );

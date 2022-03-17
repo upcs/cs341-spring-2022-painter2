@@ -1,6 +1,6 @@
 import React, {Component, useState} from 'react';
 import {StyleSheet,Text,View,TextInput,Button, Alert} from 'react-native';
-import { clockIn, clockOut } from './databaseFunctions';
+import { clockInFunc, clockOut } from './databaseFunctions';
 
 
 export default ClockTesterScreen=()=>{
