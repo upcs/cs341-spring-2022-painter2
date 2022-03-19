@@ -29,5 +29,12 @@ export default StyleSheet.create({
     body: {
       padding: 15,
       borderWidth:1,
+    },
+    searchBackground: {
+      backgroundColor: '#ffffff',
+      fontSize: 15,
+      padding: 8,
+      borderWidth: 1,
+      borderColor: '#000000'   
     }
   });
