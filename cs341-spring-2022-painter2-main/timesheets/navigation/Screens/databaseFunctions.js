@@ -163,7 +163,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
         let data =(fetchedEmployee.docs[i].data());
         emailEmployeeArray.push(data);
       }
-      console.log(emailEmployeeArray);
+      //console.log(emailEmployeeArray);
       return emailEmployeeArray;
   }
   
@@ -274,7 +274,7 @@ var clockRecords= await firebase.firestore()
 .where('employeeID','==',newEmployeeID)
 .get()
 
-console.log((clockRecords.docs).length);
+//console.log((clockRecords.docs).length);
 //if amount of clock records for an employee is zero a clock out is not possible
 //otherwise, if there are clock in records, then a clock out is possible
 if((clockRecords.docs).length!=0){
@@ -290,8 +290,8 @@ if(data.clockID>maxClockID){
 
 }
 
-console.log(maxClockID);
-console.log(index);
+//console.log(maxClockID);
+//console.log(index);
 
 var clockOutField=((clockRecords.docs[index]).data()).clockOut;
 //document id of most recent clock in record is fetched

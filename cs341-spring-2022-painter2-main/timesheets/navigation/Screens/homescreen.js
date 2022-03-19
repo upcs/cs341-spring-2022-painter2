@@ -31,18 +31,16 @@ export default function HomeScreen() {
   }
   const[dbData,setdbData] = useState();
   const[gate,setGate] = useState(0);
+  
   useEffect(()=>{
     const getData = async() => {
       var data = await returnDailyClockRecords("2",getDay())
       console.log("Grabbing data")
       setdbData(data)
     }
-    getData()
-    
+      getData()
     return;
-  },[gate])
-
-  
+  },[])
   
 
   
@@ -236,16 +234,10 @@ return (
 
         if(inputCheck())
         {
-          
+          setGate(!gate)
           setClock(!clockIn)
           clocking(clockIn)
-          
-            var data = returnDailyClockRecords("2",getDay())
-            console.log("Grabbing data")
-            setdbData(data)
-          
-          
-          
+         
         }
         else{
           console.log("no")
