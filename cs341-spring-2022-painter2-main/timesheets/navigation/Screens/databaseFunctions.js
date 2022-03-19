@@ -77,7 +77,7 @@ const firebaseConfig = {
 
 //edits email field of record in the database
 export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
-    console.log(docIDInput);
+    //console.log(docIDInput);
     firebase.firestore()
        .collection('employees')
        .doc(docIDInput)
@@ -85,7 +85,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
            email:emailInput
        })
         .then(() => {
-       console.log('User updated!');
+       //console.log('User updated!');
        });   
  
  
@@ -185,7 +185,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
 
     }
         
-         console.log(IDEmployeeArray);
+         //console.log(IDEmployeeArray);
          Alert.alert(IDMessage);
          return IDEmployeeArray;
       

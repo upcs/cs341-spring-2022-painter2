@@ -185,7 +185,7 @@ async function handler(siteInput){
   setDistanceFromSite(await getDistFromSite(siteCoordinates[0],siteCoordinates[1]))
   //let siteCoord = (await getOurCoords())
   setSiteMarker({latitude: siteCoord[0], longitude: siteCoord[1]})
-  console.log(siteMarker)
+  //console.log(siteMarker)
 }
 
 
