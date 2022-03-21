@@ -26,7 +26,7 @@ export default function HomeScreen() {
   const[time,setTime]=useState(0);
   const[totalTime,setTotalTime]=useState(0);
 
-  const tsContext = useState(AppContext);
+  const tsContext = useContext(AppContext);
   
   function getDay()
   {
