@@ -6,6 +6,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import  {Picker}  from '@react-native-picker/picker';
 import { clockInFunc, clockOutFunc,returnDailyClockRecords } from './databaseFunctions'
+import { useContext } from 'react';
+import AppContext from '../Context.js';
 
 //The Home Screen
 
@@ -23,6 +25,8 @@ export default function HomeScreen() {
   const[otherText,setOtherText] =useState("");
   const[time,setTime]=useState(0);
   const[totalTime,setTotalTime]=useState(0);
+
+  const tsContext = useState(AppContext);
   
   function getDay()
   {
@@ -67,7 +71,7 @@ export default function HomeScreen() {
               console.log("clock in")
               setColor('red') // Changes button color
              
-            clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite)
+            clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite)
                 
               
               
