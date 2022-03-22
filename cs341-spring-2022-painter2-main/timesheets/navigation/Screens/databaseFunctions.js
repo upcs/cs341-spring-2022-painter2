@@ -337,19 +337,29 @@ export const returnDailyClockRecords= async (newEmployeeID,newDate)=>{
  //the back of an array
  for(let i=0;i<(dateRecords.docs).length;i++){
   let currentClockRecord=(dateRecords.docs[i]).data();
- 
 //if the json object has matching date to the date in question,
 //we add that json data to the array
   if(currentClockRecord.date===newDate){
     clocksForDateArray.push(currentClockRecord);
-
   }
-
-
  }
  //console.log(clocksForDateArray);
 return clocksForDateArray;
+}
 
 
+export const addJobsite = async(addressInp, customerInp, jobNameInp) => {
+  const year = new Date().getFullYear().toString().substring(2);
+  var jobsites = await firebase.firestore().collection('jobsites').get();
+  console.log(100 + jobsites.size);
 
+  firebase.firestore().collection('jobsites').add(
+    {
+      address:addressInp,
+      customer:customerInp,
+      jobName:jobNameInp,
+      jobYear:year,
+      jobNum: jobsites.size + 100
+    }
+  ).then(console.log("Test"));
 }

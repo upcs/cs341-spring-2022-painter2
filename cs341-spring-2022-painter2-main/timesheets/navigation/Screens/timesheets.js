@@ -7,30 +7,11 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import { useState, useEffect } from 'react';
-import { getTimesheets, get} from './databaseFunctions.js';
+import { getTimesheets, addJobsite} from './databaseFunctions.js';
 import timesheetStyle from './styles/timesheetStyle.js';
 import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 import { useContext } from 'react';
 import AppContext from '../Context.js';
-
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCVu8npmz8_Mes5xQC6LBYTEBaw55ucAxRJXc",
-  authDomain: "timesheetdb-2b167.firebaseapp.com",
-  projectId: "timesheetdb-2b167",
-  storageBucket: "timesheetdb-2b167.appspot.com",
-  messagingSenderId: "533714654432",
-  appId: "1:533714654432:web:9a8adf4fa6f391b48f6c85",
-  measurementId: "G-S9ZRZDN57B"
-};
-
-if(firebase.apps.length==0){
-  firebase.initializeApp(firebaseConfig);
- }
-
-
-
-    
 
 export default function TimesheetScreen({ navigation }) {
       
@@ -53,6 +34,7 @@ export default function TimesheetScreen({ navigation }) {
           setUseData(data);
         }
         }
+        addJobsite("2409 N Russet St, Portland, OR, 97217","Phi Nguyen","House Painting");
         getData()
         return;
      }, [])
