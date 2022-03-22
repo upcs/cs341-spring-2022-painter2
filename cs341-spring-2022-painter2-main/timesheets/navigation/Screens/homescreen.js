@@ -8,13 +8,10 @@ import  {Picker}  from '@react-native-picker/picker';
 import { clockInFunc, clockOutFunc,returnDailyClockRecords } from './databaseFunctions'
 
 //The Home Screen
-
-
-
 export default function HomeScreen() {
   const [jobSite, setJobSite] = useState(' ');
-  const [clockIn, setClock] = useState(null);
-  const [color, setColor] = useState('green');
+  const [clockIn, setClock] = useState(true);
+  const [color,setColor]=useState('green');
   const [buttonText, setButtonText] = useState("Clock in");
   const [requiredText, setRequiredText] = useState(null);
   const [requiredText2, setRequiredText2] = useState(null);
@@ -22,7 +19,6 @@ export default function HomeScreen() {
   const[other,setOther]=useState(false);
   const[otherText,setOtherText] =useState("");
   const[time,setTime]=useState(0);
-  const[totalTime,setTotalTime]=useState(0);
   
   function getDay()
   {
@@ -33,81 +29,24 @@ export default function HomeScreen() {
     var string = month+"/"+day+"/"+year
     return string
   }
- 
-  const[gate,setGate]=useState(true);
-
-  const[testGate,setTestGate]=useState(true);
-
-  
   const[dbData,setdbData] = useState();
+  const[gate,setGate] = useState(0);
+  
   useEffect(()=>{
     const getData = async() => {
-      
       var data = await returnDailyClockRecords("2",getDay())
-      
-      console.log("getting data")
-      //setGate(true)
+      console.log("Grabbing data")
       setdbData(data)
     }
-    getData()
-    
-    
+      getData()
     return;
-  },[gate])
-
-  useEffect(() => {
-          //when they clock in, store their time
-          setGate(!gate)
-          if(clockIn)
-          {
-              var hours = new Date().getHours()
-              var min = new Date().getMinutes()
-              hours = 9
-              min = 0
-              console.log("clock in")
-              setColor('red') // Changes button color
-             
-            clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite)
-                
-              
-              
-            setGate(!gate)
-              
-              //stores the total minutes work for later
-              hours = (hours)*60 + min
-              setTime(hours)
-          }
-          //when they clock out, store their time
-          if(clockIn == false){
-              var hours = new Date().getHours()
-              var min = new Date().getMinutes()
-              hours = 17
-              min = 0
-              
-              
-              setColor('green') //changes button color
-              var dbhours = hours*60 + min
-              dbhours =(dbhours-time)/60
-              setTotalTime(prevTime=>prevTime + dbhours)
-              
-                console.log("clocking out")
-                clockOutFunc("2",timeCheck(hours,min),dbhours)
-                setGate(!gate)
-              
-          }
-      }, [clockIn])
+  },[])
+  
 
   
- function clockInClockOut()
-{
-  setClock(!clockIn)
-  return clockIn ? setButtonText("Clock in")  : setButtonText("Clock out")
-
-}
-//formats the time
+ //formats the time
 function timeCheck(hours, min)
 {
-  
   if(min <10)
   {
     min = '0'+min
@@ -125,15 +64,78 @@ function timeCheck(hours, min)
     return  12 + ":" + min + ":" + "am"
   }
 }
-module.exports = timeCheck(13,0)
+  
+  function clocking(value)
+  {
+    //when they clock in, store their time
+    
+    if(value)
+    {
+      setButtonText("Clock out")
+      var hours = new Date().getHours()
+      var min = new Date().getMinutes()
+      hours = 9
+      min = 0
+      console.log("clock in")
+      clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite)
+      //stores the total minutes work for later
+      hours = (hours)*60 + min
+      setTime(hours)
+    }
+    else
+    {
+      setButtonText("Clock in")
+      var hours = new Date().getHours()
+      var min = new Date().getMinutes()
+      hours = 17
+      min = 0
+      var dbhours = hours*60 + min
+      dbhours =(dbhours-time)/60
+      console.log("clocking out")
+      clockOutFunc("2",timeCheck(hours,min),dbhours)
+    }
+          
+  }
+ 
+function clockInClockOut()
+{
+  setClock(!clockIn);
+  return clockIn ? setButtonText("Clock in")  : setButtonText("Clock out")
 
+}
 
+function inputCheck()
+{
+  if(requiredText != null && requiredText2!=null)
+    {
+      return true;
+    }
+    else if(requiredText == null && requiredText2 == null)
+    {
+      Alert.alert("Please Enter Jobsite and Select Task");
+      return false;
+    }
+    else if(requiredText == null)
+    {
+      Alert.alert("Please Enter Jobsite");
+      return false;
+    }
+    else if(requiredText2 == null && other ==true)
+    {
+      Alert.alert("Please type in Task")
+      return false;
+    }
+    else if(requiredText2== null && selectedValue==="")
+    {
+      Alert.alert("Please select Task")
+      return false;
+    }
+}
 
 return (
   <View style={styles.container}>
-    <Text style={styles.totalTimeText} > Total time:{totalTime} </Text>
+    <Text style={styles.totalTimeText} > Total time: </Text>
     <Text></Text>
-
     <Text> </Text>
     <Text style={styles.textLabel} > Enter Jobsite: </Text>
     <TextInput
@@ -165,9 +167,7 @@ return (
           //if the didn't select a task return null
           if(itemValue ==="")
           {
-
             setRequiredText2(null);
-
           }
           //if they select "other" task, activate text input box to allow them to enter in task
           if(itemValue === "Other")
@@ -188,10 +188,8 @@ return (
           <Picker.Item label ="Office" value = "Office" />
           <Picker.Item label ="Shop" value = "Shop" />
           <Picker.Item label ="Other" value = "Other" />
-
         </Picker>
     </View>
-
       <TextInput
         editable={other}
         style={styles.input}
@@ -205,7 +203,6 @@ return (
           else{
             setRequiredText2(true);
           }
-
         }}
     />
     <Text> </Text>
@@ -214,59 +211,41 @@ return (
           <Text style={styles.title}>In</Text>
           <Text style={styles.title}>Out</Text>
           <Text style={styles.title}>Time</Text>
-        </View>
-
+    </View>
     <FlatList
       data={dbData}
       
       keyExtractor={(item) => item.clockID}
       renderItem={ ({item}) => 
-      
         <View style = {styles.listWrapper}>
-          
           <Text style={styles.title}>{item.clockIn}</Text>
           <Text style={styles.title}>{item.clockOut}</Text>
           <Text style={styles.title}>{item.hoursWorked}</Text>
         </View>
       }
     />
-
-    <Button color ={color} title ={buttonText}  onPress={() => {
-
-    if(requiredText != null && requiredText2!=null)
-    {
-      //console.log("button pressed");
-      setTestGate(false)
-      console.log(testGate)
-      
-      clockInClockOut();
-    }
-
-    else if(requiredText == null && requiredText2 == null)
-    {
-      Alert.alert("Please Enter Jobsite and Select Task");
-    }
-    else if(requiredText == null)
-    {
-      Alert.alert("Please Enter Jobsite");
-    }
-    else if(requiredText2 == null && other ==true)
-    {
-
-      Alert.alert("Please type in Task")
-    }
-    else if(requiredText2== null && selectedValue==="")
-    {
-      Alert.alert("Please select Task")
-    }
+    <Button title ="refresh" onPress={()=> {
+      console.log("refresh")
+      setGate(!gate)
 
     }}
+    />
+    <Button color ={color} title ={buttonText}  onPress={() => {
 
+        if(inputCheck())
+        {
+          setGate(!gate)
+          setClock(!clockIn)
+          clocking(clockIn)
+         
+        }
+        else{
+          console.log("no")
+        }
+    }}
     />
   </View>
-
 );
-
 }
 const styles = StyleSheet.create({
   container: {
@@ -274,7 +253,6 @@ const styles = StyleSheet.create({
   backgroundColor: "white"
   //alignItems: "center",
   //justifyContent: 'center',
-
   },
   input: {
       borderWidth:1,
@@ -339,9 +317,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ab0e0e',
     borderWidth: .5
   }
-
-
-
 
 });
 
