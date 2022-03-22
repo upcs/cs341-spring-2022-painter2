@@ -23,6 +23,25 @@ export default function HomeScreen() {
   const[otherText,setOtherText] =useState("");
   const[time,setTime]=useState(0);
   const[totalTime,setTotalTime]=useState(0);
+  const[otherTextVal,setOtherTextVal] =useState("");
+  const [location, setLocation] = React.useState(null)
+
+  /// gets the users current location and sets it to location
+  React.useEffect(() => {
+    (async () =>{
+        let { status } = await Location.requestPermissionsAsync();
+        if(status !== 'granted'){
+            setError('Permission to access location was denied');
+            return;
+        }
+        const locate = await Location.getCurrentPositionAsync({});
+        setLocation(locate.coords)
+        // let siteCoord = (await getOurCoords())
+        // setSiteMarker({latitude: siteCoord[0], longitude: siteCoord[1]})
+        // console.log(siteMarker)
+
+    })()
+  }, []);
   
   function getDay()
   {
@@ -60,14 +79,21 @@ export default function HomeScreen() {
           setGate(!gate)
           if(clockIn)
           {
-              var hours = new Date().getHours()
+            getLocation()
+            console.log("LOCATION IS: " + location)  
+            var hours = new Date().getHours()
               var min = new Date().getMinutes()
               hours = 9
               min = 0
               console.log("clock in")
               setColor('red') // Changes button color
-             
-            clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite)
+              if(selectedValue == "Other") {
+                clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite, otherTextVal, location)
+              }
+              else {
+                clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite, otherTextVal, location)
+              } 
+            //clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite)
                 
               
               
@@ -176,6 +202,9 @@ return (
             setOther(true);
             setOtherText("Please Enter work");
           }
+          if(itemValue !== "Other" && itemValue !=="") {
+            setOtherTextVal(itemValue);
+          }
         }}
         >
           <Picker.Item label ="Select Task" value = "" />
@@ -203,6 +232,7 @@ return (
             setRequiredText2(null);
           }
           else{
+            setOtherTextVal(text);
             setRequiredText2(true);
           }
 

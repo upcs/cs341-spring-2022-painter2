@@ -217,13 +217,13 @@ async function handler(siteInput){
 
       <Text style={styler.labelText}> Current Location:</Text>
       <Text style={styler.boldText}> {yourLocation} </Text>
-      <Text style={styler.text}> ({yourCoord[0]},{yourCoord[1]}) </Text>
+      {/* <Text style={styler.text}> ({yourCoord[0]},{yourCoord[1]}) </Text> */}
 
       <Text> </Text>
-      <Text> </Text>
+      {/* <Text> </Text> */}
 
-      <Text style={styler.labelText}> Coordinates of Job site:</Text>
-      <Text style={styler.text}> ({siteCoord[0]},{siteCoord[1]}) </Text>
+      {/* <Text style={styler.labelText}> Coordinates of Job site:</Text>
+      <Text style={styler.text}> ({siteCoord[0]},{siteCoord[1]}) </Text> */}
 
       <Text> </Text>
 
@@ -285,7 +285,7 @@ const styler = StyleSheet.create({
         },
         map: {
           width: Dimensions.get('window').width,
-          height: Dimensions.get('window').height/4,
+          height: Dimensions.get('window').height/2.5,
         },
 
         });
@@ -422,3 +422,42 @@ const styler = StyleSheet.create({
     
 //     });
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

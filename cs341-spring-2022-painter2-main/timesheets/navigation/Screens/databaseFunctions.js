@@ -195,7 +195,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
 //with the employee name, employee ID, date and 
 //clock in time as the parameter
  export const clockInFunc= async(newName,newEmployeeID,newDate
-,newClockInTime, newJobSite )=>{
+,newClockInTime, newJobSite, newTask, newLocation )=>{
     //gets all clock records for a given employee
     var clockRecords= await firebase.firestore()
     .collection('clocking')
@@ -235,7 +235,9 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
         clockIn:newClockInTime,
         clockOut:null,
         jobSite:newJobSite, 
-        hoursWorked:0  
+        hoursWorked:0, 
+        task:newTask,
+        location:newLocation
         });
       }
     
