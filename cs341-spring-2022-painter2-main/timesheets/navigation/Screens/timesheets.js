@@ -34,7 +34,6 @@ export default function TimesheetScreen({ navigation }) {
           setUseData(data);
         }
         }
-        addJobsite("2409 N Russet St, Portland, OR, 97217","Phi Nguyen","House Painting");
         getData()
         return;
      }, [])
