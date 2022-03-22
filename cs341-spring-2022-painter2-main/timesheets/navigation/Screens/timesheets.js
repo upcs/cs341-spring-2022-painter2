@@ -7,7 +7,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
 import { useState, useEffect } from 'react';
-import { getTimesheets, addJobsite} from './databaseFunctions.js';
+import { getTimesheets, addJobsite, changeRole} from './databaseFunctions.js';
 import timesheetStyle from './styles/timesheetStyle.js';
 import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 import { useContext } from 'react';
@@ -34,6 +34,7 @@ export default function TimesheetScreen({ navigation }) {
           setUseData(data);
         }
         }
+        changeRole("Admin",2);
         getData()
         return;
      }, [])

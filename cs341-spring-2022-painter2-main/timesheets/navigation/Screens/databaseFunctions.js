@@ -350,8 +350,7 @@ return clocksForDateArray;
 
 export const addJobsite = async(addressInp, customerInp, jobNameInp) => {
   const year = new Date().getFullYear().toString().substring(2);
-  var jobsites = await firebase.firestore().collection('jobsites').get();
-  console.log(100 + jobsites.size);
+  var jobsites = await firebase.firestore().collection('jobsites').where('jobYear','==',year).get();
 
   firebase.firestore().collection('jobsites').add(
     {
@@ -359,7 +358,13 @@ export const addJobsite = async(addressInp, customerInp, jobNameInp) => {
       customer:customerInp,
       jobName:jobNameInp,
       jobYear:year,
-      jobNum: jobsites.size + 100
+      jobNum: jobsites.size + 101
     }
-  ).then(console.log("Test"));
+  );
 }
+
+export const changeRole = async(newRole,id) => {
+    var emplyoee = await firebase.firestore().collection('employees').where('employeeID','==',id).get();
+    var docID = emplyoee.docs[0].id
+    firebase.firestore().collection('employees').doc(docID).update({role:newRole});
+  }
