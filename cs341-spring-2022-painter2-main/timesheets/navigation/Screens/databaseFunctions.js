@@ -67,11 +67,26 @@ const firebaseConfig = {
         let timesheetsData=(allTimesheets.docs[i]).data();
        timesheetsArray.push(timesheetsData);
     }
-    console.log("Timesheets fetched");
+    console.log("databaseFunctions: Timesheets fetched");
     return timesheetsArray;
 
 
-      }
+    }
+
+//Returns an array of all the employees
+    export const getAllEmployees = async () =>{
+
+        var allEmployees= await firebase.firestore()
+        .collection('employees')
+        .get();
+        var employeesArray=[];
+        for(let i=0;i<(allEmployees.docs).length;i++){
+            let employeeData=(allEmployees.docs[i]).data();
+            employeesArray.push(employeeData);
+        }
+        console.log("databaseFunctions: users fetched");
+        return employeesArray;
+}
 
 
 
@@ -85,7 +100,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
            email:emailInput
        })
         .then(() => {
-       console.log('User updated!');
+       console.log('databaseFunctions: User updated!');
        });   
  
  
@@ -94,7 +109,6 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
    //edits an employee record that it finds with the employeeID input
    //takes this record and changes the data in the email address field
    export const editEmployeeEmail =  async (IDInput,emailInput) =>{
-       
     firebase.firestore()
        .collection('employees')
        .where('employeeID','==',IDInput)

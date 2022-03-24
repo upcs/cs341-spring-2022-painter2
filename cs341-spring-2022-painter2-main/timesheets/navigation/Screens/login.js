@@ -10,13 +10,9 @@ import { useContext } from 'react';
 
 //The Home Screen
 export default function LoginScreen({ navigation }) {
-
-
-
     const tsContext = useContext(AppContext);
-
     const [creds, setCreds] = useState({
-        email: "", password: "", ID: 0, Role: ""
+        email: "a@a.com", password: "a"
     });
     
 
@@ -40,15 +36,14 @@ export default function LoginScreen({ navigation }) {
     //Helper function that does all the validating for the login
     const validateLogin = async() => {
         if(creds.email.length != 0 && creds.password.length != 0){
+            console.log("login.js: input email - ", creds.email);
             var user = await findUserByEmail(creds.email); //<-----
-            console.log(user);
+            console.log("login.js: userFound - ", user);
             if (Object.keys(user).length > 0){
                 //console.log("Password: ", user.map(a => a.password)[0])
                 var pass = user.map(a => a.password)[0];
                 //console.log(decodePass(pass))
                 if(creds.password == decodePass(pass)){
-
-
                     tsContext.setCurrName(user[0].name);
                     tsContext.setCurrEmail(user[0].email);
                     tsContext.setCurrRole(user[0].role);
