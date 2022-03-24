@@ -348,6 +348,7 @@ return clocksForDateArray;
 }
 
 
+//adds a jobsite to the database
 export const addJobsite = async(addressInp, customerInp, jobNameInp) => {
   const year = new Date().getFullYear().toString().substring(2);
   var jobsites = await firebase.firestore().collection('jobsites').where('jobYear','==',year).get();
@@ -358,13 +359,35 @@ export const addJobsite = async(addressInp, customerInp, jobNameInp) => {
       customer:customerInp,
       jobName:jobNameInp,
       jobYear:year,
-      jobNum: jobsites.size + 101
+      jobNum: jobsites.size + 101,
+      status: "Open"
     }
   );
 }
 
+//finds an employee by ID and chagnes their role
 export const changeRole = async(newRole,id) => {
     var emplyoee = await firebase.firestore().collection('employees').where('employeeID','==',id).get();
     var docID = emplyoee.docs[0].id
     firebase.firestore().collection('employees').doc(docID).update({role:newRole});
   }
+
+//finds an employee by id and removes them from database
+export const removeEmployee = async(id) => {
+  var emplyoee = await firebase.firestore().collection('employees').where('employeeID','==',id).get();
+  var docID = emplyoee.docs[0].id;
+  firebase.firestore().collection('employees').doc(docID).delete();
+}
+
+//finds a timesheet by id and removes it from database
+export const removeTimesheet = async(id) => {
+  var employee = await firebase.firestore().collection('timesheets').where('clockID','==',id).get();
+  var docID = employee.docs[0].id;
+  firebase.firestore().collection('timesheets').doc(docID).delete();
+}
+
+export const closeJobsite = async(id) => {
+  var emplyoee = await firebase.firestore().collection('jobsites').where('employeeID','==',id).get();
+  var docID = emplyoee.docs[0].id
+  firebase.firestore().collection('employees').doc(docID).update({status:"closed"});
+}
