@@ -8,6 +8,7 @@ export default function App(){
     const [currEmail, setCurrEmail] = useState('');
     const [currRole, setCurrRole] = useState('');
     const [currId, setCurrId] = useState(-1);
+    const [currLang, setCurrLang] = useState("EN");
 
 
     const userSetting = {
@@ -15,10 +16,12 @@ export default function App(){
         currentEmail: currEmail,
         currentRole: currRole,
         currentId: currId,
+        currentLang: currLang,
         setCurrName,
         setCurrEmail,
         setCurrRole,
-        setCurrId
+        setCurrId,
+        setCurrLang
     }
 
     return (

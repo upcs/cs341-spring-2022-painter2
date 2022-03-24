@@ -31,7 +31,7 @@ function CustomDrawerContent(props) {
         onPress={() => props.navigation.closeDrawer()}
       />
       <DrawerItem
-        label="Spanish"
+        label="Español"
         onPress={() => props.navigation.closeDrawer()}
       />
       <DrawerItem
