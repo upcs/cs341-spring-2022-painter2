@@ -90,7 +90,7 @@ export default function TimesheetScreen({ navigation }) {
         
        const renderItem = ({ item }) => (
         <TouchableOpacity onPress={() =>navigation.navigate('DetailScreen', item)}>
-          <Item name={item.name +": " + item.date}/>
+          <Item name={item.name +": " + item.date +"("+item.clockID+")"}/>
         </TouchableOpacity>
       );
           if(tsContext.currentRole == 'Employee') {
