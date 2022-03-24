@@ -40,7 +40,7 @@ export default function HomeScreen() {
     }
       getData()
     return;
-  },[])
+  },[gate])
   
 
   
@@ -319,5 +319,4 @@ const styles = StyleSheet.create({
   }
 
 });
-
 

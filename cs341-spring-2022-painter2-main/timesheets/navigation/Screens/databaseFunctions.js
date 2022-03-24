@@ -337,19 +337,57 @@ export const returnDailyClockRecords= async (newEmployeeID,newDate)=>{
  //the back of an array
  for(let i=0;i<(dateRecords.docs).length;i++){
   let currentClockRecord=(dateRecords.docs[i]).data();
- 
 //if the json object has matching date to the date in question,
 //we add that json data to the array
   if(currentClockRecord.date===newDate){
     clocksForDateArray.push(currentClockRecord);
-
   }
-
-
  }
  //console.log(clocksForDateArray);
 return clocksForDateArray;
+}
 
 
+//adds a jobsite to the database
+export const addJobsite = async(addressInp, customerInp, jobNameInp) => {
+  const year = new Date().getFullYear().toString().substring(2);
+  var jobsites = await firebase.firestore().collection('jobsites').where('jobYear','==',year).get();
 
+  firebase.firestore().collection('jobsites').add(
+    {
+      address:addressInp,
+      customer:customerInp,
+      jobName:jobNameInp,
+      jobYear:year,
+      jobNum: jobsites.size + 101,
+      status: "Open"
+    }
+  );
+}
+
+//finds an employee by ID and chagnes their role
+export const changeRole = async(newRole,id) => {
+    var emplyoee = await firebase.firestore().collection('employees').where('employeeID','==',id).get();
+    var docID = emplyoee.docs[0].id
+    firebase.firestore().collection('employees').doc(docID).update({role:newRole});
+  }
+
+//finds an employee by id and removes them from database
+export const removeEmployee = async(id) => {
+  var emplyoee = await firebase.firestore().collection('employees').where('employeeID','==',id).get();
+  var docID = emplyoee.docs[0].id;
+  firebase.firestore().collection('employees').doc(docID).delete();
+}
+
+//finds a timesheet by id and removes it from database
+export const removeTimesheet = async(id) => {
+  var employee = await firebase.firestore().collection('timesheets').where('clockID','==',id).get();
+  var docID = employee.docs[0].id;
+  firebase.firestore().collection('timesheets').doc(docID).delete();
+}
+
+export const closeJobsite = async(id) => {
+  var emplyoee = await firebase.firestore().collection('jobsites').where('employeeID','==',id).get();
+  var docID = emplyoee.docs[0].id
+  firebase.firestore().collection('employees').doc(docID).update({status:"closed"});
 }
