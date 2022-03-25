@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, StatusBar, TouchableOpacity, Button, Alert} fro
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import styles from './styles/timesheetStyle.js';
 import { useState, useEffect } from 'react';
-import { getAllEmployees, get} from './databaseFunctions.js';
+import { getAllEmployees, editEmployeeRole, changeRole, removeEmployee, get} from './databaseFunctions.js';
 import { useContext } from 'react';
 import AppContext from '../Context.js';
 import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
@@ -51,12 +51,12 @@ export default function AdminScreen({ navigation }) {
      }
     
     //CONFIRM ROLE CHANGE
-    const changeRole = async(empID, role) => {
+    const chRole = async(empID, role) => {
         Alert.alert('Confirm Role Change?', empID + ": " + role, [{
                 text: 'Cancel',
                 onPress: () => console.log('admin: Cancel Pressed'),
                 style: 'cancel',
-        }, { text: 'OK', onPress: () => onClickListener(item.employeeID, role) },]);
+        }, { text: 'OK', onPress: () => onClickListener(empID, role) },]);
     }
     
     //CONFIRM DELETE
@@ -72,15 +72,25 @@ export default function AdminScreen({ navigation }) {
     const onClickListener = (empID, buttonID) => {
         if (buttonID == "del"){
             console.log('admin: delete confirmed');
+            //removeEmployee(empID);
         } else {
-            
+            console.log('admin: role change confirmed - ' + empID + '-' + buttonID);
+            //changeRole(empID, buttonID);
+            return;
         }
     }
     
     
         
-       const renderItem = ({ item }) =>
-    (<View style={{
+    function renderItem ({ item }) {
+        console.log("admin: " + item.employeeID + "-" + tsContext.currentId)
+    if( item.employeeID === tsContext.currentId ){
+        console.log("admin: found myself");
+        return;
+    }
+     else {
+         return (
+    <View style={{
         padding: 0,
         borderWidth: 1,
         flexDirection: 'row',
@@ -96,14 +106,14 @@ export default function AdminScreen({ navigation }) {
                 data={roleData}
                 value={item.role}
                 containerStyle={styles.conStyle}
-                onChangeText={(val) => changeRole(item.name, val)}
+                onChangeText={(val) => chRole(item.name, val)}
             />
      <TouchableOpacity onPress={() => delEmp(item)}>
                 <Ionicons name={'close-circle-outline'} size={30} style={styles.inputLineIcon}/>
             </TouchableOpacity>
             </View>
      </View>
-      );
+     );}};
     
     
           if(tsContext.currentRole == 'Employee') {
@@ -125,7 +135,6 @@ export default function AdminScreen({ navigation }) {
                   onChangeText={(input) => filterData(input)}
                   />
                 <FlatList
-                    style={{flex: 1}}
                 data={useData}
                 renderItem={renderItem}
                 keyExtractor={item => item.employeeID}
