@@ -38,31 +38,31 @@ const [siteMarker, setSiteMarker] = useState({
   longitude: 0,
 });
 
-      // // gets the users current location and sets it to location
-      // React.useEffect(() => {
-      //   (async () =>{
-      //     let { status } = await Location.requestForegroundPermissionsAsync();
-      //     if (status !== 'granted') {
-      //       Alert.alert('Permission to access location was denied');
-      //       return;
-      //     }
+      // gets the users current location and sets it to location
+      React.useEffect(() => {
+        (async () =>{
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            Alert.alert('Permission to access location was denied');
+            return;
+          }
           
-      //     let locationServiceEnabled = await Location.hasServicesEnabledAsync();
+          let locationServiceEnabled = await Location.hasServicesEnabledAsync();
           
-      //       if (!locationServiceEnabled) {
+            if (!locationServiceEnabled) {
           
-      //         Alert.alert("Your Location services are turned off. Turn them on Please");
-      //         return;
-      //       }
+              Alert.alert("Your Location services are turned off. Turn them on Please");
+              return;
+            }
 
-      //       const locate = await Location.getCurrentPositionAsync({});
-      //       setLocation(locate.coords)
-      //       // let siteCoord = (await getOurCoords())
-      //       // setSiteMarker({latitude: siteCoord[0], longitude: siteCoord[1]})
-      //       // console.log(siteMarker)
+            const locate = await Location.getCurrentPositionAsync({});
+            setLocation(locate.coords)
+            // let siteCoord = (await getOurCoords())
+            // setSiteMarker({latitude: siteCoord[0], longitude: siteCoord[1]})
+            // console.log(siteMarker)
 
-      //   })()
-      // }, []);
+        })()
+      }, []);
   
       async function getOurCoords(){
        

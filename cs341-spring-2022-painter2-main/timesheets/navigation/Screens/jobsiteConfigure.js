@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { StyleSheet, Text,  View, TextInput,  TouchableHighlight, Alert, Linking} from 'react-native';
 import {Picker} from '@react-native-picker/picker'
-
+import {getAllJobsites} from './databaseFunctions'
 
 export default function JobsiteConfigure(){
 const [address,setAddress]=useState("");
@@ -14,8 +14,29 @@ const [address,setAddress]=useState("");
 const [customer,setCustomer]=useState("");
 const [jobName,setJobName]=useState("");
 const [jobYear,setJobYear]=useState(0);
+const [jobsiteCollection,setJobsiteCollection]=useState("");
+
+useEffect(() => {
+
+   getAllJobsites().then((jobsiteData) => {
+      let addressArr=[];
+       for(let i=0;i<jobsiteData.docs.length;i++){
+          let jobRecord=(jobsiteData.docs[i]).data();
+          addressArr+=  jobRecord.address;   
+          
+       }
+       console.log(2);
+       setJobsiteCollection(addressArr);
+       console.log(jobsiteCollection);
+
+      
+   });
+ 
+
+    
 
 
+ });
 
 
 
@@ -95,14 +116,13 @@ return(
        
       />
    <Picker
-
+ 
        style={styles.pickerStyle}
        mode={"dialog"}
         selectedValue={address}
         onValueChange={(itemValue, itemIndex) =>  setAddress(itemValue)}>
 
-        <Picker.Item label="hello" value="hello" />
-        <Picker.Item label="world" value="world" />
+        
       </Picker>
 
 
@@ -115,7 +135,9 @@ return(
 );
 
 
-
+// {this.state.people.map((person, index) => (
+//    <p>Hello, {person.name} from {person.country}!</p>
+// ))}
 
 
 
