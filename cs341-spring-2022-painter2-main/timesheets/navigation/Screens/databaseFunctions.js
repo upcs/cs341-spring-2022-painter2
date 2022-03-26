@@ -391,3 +391,9 @@ export const closeJobsite = async(id) => {
   var docID = emplyoee.docs[0].id
   firebase.firestore().collection('employees').doc(docID).update({status:"closed"});
 }
+
+export const getAllJobsites = async() => {
+  var allJobsites = await firebase.firestore().collection('jobsites').get();
+return allJobsites;
+}
+
