@@ -23,7 +23,8 @@ export default function LoginScreen({ navigation }) {
     //The Listener for the buttons pressed
     const onClickListener = (viewID) => {
         if (viewID == "login"){
-            validateLogin()
+           // validateLogin()
+           navigation.navigate("Main", creds);
         //navigation.getParam('password') to recieve passed values
         }
         else if (viewID == "forgot"){
