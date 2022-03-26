@@ -22,7 +22,7 @@ useEffect(() => {
       let addressArr=[];
        for(let i=0;i<jobsiteData.docs.length;i++){
           let jobRecord=(jobsiteData.docs[i]).data();
-          addressArr+=  jobRecord.address;   
+          addressArr+= "|"+ jobRecord.address;   
           
        }
        console.log(2);
@@ -115,16 +115,20 @@ return(
         defaultValue={address}
        
       />
+       
+
    <Picker
  
        style={styles.pickerStyle}
        mode={"dialog"}
         selectedValue={address}
         onValueChange={(itemValue, itemIndex) =>  setAddress(itemValue)}>
-
+           {jobsiteCollection.split("|").map(site =>  <Picker.Item label={site} value={site}/>)}
+         
         
       </Picker>
 
+     
 
      
   
