@@ -15,12 +15,15 @@ import HomeScreen from './Screens/homescreen';
 import StackNav from './Screens/Stack'
 import DatabaseTesterScreen from './Screens/DatabaseTesterScreen';
 import JobsiteConfigure from './Screens/jobsiteConfigure';
+import { useContext } from 'react';
+import AppContext from './Context';
 
 
 const homeName = 'Home';
 const timesheetsName = 'Timesheets';
 
 const Tab = createBottomTabNavigator();
+const tsContext = useContext(AppContext);
 
 //side menu options
 function CustomDrawerContent(props) {
@@ -28,11 +31,17 @@ function CustomDrawerContent(props) {
     <DrawerContentScrollView {...props}>
       <DrawerItem
         label="English"
-        onPress={() => props.navigation.closeDrawer()}
+        onPress={() => {
+          tsContext.setCurrLang("EN");
+          props.navigation.closeDrawer()
+        }}
       />
       <DrawerItem
         label="Español"
-        onPress={() => props.navigation.closeDrawer()}
+        onPress={() => {
+          tsContext.setCurrLang("ES");
+          props.navigation.closeDrawer()
+        }}
       />
       <DrawerItem
         label="Logout"
