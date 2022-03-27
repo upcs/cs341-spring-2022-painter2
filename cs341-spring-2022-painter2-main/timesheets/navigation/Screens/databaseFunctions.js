@@ -358,8 +358,7 @@ export const addJobsite = async(addressInp, customerInp, jobNameInp) => {
       address:addressInp,
       customer:customerInp,
       jobName:jobNameInp,
-      jobYear:year,
-      jobNum: jobsites.size + 101,
+      jobNum: year + "-" + (jobsites.size + 101),
       status: "Open"
     }
   );
@@ -403,6 +402,20 @@ export const getAllJobsites = async() => {
 return allJobsites;
 }
 
+
+export const getOpenJobsites = async() => {
+  var jobsites = await firebase.firestore().collection('jobsites').where("Status",'==',"Open").get();
+  var jobsiteArr = [];
+  for(let i=0;i<(jobsites.docs).length;i++){
+    let jobsitesData=(jobsites.docs[i]).data();
+    jobsiteArr.push(jobsitesData);
+}
+console.log("Jobsites fetched");
+return jobsiteArr;
+
+}
+
+
 //authentification function that adds employee as firebase user
 //used to send out timesheet emails
 export const addFireBaseUser=async(emailInput,passInput)=>{
@@ -414,5 +427,6 @@ console.log("Firebase Email: " +userDetails.user.email+" Firebase Password: " +u
 })
 .catch(err=>console.log(err.message));
 }
+
 
 

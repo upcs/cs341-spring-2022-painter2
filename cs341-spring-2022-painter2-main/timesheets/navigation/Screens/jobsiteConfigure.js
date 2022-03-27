@@ -238,10 +238,9 @@ return(
 
     <Text style={styles.listTitle}>List of Jobsites in Database </Text> 
     <FlatList
-    style={styles.flatStyle}
-    keyExtractor={(item)=>item}
-   data={jobsiteCollection.toString().split("?")}
-
+    keyExtractor={(item)=>item.jobNum}
+   data={jobsiteCollection.split("?")}
+   style={styles.flatStyle}
    renderItem={({item})=>(
   <View style={styles.cellStyle}>
   <Text style={styles.rowStyle}>Jobsite Address: {item.split("|")[0]}</Text>
