@@ -127,7 +127,7 @@ async function openJobsiteHandler(inputSiteNum){
 
       },
       inputStyle:{
-         height: 30,
+         height: 40,
          width:350,
          margin: 12,
          borderWidth: 1,
@@ -171,6 +171,11 @@ async function openJobsiteHandler(inputSiteNum){
          fontSize:20
    
    
+         },
+         flatStyle:{
+         height: 150,
+   
+         flexGrow: 0
          }
 
        
@@ -233,9 +238,9 @@ return(
 
     <Text style={styles.listTitle}>List of Jobsites in Database </Text> 
     <FlatList
-    keyExtractor={(item)=>item}
-   data={jobsiteCollection.toString().split("?")}
-
+    keyExtractor={(item)=>item.jobNum}
+   data={jobsiteCollection.split("?")}
+   style={styles.flatStyle}
    renderItem={({item})=>(
   <View style={styles.cellStyle}>
   <Text style={styles.rowStyle}>Jobsite Address: {item.split("|")[0]}</Text>

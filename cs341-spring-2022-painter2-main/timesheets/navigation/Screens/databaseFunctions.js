@@ -6,7 +6,7 @@ import 'firebase/firestore';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-
+import {auth} from './firebaseSettings'
 
 //this config key used to connect to firestore database
 const firebaseConfig = {
@@ -358,8 +358,7 @@ export const addJobsite = async(addressInp, customerInp, jobNameInp) => {
       address:addressInp,
       customer:customerInp,
       jobName:jobNameInp,
-      jobYear:year,
-      jobNum: jobsites.size + 101,
+      jobNum: year + "-" + (jobsites.size + 101),
       status: "Open"
     }
   );
@@ -407,22 +406,48 @@ export const removeTimesheet = async(id,clockID) => {
   var docID = employee.docs[0].id;
   firebase.firestore().collection('clocking').doc(docID).delete();
 }
-
+//sets the status field of a jobsite to "Closed"
 export const closeJobsite = async(inpJobNum) => {
   var jobs = await firebase.firestore().collection('jobsites').where('jobNum','==',inpJobNum).get();
   var jobID = jobs.docs[0].id
   firebase.firestore().collection('jobsites').doc(jobID).update({status:"Closed"});
 }
-
+//sets the status field of a jobsite to "Open"
 export const openJobsite = async(inpJobNum) => {
   var jobs = await firebase.firestore().collection('jobsites').where('jobNum','==',inpJobNum).get();
   var jobID = jobs.docs[0].id
   firebase.firestore().collection('jobsites').doc(jobID).update({status:"Open"});
 }
-
+//gets all jobsite data recods
 export const getAllJobsites = async() => {
   var allJobsites = await firebase.firestore().collection('jobsites').get();
 return allJobsites;
+}
+
+
+export const getOpenJobsites = async() => {
+  var jobsites = await firebase.firestore().collection('jobsites').where("Status",'==',"Open").get();
+  var jobsiteArr = [];
+  for(let i=0;i<(jobsites.docs).length;i++){
+    let jobsitesData=(jobsites.docs[i]).data();
+    jobsiteArr.push(jobsitesData);
+}
+console.log("Jobsites fetched");
+return jobsiteArr;
+
+}
+
+
+//authentification function that adds employee as firebase user
+//used to send out timesheet emails
+export const addFireBaseUser=async(emailInput,passInput)=>{
+auth
+.createUserWithEmailAndPassword(emailInput,passInput)
+.then(userDetails=>{
+console.log("Firebase Email: " +userDetails.user.email+" Firebase Password: " +userDetails.user.password )
+
+})
+.catch(err=>console.log(err.message));
 }
 
 
