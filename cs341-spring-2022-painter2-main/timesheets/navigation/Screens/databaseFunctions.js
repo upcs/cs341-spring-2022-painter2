@@ -6,7 +6,7 @@ import 'firebase/firestore';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-
+import {auth} from './firebaseSettings'
 
 //this config key used to connect to firestore database
 const firebaseConfig = {
@@ -384,13 +384,19 @@ export const removeTimesheet = async(id) => {
   var docID = employee.docs[0].id;
   firebase.firestore().collection('timesheets').doc(docID).delete();
 }
-
-export const closeJobsite = async(id) => {
-  var emplyoee = await firebase.firestore().collection('jobsites').where('employeeID','==',id).get();
-  var docID = emplyoee.docs[0].id
-  firebase.firestore().collection('employees').doc(docID).update({status:"closed"});
+//sets the status field of a jobsite to "Closed"
+export const closeJobsite = async(inpJobNum) => {
+  var jobs = await firebase.firestore().collection('jobsites').where('jobNum','==',inpJobNum).get();
+  var jobID = jobs.docs[0].id
+  firebase.firestore().collection('jobsites').doc(jobID).update({status:"Closed"});
 }
-
+//sets the status field of a jobsite to "Open"
+export const openJobsite = async(inpJobNum) => {
+  var jobs = await firebase.firestore().collection('jobsites').where('jobNum','==',inpJobNum).get();
+  var jobID = jobs.docs[0].id
+  firebase.firestore().collection('jobsites').doc(jobID).update({status:"Open"});
+}
+//gets all jobsite data recods
 export const getAllJobsites = async() => {
   var allJobsites = await firebase.firestore().collection('jobsites').get();
 return allJobsites;
@@ -407,4 +413,17 @@ console.log("Jobsites fetched");
 return jobsiteArr;
 
 }
+
+//authentification function that adds employee as firebase user
+//used to send out timesheet emails
+export const addFireBaseUser=async(emailInput,passInput)=>{
+auth
+.createUserWithEmailAndPassword(emailInput,passInput)
+.then(userDetails=>{
+console.log("Firebase Email: " +userDetails.user.email+" Firebase Password: " +userDetails.user.password )
+
+})
+.catch(err=>console.log(err.message));
+}
+
 
