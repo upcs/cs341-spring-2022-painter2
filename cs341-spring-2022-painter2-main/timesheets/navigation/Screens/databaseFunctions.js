@@ -396,3 +396,15 @@ export const getAllJobsites = async() => {
 return allJobsites;
 }
 
+export const getOpenJobsites = async() => {
+  var jobsites = await firebase.firestore().collection('jobsites').where("Status",'==',"Open").get();
+  var jobsiteArr = [];
+  for(let i=0;i<(jobsites.docs).length;i++){
+    let jobsitesData=(jobsites.docs[i]).data();
+    jobsiteArr.push(jobsitesData);
+}
+console.log("Jobsites fetched");
+return jobsiteArr;
+
+}
+
