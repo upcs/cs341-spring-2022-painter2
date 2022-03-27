@@ -24,7 +24,6 @@ export default function HomeScreen() {
   const[otherText,setOtherText] =useState("");
   const[time,setTime]=useState(0);
   const tsContext = useContext(AppContext);
-
   
   function getDay()
   {
