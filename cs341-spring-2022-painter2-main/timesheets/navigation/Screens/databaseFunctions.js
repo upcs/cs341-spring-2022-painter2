@@ -386,14 +386,22 @@ export const removeTimesheet = async(id) => {
   firebase.firestore().collection('timesheets').doc(docID).delete();
 }
 
-export const closeJobsite = async(id) => {
-  var emplyoee = await firebase.firestore().collection('jobsites').where('employeeID','==',id).get();
-  var docID = emplyoee.docs[0].id
-  firebase.firestore().collection('employees').doc(docID).update({status:"closed"});
+export const closeJobsite = async(inpJobNum) => {
+  var jobs = await firebase.firestore().collection('jobsites').where('jobNum','==',inpJobNum).get();
+  var jobID = jobs.docs[0].id
+  firebase.firestore().collection('jobsites').doc(jobID).update({status:"Closed"});
+}
+
+export const openJobsite = async(inpJobNum) => {
+  var jobs = await firebase.firestore().collection('jobsites').where('jobNum','==',inpJobNum).get();
+  var jobID = jobs.docs[0].id
+  firebase.firestore().collection('jobsites').doc(jobID).update({status:"Open"});
 }
 
 export const getAllJobsites = async() => {
   var allJobsites = await firebase.firestore().collection('jobsites').get();
 return allJobsites;
 }
+
+
 
