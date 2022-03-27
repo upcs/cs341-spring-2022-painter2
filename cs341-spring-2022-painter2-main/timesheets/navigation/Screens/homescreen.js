@@ -6,6 +6,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import  {Picker}  from '@react-native-picker/picker';
 import { clockInFunc, clockOutFunc,returnDailyClockRecords } from './databaseFunctions'
+import { useContext } from 'react';
+import AppContext from '../Context.js';
+
+
 
 //The Home Screen
 export default function HomeScreen() {
@@ -19,6 +23,8 @@ export default function HomeScreen() {
   const[other,setOther]=useState(false);
   const[otherText,setOtherText] =useState("");
   const[time,setTime]=useState(0);
+  const tsContext = useContext(AppContext);
+
   
   function getDay()
   {

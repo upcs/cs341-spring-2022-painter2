@@ -173,7 +173,7 @@ return(
 
     <Text style={styles.listTitle}>List of Pre-Existing Jobs in Database </Text> 
     <FlatList
-    keyExtractor={(item)=>item}
+    keyExtractor={(item)=>item.jobNum}
    data={jobsiteCollection.split("?")}
 
    renderItem={({item})=>(

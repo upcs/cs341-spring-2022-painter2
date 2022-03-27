@@ -358,8 +358,7 @@ export const addJobsite = async(addressInp, customerInp, jobNameInp) => {
       address:addressInp,
       customer:customerInp,
       jobName:jobNameInp,
-      jobYear:year,
-      jobNum: jobsites.size + 101,
+      jobNum: year + "-" + (jobsites.size + 101),
       status: "Open"
     }
   );
