@@ -24,7 +24,6 @@ export default function HomeScreen() {
   const[otherText,setOtherText] =useState("");
   const[time,setTime]=useState(0);
   const tsContext = useContext(AppContext);
-
   
   function getDay()
   {
@@ -83,7 +82,7 @@ function timeCheck(hours, min)
       hours = 9
       min = 0
       console.log("clock in")
-      clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite)
+      clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite)
       //stores the total minutes work for later
       hours = (hours)*60 + min
       setTime(hours)
