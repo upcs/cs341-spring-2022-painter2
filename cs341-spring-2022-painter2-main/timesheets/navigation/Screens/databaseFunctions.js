@@ -372,6 +372,28 @@ export const changeRole = async(newRole,id) => {
     firebase.firestore().collection('employees').doc(docID).update({role:newRole});
   }
 
+//finds an employee by ID and changes clock in time
+export const changeClockIn = async(newClockIn,id,clockID) => {
+  var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
+  var docID = employee.docs[0].id
+  console.log(docID)
+  firebase.firestore().collection('clocking').doc(docID).update({clockIn:newClockIn});
+}  
+//finds an employee by ID and changes clock out time
+export const changeClockOut = async(newClockOut,id,clockID) => {
+  var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
+  var docID = employee.docs[0].id
+  console.log(docID)
+  firebase.firestore().collection('clocking').doc(docID).update({clockOut:newClockOut});
+}  
+//finds an employee by ID and changes clock in time
+export const changeJobSite = async(newJobSite,id,clockID) => {
+  var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
+  var docID = employee.docs[0].id
+  console.log(docID)
+  firebase.firestore().collection('clocking').doc(docID).update({jobSite:newJobSite});
+}  
+
 //finds an employee by id and removes them from database
 export const removeEmployee = async(id) => {
   var emplyoee = await firebase.firestore().collection('employees').where('employeeID','==',id).get();
@@ -380,10 +402,10 @@ export const removeEmployee = async(id) => {
 }
 
 //finds a timesheet by id and removes it from database
-export const removeTimesheet = async(id) => {
-  var employee = await firebase.firestore().collection('timesheets').where('clockID','==',id).get();
+export const removeTimesheet = async(id,clockID) => {
+  var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
   var docID = employee.docs[0].id;
-  firebase.firestore().collection('timesheets').doc(docID).delete();
+  firebase.firestore().collection('clocking').doc(docID).delete();
 }
 
 export const closeJobsite = async(inpJobNum) => {
