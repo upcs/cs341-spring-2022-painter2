@@ -40,7 +40,7 @@ export default function HomeScreen() {
     }
       getData()
     return;
-  },[])
+  },[gate])
   
 
   
