@@ -14,7 +14,7 @@ import TimesheetScreen from './Screens/timesheets';
 import HomeScreen from './Screens/homescreen';
 import StackNav from './Screens/Stack'
 import DatabaseTesterScreen from './Screens/DatabaseTesterScreen';
-
+import JobSite from './Screens/Jobsite';
 
 
 const homeName = 'Home';
@@ -61,6 +61,9 @@ function BottomTabs() {
             else if (route.name === 'DatabaseTester') {
               iconName = focused ? 'ios-document-text':'ios-document-text-outline';
             }
+            else if(route.name === 'Jobsite'){
+              iconName = focused ? 'ios-document-text':'ios-document-text-outline';
+            }
             return <Ionicons name={iconName} size={size} color={color} />;
           },
           headerShown: false,
@@ -73,6 +76,7 @@ function BottomTabs() {
         <Tab.Screen name="Timesheets" component={StackNav} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="DatabaseTester" component={DatabaseTesterScreen} />
+        <Tab.Screen name="Jobsite" component={JobSite}/>
         
 
     </Tab.Navigator>
