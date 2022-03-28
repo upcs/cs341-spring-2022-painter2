@@ -78,12 +78,18 @@ export default function TimesheetScreen({ navigation }) {
       );
         
        const renderItem = ({ item }) => (
+         //send "item" to a function to get item.employeeID
+         //so you can set it to a useStateHook to use for databaseFunction
         <TouchableOpacity onPress={handleModal}>
           <Item name={item.name +": " + item.date +"("+item.clockID+")"}/>
         </TouchableOpacity>
       );
       const[isModalVisible,setIsModalVisible]=useState(false);
-      const handleModal = () => setIsModalVisible(()=> !isModalVisible, console.log(isModalVisible));
+      const handleModal = () => setIsModalVisible(()=> {
+        !isModalVisible 
+        
+        console.log(isModalVisible)
+      });
       const [selectedDate, setSelectedDate] = useState(new Date());
 
 
