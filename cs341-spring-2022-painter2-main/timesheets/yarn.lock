@@ -2307,6 +2307,13 @@
     "sudo-prompt" "^9.0.0"
     "wcwidth" "^1.0.1"
 
+"@react-native-community/datetimepicker@^6.1.0":
+  "integrity" "sha512-RD9KDNDYyJkEEpw0L/pQ5xPptkHp5FXK05ISTaCWo7O2RlTkRKcxen8UVMQ56wjSx/VPT6OpLxI4wrLO6sx/Xg=="
+  "resolved" "https://registry.npmjs.org/@react-native-community/datetimepicker/-/datetimepicker-6.1.0.tgz"
+  "version" "6.1.0"
+  dependencies:
+    "invariant" "^2.2.4"
+
 "@react-native-community/masked-view@*", "@react-native-community/masked-view@>=0.1.0":
   "integrity" "sha512-rQfMIGSR/1r/SyN87+VD8xHHzDYeHaJq6elOSCAD+0iLagXkSI2pfA0LmSXP21uw5i3em7GkkRjfJ8wpqWXZNw=="
   "resolved" "https://registry.npmjs.org/@react-native-community/masked-view/-/masked-view-0.1.11.tgz"
