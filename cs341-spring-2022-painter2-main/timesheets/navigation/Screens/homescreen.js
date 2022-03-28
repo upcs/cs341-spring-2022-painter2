@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import  {Picker}  from '@react-native-picker/picker';
 import { clockInFunc, clockOutFunc,returnDailyClockRecords } from './databaseFunctions'
 import { useContext } from 'react';
+import { Dropdown } from 'react-native-material-dropdown';
 import AppContext from '../Context.js';
 
 
