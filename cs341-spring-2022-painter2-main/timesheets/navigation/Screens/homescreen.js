@@ -5,26 +5,53 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import  {Picker}  from '@react-native-picker/picker';
-import { clockInFunc, clockOutFunc,returnDailyClockRecords } from './databaseFunctions'
+import { clockInFunc, clockOutFunc,returnDailyClockRecords, getOpenJobsites } from './databaseFunctions'
 import { useContext } from 'react';
 import AppContext from '../Context.js';
+import DropDownPicker from 'react-native-dropdown-picker';
+import {Component} from 'react'
 
 
 
 //The Home Screen
 export default function HomeScreen() {
+  
   const [jobSite, setJobSite] = useState(' ');
+  const [task, setTask] = useState(' ');
   const [clockIn, setClock] = useState(true);
   const [color,setColor]=useState('green');
   const [buttonText, setButtonText] = useState("Clock in");
   const [requiredText, setRequiredText] = useState(null);
   const [requiredText2, setRequiredText2] = useState(null);
-  const[selectedValue, setSelectedValue]=useState("");
-  const[other,setOther]=useState(false);
-  const[otherText,setOtherText] =useState("");
-  const[time,setTime]=useState(0);
+  const [selectedValue, setSelectedValue]=useState("");
+  const [other,setOther]=useState(false);
+  const [otherText,setOtherText] =useState("");
+  const [time,setTime]=useState(0);
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {label: 'Apple', value: 'apple'},
+    {label: 'Banana', value: 'banana'}
+  ]);
+
+  const [openTask, setOpenTask] = useState(false);
+  const [valueTask, setValueTask] = useState(null);
+  const [itemsTask, setItemsTask] = useState([
+    {label: 'Pressure Wash', value: 'Pressure Wash'},
+    {label: 'Painting', value: 'Painting'},
+    {label: 'Prep', value: 'Prep'},
+    {label: 'Cleanup', value: 'Cleanup'},
+    {label: 'Travel', value: 'Travel'},
+    {label: 'Delivery', value: 'Delivery'},
+    {label: 'Office', value: 'Office'},
+    {label: 'Shop', value: 'Shop'},
+    {label: 'Other', value: 'Other'}
+  ]);
   const tsContext = useContext(AppContext);
   
+
+  //useEffect to get the jobsite data?
   function getDay()
   {
     var month = new Date().getMonth()
@@ -39,16 +66,18 @@ export default function HomeScreen() {
   
   useEffect(()=>{
     const getData = async() => {
-      var data = await returnDailyClockRecords("2",getDay())
-      console.log("Grabbing data")
+      var data = await returnDailyClockRecords(123456789,getDay())
+      //console.log("Grabbing data")
       setdbData(data)
     }
       getData()
     return;
   },[gate])
-  
 
-  
+  useEffect(() => {
+    getOpenJobsites().then(jbs => setItems(jbs));
+    return;
+  },[])
  //formats the time
 function timeCheck(hours, min)
 {
@@ -79,10 +108,8 @@ function timeCheck(hours, min)
       setButtonText("Clock out")
       var hours = new Date().getHours()
       var min = new Date().getMinutes()
-      hours = 9
-      min = 0
-      console.log("clock in")
-      clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite)
+      //console.log("clock in")
+      clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite,task)
       //stores the total minutes work for later
       hours = (hours)*60 + min
       setTime(hours)
@@ -92,12 +119,10 @@ function timeCheck(hours, min)
       setButtonText("Clock in")
       var hours = new Date().getHours()
       var min = new Date().getMinutes()
-      hours = 17
-      min = 0
       var dbhours = hours*60 + min
       dbhours =(dbhours-time)/60
-      console.log("clocking out")
-      clockOutFunc("2",timeCheck(hours,min),dbhours)
+      //console.log("clocking out")
+      clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours)
     }
           
   }
@@ -137,64 +162,51 @@ function inputCheck()
     }
 }
 
+
 return (
   <View style={styles.container}>
     <Text style={styles.totalTimeText} > Total time: </Text>
     <Text></Text>
     <Text> </Text>
     <Text style={styles.textLabel} > Enter Jobsite: </Text>
-    <TextInput
-    style={styles.input}
-    placeholder="e.g. Apartment "
-    /* required text field */
-    onChangeText={text => {
-    //if text input is empty, null
-    if(text === "")
-    {
-      setRequiredText(null);
-    }
-    else
-    {
-      setRequiredText(true);
-      setJobSite(text);
-    }
-    }}
+    <DropDownPicker
+      placeholder='Select a Jobsite'
+      open={open}
+      value={value}
+      items={items}
+      setOpen={setOpen}
+      setValue={setValue}
+      setItems={setItems}
+      onChangeValue={js => setJobSite(js)}
+      zIndex={1000}
     />
-    <View style={{ height: 175, padding: 20 }}>
-      <Picker
-        selectedValue={selectedValue}
-        style={styles.selectMenu} itemStyle= {{height:150}}
-        onValueChange={(itemValue) => {
-          setSelectedValue(itemValue);
-          setOther(false);
-          setOtherText("");
-          setRequiredText2(true);
-          //if the didn't select a task return null
-          if(itemValue ==="")
-          {
-            setRequiredText2(null);
-          }
-          //if they select "other" task, activate text input box to allow them to enter in task
-          if(itemValue === "Other")
-          {
-            setRequiredText2(null);
-            setOther(true);
-            setOtherText("Please Enter work");
-          }
-        }}
-        >
-          <Picker.Item label ="Select Task" value = "" />
-          <Picker.Item label ="Pressure Wash" value ="Pressure Wash" />
-          <Picker.Item label ="Painting" value = "Painting" />
-          <Picker.Item label ="Prep" value = "Prep" />
-          <Picker.Item label ="cleanup" value = "Cleanup" />
-          <Picker.Item label ="Travel" value = "Travel" />
-          <Picker.Item label ="Delivery" value = "Delivery" />
-          <Picker.Item label ="Office" value = "Office" />
-          <Picker.Item label ="Shop" value = "Shop" />
-          <Picker.Item label ="Other" value = "Other" />
-        </Picker>
-    </View>
+    <DropDownPicker
+      placeholder='Select a Task'
+      zIndex={1}
+      label
+      open={openTask}
+      value={valueTask}
+      items={itemsTask}
+      setOpen={setOpenTask}
+      setValue={setValueTask}
+      setItems={setItemsTask}
+      onChangeValue={tsk => {
+        setTask(tsk);
+        setOther(false);
+        setOtherText("");
+        setRequiredText2(true);
+
+        if(tsk === "") {
+          setRequiredText2(null);
+        }
+        if(tsk === "Other") {
+          setRequiredText2(null);
+          setOther(true);
+          setOtherText("Please Enter Work");
+        }
+      }}
+    />
+
       <TextInput
         editable={other}
         style={styles.input}
@@ -230,7 +242,7 @@ return (
       }
     />
     <Button title ="refresh" onPress={()=> {
-      console.log("refresh")
+      //console.log("refresh")
       setGate(!gate)
 
     }}
@@ -245,7 +257,7 @@ return (
          
         }
         else{
-          console.log("no")
+          //console.log("no")
         }
     }}
     />

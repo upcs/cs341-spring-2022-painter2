@@ -195,7 +195,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
 //with the employee name, employee ID, date and 
 //clock in time as the parameter
  export const clockInFunc= async(newName,newEmployeeID,newDate
-,newClockInTime, newJobSite )=>{
+,newClockInTime, newJobSite, newTask )=>{
     //gets all clock records for a given employee
     var clockRecords= await firebase.firestore()
     .collection('clocking')
@@ -224,7 +224,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
       //otherwise employee is allowed to clock in
       //the 420 represents a clocked in time that has no corresponding
       //clock out time
-      if(!(employeeClockOutData===null)){
+      
         firebase.firestore()
         .collection("clocking")
         .add({
@@ -235,9 +235,10 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
         clockIn:newClockInTime,
         clockOut:null,
         jobSite:newJobSite, 
+        task:newTask,
         hoursWorked:0  
         });
-      }
+      
     
     }
 
@@ -425,12 +426,13 @@ return allJobsites;
 }
 
 export const getOpenJobsites = async() => {
-  var jobsites = await firebase.firestore().collection('jobsites').where("Status",'==',"Open").get();
+  var jobsites = await firebase.firestore().collection('jobsites').where("status",'==',"Open").get();
   var jobsiteArr = [];
   for(let i=0;i<(jobsites.docs).length;i++){
     let jobsitesData=(jobsites.docs[i]).data();
-    jobsiteArr.push(jobsitesData);
+    jobsiteArr.push({"label": jobsitesData.jobName, "value": jobsitesData.jobNum});
 }
+console.log(jobsiteArr);
 console.log("Jobsites fetched");
 return jobsiteArr;
 
@@ -447,5 +449,3 @@ console.log("Firebase Email: " +userDetails.user.email+" Firebase Password: " +u
 })
 .catch(err=>console.log(err.message));
 }
-
-
