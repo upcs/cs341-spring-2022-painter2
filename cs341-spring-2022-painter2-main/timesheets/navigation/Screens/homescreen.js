@@ -66,7 +66,7 @@ export default function HomeScreen() {
   
   useEffect(()=>{
     const getData = async() => {
-      var data = await returnDailyClockRecords(123456789,getDay())
+      var data = await returnDailyClockRecords(tsContext.currentId,getDay())
       //console.log("Grabbing data")
       setdbData(data)
     }
