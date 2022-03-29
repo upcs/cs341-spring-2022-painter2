@@ -6,6 +6,10 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import  {Picker}  from '@react-native-picker/picker';
 import { clockInFunc, clockOutFunc,returnDailyClockRecords } from './databaseFunctions'
+import { useContext } from 'react';
+import AppContext from '../Context.js';
+
+
 
 //The Home Screen
 export default function HomeScreen() {
@@ -19,6 +23,7 @@ export default function HomeScreen() {
   const[other,setOther]=useState(false);
   const[otherText,setOtherText] =useState("");
   const[time,setTime]=useState(0);
+  const tsContext = useContext(AppContext);
   
   function getDay()
   {
@@ -77,7 +82,7 @@ function timeCheck(hours, min)
       hours = 9
       min = 0
       console.log("clock in")
-      clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite)
+      clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite)
       //stores the total minutes work for later
       hours = (hours)*60 + min
       setTime(hours)
