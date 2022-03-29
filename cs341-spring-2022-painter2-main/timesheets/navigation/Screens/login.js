@@ -42,6 +42,7 @@ export default function LoginScreen({ navigation }) {
     const validateLogin = async() => {
         if(creds.email.length != 0 && creds.password.length != 0){
             var user = await findUserByEmail(creds.email); //<-----
+            //var user = await firebase.firestore().collection('clocking').where('employeeID','==',id)
             console.log(user);
             if (Object.keys(user).length > 0){
                 //console.log("Password: ", user.map(a => a.password)[0])
