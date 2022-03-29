@@ -24,7 +24,6 @@ export default function LoginScreen({ navigation }) {
     const onClickListener = (viewID) => {
         if (viewID == "login"){
            validateLogin()
-           navigation.navigate("Main", creds);
         //navigation.getParam('password') to recieve passed values
         }
         else if (viewID == "forgot"){
@@ -55,11 +54,12 @@ export default function LoginScreen({ navigation }) {
                     tsContext.setCurrRole(user[0].role);
                     tsContext.setCurrId(user[0].employeeID);
                     navigation.navigate("Main", creds);
-                    return;
+                    return true;
                 }
             }
         }
         Alert.alert("Try Again", "Invalid email or password" )
+        return false
     }
 
     //Render
