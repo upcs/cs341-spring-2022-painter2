@@ -73,6 +73,33 @@ const firebaseConfig = {
 
       }
 
+    // gets timesheets by ID
+    export const getTimesheetsByID = async (inputID) =>{
+      var allTimesheets= await firebase.firestore()
+              .collection('clocking')
+              .where('employeeID', '==', inputID)
+              .get();
+      var timesheetsArray=[];
+      for(let i=0;i<(allTimesheets.docs).length;i++){
+        let timesheetsData=(allTimesheets.docs[i]).data();
+        timesheetsArray.push(timesheetsData);
+      }
+      var lastTimesheet = timesheetsArray.length - 1;
+      console.log("the Last timesheet: " + lastTimesheet);
+      var lastArray = [];
+      timesheetsArray.forEach((singleTimesheet) => {
+        //console.log("hello");
+        if (singleTimesheet.clockID == lastTimesheet) {
+          //console.log("inside");
+          lastArray.push(singleTimesheet);
+        }
+      });
+      //console.log("Timesheets fetched");
+      console.log(lastArray);
+      return lastArray;
+      
+
+    }
 
 
 //edits email field of record in the database
@@ -195,7 +222,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
 //with the employee name, employee ID, date and 
 //clock in time as the parameter
  export const clockInFunc= async(newName,newEmployeeID,newDate
-,newClockInTime, newJobSite, newTask, newLocation )=>{
+,newClockInTime, newJobSite, newTask, newLatitude, newLongitude )=>{
     //gets all clock records for a given employee
     var clockRecords= await firebase.firestore()
     .collection('clocking')
@@ -237,7 +264,8 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
         jobSite:newJobSite, 
         hoursWorked:0, 
         task:newTask,
-        location:newLocation
+        latitude:newLatitude,
+        longitude:newLongitude
         });
       }
     

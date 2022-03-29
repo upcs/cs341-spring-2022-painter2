@@ -8,6 +8,7 @@ export default function App(){
     const [currEmail, setCurrEmail] = useState('');
     const [currRole, setCurrRole] = useState('');
     const [currId, setCurrId] = useState(-1);
+    const [tcInfo,setTCInfo]=useState([]);
 
 
     const userSetting = {
@@ -15,10 +16,12 @@ export default function App(){
         currentEmail: currEmail,
         currentRole: currRole,
         currentId: currId,
+        timecardInfo: tcInfo,
         setCurrName,
         setCurrEmail,
         setCurrRole,
-        setCurrId
+        setCurrId,
+        setTCInfo
     }
 
     return (

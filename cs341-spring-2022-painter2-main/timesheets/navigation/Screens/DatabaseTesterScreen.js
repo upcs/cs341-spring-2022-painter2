@@ -5,6 +5,9 @@ import {Platform,StyleSheet,Text,View,TextInput,Button, Alert, Dimensions} from 
 import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons'; 
+import { getTimesheetsByID } from './databaseFunctions';
+import { useContext } from 'react';
+import AppContext from '../Context.js';
 
 
 export default function DatabaseTesterScreen() {
@@ -18,6 +21,7 @@ const [siteCoord,setSiteCoord]=useState([]);
 const [yourLocation,setYourLocation]=useState("");
 const [yourCoord,setYourCoord]=useState([]);
 const [distanceFromSite,setDistanceFromSite]=useState(0);
+const dtsContext = useContext(AppContext);
 
 // state var for the where the map initially displays (Coordinates for Portland)
 const [mapRegion, setmapRegion] = useState({
@@ -31,6 +35,10 @@ const [mapRegion, setmapRegion] = useState({
 const [location, setLocation] = React.useState(null)
 const [error, setError] = React.useState(null)
 const [siteMarker, setSiteMarker] = useState({
+  latitude: 0,
+  longitude: 0,
+});
+const [locationTest, setLocationTest] = useState({
   latitude: 0,
   longitude: 0,
 });
@@ -185,6 +193,7 @@ async function handler(siteInput){
   setDistanceFromSite(await getDistFromSite(siteCoordinates[0],siteCoordinates[1]))
   //let siteCoord = (await getOurCoords())
   setSiteMarker({latitude: siteCoord[0], longitude: siteCoord[1]})
+  setLocationTest({latitude: yourLat, longitude: yourLong})
   console.log(siteMarker)
 }
 
@@ -203,11 +212,11 @@ async function handler(siteInput){
       <Text style={styler.line}>_______________________________________________</Text>
 
       <Text> </Text>
-
+      
 
       {/* Map with marker for current location */}
       <MapView style={styler.map} region={mapRegion} > 
-        <Marker coordinate={location} title='yourMarker' />
+        <Marker coordinate={locationTest} title='yourMarker' />
         <Marker coordinate={siteMarker} title='SiteMarker'>
           <FontAwesome name="map-marker" size={40} color="#1F1BEA" />
         </Marker>

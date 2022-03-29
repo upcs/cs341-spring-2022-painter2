@@ -5,7 +5,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import  {Picker}  from '@react-native-picker/picker';
-import { clockInFunc, clockOutFunc,returnDailyClockRecords } from './databaseFunctions'
+import { clockInFunc, clockOutFunc,returnDailyClockRecords, getTimesheetsByID } from './databaseFunctions'
+import { getOurCoords  } from './geoFunctions'
+import { useContext } from 'react';
+import AppContext from '../Context.js';
 
 //The Home Screen
 
@@ -24,24 +27,13 @@ export default function HomeScreen() {
   const[time,setTime]=useState(0);
   const[totalTime,setTotalTime]=useState(0);
   const[otherTextVal,setOtherTextVal] =useState("");
-  const [location, setLocation] = React.useState(null)
-
-  /// gets the users current location and sets it to location
-  React.useEffect(() => {
-    (async () =>{
-        let { status } = await Location.requestPermissionsAsync();
-        if(status !== 'granted'){
-            setError('Permission to access location was denied');
-            return;
-        }
-        const locate = await Location.getCurrentPositionAsync({});
-        setLocation(locate.coords)
-        // let siteCoord = (await getOurCoords())
-        // setSiteMarker({latitude: siteCoord[0], longitude: siteCoord[1]})
-        // console.log(siteMarker)
-
-    })()
-  }, []);
+  const[latitude,setLatitude]=useState(0);
+  const[longitude,setLongitude]=useState(0);
+  const [location, setLocation] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
+  const hsContext = useContext(AppContext);
   
   function getDay()
   {
@@ -79,21 +71,40 @@ export default function HomeScreen() {
           setGate(!gate)
           if(clockIn)
           {
-            getLocation()
-            console.log("LOCATION IS: " + location)  
-            var hours = new Date().getHours()
+            (async () =>{
+              // let yourLat=(await getOurCoords())[0];
+              // let yourLong=(await getOurCoords())[1];
+              setLatitude((await getOurCoords())[0]);
+              setLongitude((await getOurCoords())[1]);
+              console.log("YOUR LATITIUDE: " + latitude);
+              console.log("YOUR LONGITUDE: " + longitude);
+              //setLocation({latitude: yourLat, longitude: yourLong});
+
+              var hours = new Date().getHours()
               var min = new Date().getMinutes()
               hours = 9
               min = 0
               console.log("clock in")
               setColor('red') // Changes button color
               if(selectedValue == "Other") {
-                clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite, otherTextVal, location)
+                clockInFunc("David",2,getDay(),timeCheck(hours,min),jobSite, otherTextVal, latitude, longitude)
+                let tSheet = await getTimesheetsByID(2);
+                hsContext.setTCInfo(tSheet);
+                console.log("TEST TEST: " + hsContext.tcInfo[0]);
+                //console.log("TEST TEST2: " + hsContext.tcInfo[1]);
               }
               else {
-                clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite, otherTextVal, location)
+                clockInFunc("David",2,getDay(),timeCheck(hours,min),jobSite, otherTextVal, latitude, longitude)
+                let tSheet = await getTimesheetsByID(2);
+                hsContext.setTCInfo(tSheet);
+                console.log("TEST TEST: " + (hsContext.tcInfo[0])[]);
+                //console.log("TEST TEST2: " + hsContext.tcInfo[1]);
               } 
+
             //clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite)
+            })()
+
+            
                 
               
               
@@ -117,7 +128,7 @@ export default function HomeScreen() {
               setTotalTime(prevTime=>prevTime + dbhours)
               
                 console.log("clocking out")
-                clockOutFunc("2",timeCheck(hours,min),dbhours)
+                clockOutFunc(2,timeCheck(hours,min),dbhours)
                 setGate(!gate)
               
           }
@@ -267,7 +278,7 @@ return (
     {
       //console.log("button pressed");
       setTestGate(false)
-      console.log(testGate)
+      //console.log(testGate)
       
       clockInClockOut();
     }
@@ -374,5 +385,6 @@ const styles = StyleSheet.create({
 
 
 });
+
 
 
