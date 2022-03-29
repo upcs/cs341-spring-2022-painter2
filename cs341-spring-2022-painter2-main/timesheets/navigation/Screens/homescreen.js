@@ -136,16 +136,16 @@ function clockInClockOut()
 
 function inputCheck()
 {
-  if(requiredText != null && requiredText2!=null)
+  if(jobSite != null && requiredText2!=null)
     {
       return true;
     }
-    else if(requiredText == null && requiredText2 == null)
+    else if(jobSite == null && requiredText2 == null)
     {
       Alert.alert("Please Enter Jobsite and Select Task");
       return false;
     }
-    else if(requiredText == null)
+    else if(jobSite == null)
     {
       Alert.alert("Please Enter Jobsite");
       return false;
