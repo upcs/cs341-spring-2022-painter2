@@ -424,7 +424,6 @@ export const getAllJobsites = async() => {
 return allJobsites;
 }
 
-
 export const getOpenJobsites = async() => {
   var jobsites = await firebase.firestore().collection('jobsites').where("Status",'==',"Open").get();
   var jobsiteArr = [];
@@ -437,7 +436,6 @@ return jobsiteArr;
 
 }
 
-
 //authentification function that adds employee as firebase user
 //used to send out timesheet emails
 export const addFireBaseUser=async(emailInput,passInput)=>{
@@ -449,6 +447,5 @@ console.log("Firebase Email: " +userDetails.user.email+" Firebase Password: " +u
 })
 .catch(err=>console.log(err.message));
 }
-
 
 
