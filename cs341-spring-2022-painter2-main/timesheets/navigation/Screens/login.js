@@ -20,7 +20,6 @@ export default function LoginScreen({ navigation }) {
     const onClickListener = (viewID) => {
         if (viewID == "login"){
            validateLogin()
-           navigation.navigate("Main", creds);
         //navigation.getParam('password') to recieve passed values
         }
         else if (viewID == "forgot"){
@@ -40,6 +39,8 @@ export default function LoginScreen({ navigation }) {
             console.log("login.js: input email - ", creds.email);
             var user = await findUserByEmail(creds.email); //<-----
             console.log("login.js: userFound - ", user);
+            //var user = await firebase.firestore().collection('clocking').where('employeeID','==',id)
+            console.log(user);
             if (Object.keys(user).length > 0){
                 //console.log("Password: ", user.map(a => a.password)[0])
                 var pass = user.map(a => a.password)[0];
@@ -50,11 +51,12 @@ export default function LoginScreen({ navigation }) {
                     tsContext.setCurrRole(user[0].role);
                     tsContext.setCurrId(user[0].employeeID);
                     navigation.navigate("Main", creds);
-                    return;
+                    return true;
                 }
             }
         }
         Alert.alert("Try Again", "Invalid email or password" )
+        return false
     }
 
     //Render

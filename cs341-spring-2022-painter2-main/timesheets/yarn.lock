@@ -11371,6 +11371,13 @@
     "prop-types" "^15.5.9"
     "react-native-material-buttons" "^0.5.0"
     "react-native-material-ripple" "^0.8.0"
+"react-native-material-buttons@^0.6.0":
+  "integrity" "sha512-k/7hqGQJABWvU2wr61aOBuuLp7rrn26a65IUlJU1PPbfVwEJ10v0atxKsY4E0z6VO3m1DAWaAooN82BWmBITGQ=="
+  "resolved" "https://registry.npmjs.org/react-native-material-buttons/-/react-native-material-buttons-0.6.0.tgz"
+  "version" "0.6.0"
+  dependencies:
+    "prop-types" "^15.5.9"
+    "react-native-material-ripple" "^0.9.1"
 
 "react-native-material-dropdown@^0.11.1":
   "integrity" "sha1-wP5DSo5heUHvkQukTS8HyPN1hP4="
@@ -11396,10 +11403,24 @@
   dependencies:
     "prop-types" "^15.5.10"
 
+"react-native-material-ripple@^0.9.1":
+  "integrity" "sha512-dHjARdKoGD3LXwPh2TkURabywM5BfdpKc/AHplJTfBMalhVZ2bc7iJoJmNhNnmT/TZ+B3szL6uV1mO7Pv8zNeA=="
+  "resolved" "https://registry.npmjs.org/react-native-material-ripple/-/react-native-material-ripple-0.9.1.tgz"
+  "version" "0.9.1"
+  dependencies:
+    "prop-types" "^15.5.10"
+
 "react-native-material-textfield@^0.12.0":
   "integrity" "sha1-P7oZ12q4n2cFLIHgghUvwkPYKj8="
   "resolved" "https://registry.npmjs.org/react-native-material-textfield/-/react-native-material-textfield-0.12.0.tgz"
   "version" "0.12.0"
+  dependencies:
+    "prop-types" "^15.5.9"
+
+"react-native-material-textfield@^0.16.1":
+  "integrity" "sha512-pcV/ic3i6vYEODS7pvAMUYJ+evkzIB8cjXtSzkab9rBtYNGRpAlM0Yp8QNnjZ7foZqkj9Ynav0nguWcuJST10A=="
+  "resolved" "https://registry.npmjs.org/react-native-material-textfield/-/react-native-material-textfield-0.16.1.tgz"
+  "version" "0.16.1"
   dependencies:
     "prop-types" "^15.5.9"
 
@@ -11478,7 +11499,7 @@
     "normalize-css-color" "^1.0.2"
     "prop-types" "^15.6.0"
 
-"react-native@*", "react-native@>= 0.51", "react-native@>=0.42.0", "react-native@>=0.57", "react-native@>=0.64.0-rc.0 || 0.0.0-*", "react-native@0.64.3":
+"react-native@*", "react-native@>= 0.51", "react-native@>=0.42.0", "react-native@>=0.55.0", "react-native@>=0.57", "react-native@>=0.64.0-rc.0 || 0.0.0-*", "react-native@0.64.3":
   "integrity" "sha512-2OEU74U0Ek1/WeBzPbg6XDsCfjF/9fhrNX/5TFgEiBKd5mNc9LOZ/OlMmkb7iues/ZZ/oc51SbEfLRQdcW0fVw=="
   "resolved" "https://registry.npmjs.org/react-native/-/react-native-0.64.3.tgz"
   "version" "0.64.3"
