@@ -394,9 +394,11 @@ export const addJobsite = async(addressInp, customerInp, jobNameInp) => {
 //finds an employee by ID and chagnes their role
 export const changeRole = async(id, newRole) => {
     console.log('databaseFunctions: role change - ', newRole + id )
-    var employee = await firebase.firestore().collection('employees').where('employeeID','==',id).get();
-    var docID = await employee.docs[0].id
+    const employee = await firebase.firestore().collection('employees').where('employeeID','==',id).get();
+    //console.log('databaseFunctions: employee - ', employee)
+    const docID = await employee.doc[0].id
     firebase.firestore().collection('employees').doc(docID).update({role:newRole});
+    console.log('databaseFunctions: User role updated!');
   }
 
 //export const editEmployeeRoleHelper = async (docIDInput,roleInput)=>{
