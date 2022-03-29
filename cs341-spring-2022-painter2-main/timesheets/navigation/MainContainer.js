@@ -9,18 +9,18 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
+import { useContext } from 'react';
 
 import TimesheetScreen from './Screens/timesheets';
+import AdminScreen from './Screens/admin';
 import HomeScreen from './Screens/homescreen';
 import StackNav from './Screens/Stack'
 import DatabaseTesterScreen from './Screens/DatabaseTesterScreen';
+import AppContext from './Context.js';
 import JobsiteConfigure from './Screens/jobsiteConfigure';
 
-
-const homeName = 'Home';
-const timesheetsName = 'Timesheets';
-
 const Tab = createBottomTabNavigator();
+
 
 //side menu options
 function CustomDrawerContent(props) {
@@ -51,6 +51,7 @@ function BottomTabs() {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
+              //console.log("Main Container: role - ", ts.currentRole);
             //setting the icons of the navigation bar
             if (route.name === 'Home') {
               iconName = focused ? 'ios-time': 'ios-time-outline';
@@ -60,6 +61,9 @@ function BottomTabs() {
             }
             else if (route.name === 'DatabaseTester') {
               iconName = focused ? 'ios-document-text':'ios-document-text-outline';
+            }
+            else if (route.name === 'Admin') {
+                iconName = focused ? 'business':'business-outline';
             }
             else if (route.name === 'jobsiteConfigure') {
               iconName = focused ? 'ios-document-text':'ios-document-text-outline';
@@ -76,6 +80,7 @@ function BottomTabs() {
         <Tab.Screen name="Timesheets" component={StackNav} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="DatabaseTester" component={DatabaseTesterScreen} />
+         <Tab.Screen name="Admin" component={AdminScreen} />
         <Tab.Screen name="JobsiteConfigure" component={JobsiteConfigure} />
 
     </Tab.Navigator>
@@ -83,12 +88,14 @@ function BottomTabs() {
 }
 
 export default function MainContainer() {
+    const tsContext = useContext(AppContext);
+    
     return (
   <NavigationContainer>
     <Drawer.Navigator
           drawerContent={(props) => <CustomDrawerContent {...props} />}
         >
-        <Drawer.Screen name="App Name" component={BottomTabs} />
+        <Drawer.Screen name="Timesheet" component={BottomTabs} />
       </Drawer.Navigator>
   </NavigationContainer>
 );

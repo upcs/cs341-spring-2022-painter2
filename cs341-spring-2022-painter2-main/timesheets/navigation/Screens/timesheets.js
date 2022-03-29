@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, StatusBar, TouchableOpacity, Button, Modal,ScrollView} from 'react-native';
+import { Text, View, StyleSheet, StatusBar, TouchableOpacity, Button, Modal,ScrollView,Alert} from 'react-native';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import styles from './styles/timesheetStyle.js';
 import 'firebase/firestore';
@@ -83,13 +83,19 @@ export default function TimesheetScreen({ navigation }) {
       );
         
        const renderItem = ({ item }) => (
+         //send "item" to a function to get item.employeeID
+         //so you can set it to a useStateHook to use for databaseFunction
         <TouchableOpacity onPress={handleModal}>
           <Item name={item.name +": " + item.date +"("+item.clockID+")"}/>
+          
         </TouchableOpacity>
       );
       
       const[isModalVisible,setIsModalVisible]=useState(false);
-      const handleModal = () => setIsModalVisible(()=> !isModalVisible, console.log(isModalVisible));
+      const handleModal = () => {
+        setIsModalVisible(()=> !isModalVisible)
+        
+      };
       const [selectedDate, setSelectedDate] = useState(new Date());
 
 
@@ -120,6 +126,26 @@ export default function TimesheetScreen({ navigation }) {
         setClockOutTime(currentTime.toLocaleString().substring(10));
         console.log(currentTime);
       }
+      const showConfirmDialog =()=>{
+        return Alert.alert(
+          "Are your sure?",
+          "Are you sure you want to delete this timesheet?",
+          [
+            // The "Yes" button
+            {
+              text: "Yes",
+              onPress: () => {
+                removeTimesheet("2",1)
+              },
+            },
+            // The "No" button
+            // Does nothing but dismiss the dialog when tapped
+            {
+              text: "No",
+            },
+          ]
+        );
+      };
       
 
           if(tsContext.currentRole == 'Employee') {
@@ -211,7 +237,7 @@ export default function TimesheetScreen({ navigation }) {
                     <View style={{flexDirection:"row"}}>
                     <Button title= "Edit" style={{height:65,marginTop:15,position:"absolute"}}onPress={() => setEdit(!edit)}/>
                     <Button title ="Submit" onPress={() => {changeClockIn(clockIn,"2",1), changeClockOut(clockOut,"2",1)}}/>
-                    <Button title = "DELETE" onPress={()=>{removeTimesheet("2",1)}}/>
+                    <Button title = "DELETE" onPress={()=>{showConfirmDialog()}}/>
                     <Button title ="close" onPress={handleModal}/>
                     </View>
                     </View>

@@ -20,6 +20,7 @@ export default StyleSheet.create({
     bodyText: {
       fontWeight: 'bold',
       fontSize: 15,
+        flex: 1
     },
     timeText: {
       textAlign: 'right',
@@ -36,5 +37,32 @@ export default StyleSheet.create({
       padding: 8,
       borderWidth: 1,
       borderColor: '#000000'   
-    }
+    },
+    alertText: {
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: 20,
+        color: '#A00000'
+    },
+listBody: {
+    padding: 15,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    margin: 0
+},
+conStyle: {
+    padding: 0,
+    margin: 0
+},
+listText: {
+    fontWeight: 'bold',
+  fontSize: 18,
+    color: '#A00000'
+},
+
+inputLineIcon: {
+    marginLeft: 15,
+    color:'#A00000',
+},
   });
