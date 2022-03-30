@@ -26,7 +26,8 @@ export default function TimesheetScreen({ navigation }) {
       //sets the initial data
       useEffect(() => {
         const getData = async () => {
-          data = await getTimesheets();
+          data = await getTimesheets().catch(() => alert("Error connecting with database"));
+          if(data == []) alert("No Timesheets Found");
           //filters data if employee
           if(tsContext.currentRole == 'Employee') {
           const filteredData = data.filter(ts => ts.employeeID == tsContext.currentId);
