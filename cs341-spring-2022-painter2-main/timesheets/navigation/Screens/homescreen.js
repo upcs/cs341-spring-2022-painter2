@@ -77,7 +77,6 @@ export default function HomeScreen() {
           totalHours += ts.hoursWorked;
         }
       })
-      console.log(totalHours)
       setTotalHoursWorked(totalHours);
       setdbData(data);
     }
