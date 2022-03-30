@@ -86,7 +86,7 @@ export default function TimesheetScreen({ navigation }) {
          //send "item" to a function to get item.employeeID
          //so you can set it to a useStateHook to use for databaseFunction
         <TouchableOpacity onPress={handleModal}>
-          <Item name={item.name +": " + item.date +"("+item.clockID+")"}/>
+          <Item name={item.name +": " + item.date}/>
           
         </TouchableOpacity>
       );
@@ -94,8 +94,8 @@ export default function TimesheetScreen({ navigation }) {
       const[isModalVisible,setIsModalVisible]=useState(false);
       const handleModal = () => {
         setIsModalVisible(()=> !isModalVisible)
-        
       };
+      
       const [selectedDate, setSelectedDate] = useState(new Date());
 
 
@@ -128,20 +128,20 @@ export default function TimesheetScreen({ navigation }) {
       }
       const showConfirmDialog =()=>{
         return Alert.alert(
-          "Are your sure?",
-          "Are you sure you want to delete this timesheet?",
+          "Delete Timesheet?",
+          "This cannot be undone",
           [
             // The "Yes" button
             {
-              text: "Yes",
-              onPress: () => {
-                removeTimesheet("2",1)
-              },
+              text: "Cancel",
             },
             // The "No" button
             // Does nothing but dismiss the dialog when tapped
             {
-              text: "No",
+              text: "Ok",
+              onPress: () => {
+                removeTimesheet("2",1)
+              },
             },
           ]
         );
@@ -202,41 +202,56 @@ export default function TimesheetScreen({ navigation }) {
                       
                         { edit ? 
                      // edit time   
-                    <View>
-                        <Text>Time In:</Text>
+                    <View style ={{flexDirection: "row", justifyContent:"center"}}>
+                      <View>
+                        <Text>Time In:         </Text>
                         <DateTimePicker
                         value={selectedTimeIn}
                         mode='time' 
                         onChange={onChangeClockIn}
                         
                       />
-                        <Text>Time Out:</Text>
+                      </View>
+
+                      <View>
+                        <Text>Time Out:         </Text>
                         <DateTimePicker
                         value={selectedTimeOut}
                         mode='time' 
                         onChange={onChangeClockOut}
                       />
+                      </View>
                             
                     </View>:
                     //normal time
-                    <View>
-                      
-                        <Text>Time In:</Text>
-                        
-                            <TextInput style={styles2.input} 
-                            value = {clockIn} 
-                            editable ={false}/> 
+                    <View style = {{flexDirection:"row",justifyContent:"center"}}>
+
+                      <View>
+                        <Text >    Time In:</Text>
+                        <TextInput style={styles2.input} 
+                          value = {clockIn} 
+                          editable ={false}/> 
+                      </View>
+
+                      <View>      
                         <Text>Time Out:</Text>
                             <TextInput style={styles2.input} 
                             value = {clockOut} 
                             editable ={false}/> 
+                      </View>
+
+
                     </View>}
 
+                    <View style={{flexDirection:"row",justifyContent:"center"}}>
+                      <Text>Job Site: {jobSite}</Text>
+                    </View>
+                   
 
-                    <Text>Job Site: {jobSite}</Text>
-                    <View style={{flexDirection:"row"}}>
+
+                    <View style={{flexDirection:"row",justifyContent:"center"}}>
                     <Button title= "Edit" style={{height:65,marginTop:15,position:"absolute"}}onPress={() => setEdit(!edit)}/>
-                    <Button title ="Submit" onPress={() => {changeClockIn(clockIn,"2",1), changeClockOut(clockOut,"2",1)}}/>
+                    <Button title ="Submit" onPress={() => {changeClockIn(clockIn,2,1), changeClockOut(clockOut,2,1)}}/>
                     <Button title = "DELETE" onPress={()=>{showConfirmDialog()}}/>
                     <Button title ="close" onPress={handleModal}/>
                     </View>
