@@ -10,6 +10,7 @@ import { useContext } from 'react';
 import AppContext from '../Context.js';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {Component} from 'react'
+import { number } from 'prop-types';
 
 
 
@@ -27,6 +28,7 @@ export default function HomeScreen() {
   const [other,setOther]=useState(false);
   const [otherText,setOtherText] =useState("");
   const [time,setTime]=useState(0);
+  const [totalHoursWorked, setTotalHoursWorked] = useState(0.0);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -48,6 +50,7 @@ export default function HomeScreen() {
     {label: 'Shop', value: 'Shop'},
     {label: 'Other', value: 'Other'}
   ]);
+  
   const tsContext = useContext(AppContext);
   
 
@@ -66,10 +69,16 @@ export default function HomeScreen() {
   
   useEffect(()=>{
     const getData = async() => {
-      var data = await returnDailyClockRecords(123456789,getDay())
+      var data = await returnDailyClockRecords(tsContext.currentId,getDay())
       //console.log("Grabbing data")
-      setdbData(data)
-      
+      var totalHours = 0.0; 
+      data.forEach(ts => {
+        if (ts.hoursWorked != 'NaN'){
+          totalHours += ts.hoursWorked;
+        }
+      })
+      setTotalHoursWorked(totalHours);
+      setdbData(data);
     }
       getData()
     return;
@@ -122,6 +131,8 @@ function timeCheck(hours, min)
       var min = new Date().getMinutes()
       var dbhours = hours*60 + min
       dbhours =(dbhours-time)/60
+      //rounds hours to 2 decimal places
+      dbhours = Number((dbhours).toFixed(2))
       //console.log("clocking out")
       clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours)
     }
@@ -137,16 +148,16 @@ function clockInClockOut()
 
 function inputCheck()
 {
-  if(requiredText != null && requiredText2!=null)
+  if(jobSite != null && requiredText2!=null)
     {
       return true;
     }
-    else if(requiredText == null && requiredText2 == null)
+    else if(jobSite == null && requiredText2 == null)
     {
       Alert.alert("Please Enter Jobsite and Select Task");
       return false;
     }
-    else if(requiredText == null)
+    else if(jobSite == null)
     {
       Alert.alert("Please Enter Jobsite");
       return false;
@@ -166,10 +177,7 @@ function inputCheck()
 
 return (
   <View style={styles.container}>
-    <Text style={styles.totalTimeText} > Total time: </Text>
-    <Text></Text>
-    <Text> </Text>
-    <Text style={styles.textLabel} > Enter Jobsite: </Text>
+    <Text style={styles.totalTimeText} > Total Hours Worked Today: {totalHoursWorked}  </Text>
     <DropDownPicker
       placeholder='Select a Jobsite'
       open={open}
@@ -207,9 +215,7 @@ return (
         }
       }}
     />
-      <View styles = {{flexDirection:"row"}}>
 
-      
       <TextInput
         editable={other}
         style={styles.input}
@@ -224,8 +230,7 @@ return (
             setRequiredText2(true);
           }
         }}
-        />
-        </View>
+    />
     <Text> </Text>
 
     <View style = {styles.listWrapper}>
