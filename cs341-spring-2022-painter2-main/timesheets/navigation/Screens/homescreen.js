@@ -69,6 +69,7 @@ export default function HomeScreen() {
       var data = await returnDailyClockRecords(123456789,getDay())
       //console.log("Grabbing data")
       setdbData(data)
+      
     }
       getData()
     return;
@@ -206,7 +207,9 @@ return (
         }
       }}
     />
+      <View styles = {{flexDirection:"row"}}>
 
+      
       <TextInput
         editable={other}
         style={styles.input}
@@ -221,7 +224,8 @@ return (
             setRequiredText2(true);
           }
         }}
-    />
+        />
+        </View>
     <Text> </Text>
 
     <View style = {styles.listWrapper}>
