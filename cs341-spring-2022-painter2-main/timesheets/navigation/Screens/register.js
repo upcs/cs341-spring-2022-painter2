@@ -50,6 +50,7 @@ export default function RegisterScreen({ navigation }) {
 //              *******************************************
                 await createNewEmployee(creds.name,creds.email,log,"Employee")
                 await addFireBaseUser(creds.email,creds.p1);
+                Alert.alert("User Created")
                 navigation.pop()
             }
         } else {
