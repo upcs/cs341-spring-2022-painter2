@@ -8,11 +8,8 @@ export default function App(){
     const [currEmail, setCurrEmail] = useState('');
     const [currRole, setCurrRole] = useState('');
     const [currId, setCurrId] = useState(-1);
-<<<<<<< HEAD
     const [tcInfo,setTCInfo]=useState([]);
-=======
     const [currLang, setCurrLang] = useState("EN");
->>>>>>> d3ca51c8c7e36a20273991e3ed4aefb89db44b62
 
 
     const userSetting = {
@@ -20,20 +17,14 @@ export default function App(){
         currentEmail: currEmail,
         currentRole: currRole,
         currentId: currId,
-<<<<<<< HEAD
         timecardInfo: tcInfo,
-=======
         currentLang: currLang,
->>>>>>> d3ca51c8c7e36a20273991e3ed4aefb89db44b62
         setCurrName,
         setCurrEmail,
         setCurrRole,
         setCurrId,
-<<<<<<< HEAD
-        setTCInfo
-=======
+        setTCInfo,
         setCurrLang
->>>>>>> d3ca51c8c7e36a20273991e3ed4aefb89db44b62
     }
 
     return (

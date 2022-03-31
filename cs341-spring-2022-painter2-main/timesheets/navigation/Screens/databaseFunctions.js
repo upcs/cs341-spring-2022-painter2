@@ -84,20 +84,26 @@ const firebaseConfig = {
         let timesheetsData=(allTimesheets.docs[i]).data();
         timesheetsArray.push(timesheetsData);
       }
-      var lastTimesheet = timesheetsArray.length - 1;
-      console.log("the Last timesheet: " + lastTimesheet);
-      var lastArray = [];
-      timesheetsArray.forEach((singleTimesheet) => {
-        //console.log("hello");
-        if (singleTimesheet.clockID == lastTimesheet) {
-          //console.log("inside");
-          lastArray.push(singleTimesheet);
+      //var lastTimesheet = timesheetsArray.length - 1;
+      var latestClockID = 0;
+      for (let i=0;i<timesheetsArray.length;i++){
+        singleTimehseet=timesheetsArray[i];
+        console.log(singleTimehseet.clockID);
+        if(singleTimehseet.clockID > latestClockID){
+          console.log("if statement is true");
+          latestClockID = singleTimehseet.clockID;
         }
-      });
-      //console.log("Timesheets fetched");
-      console.log(lastArray);
-      return lastArray;
-      
+      }
+      console.log("LatestClockID: " + latestClockID);
+      var latestTimesheet=[];
+      for(let i=0;i<timesheetsArray.length;i++){
+        if(timesheetsArray[i].clockID==latestClockID){
+          latestTimesheet.push(timesheetsArray[i]);
+        }
+      }
+      console.log("This is the latest timesheet");
+      console.log(latestTimesheet[0]);
+      return latestTimesheet;
 
     }
 
@@ -297,7 +303,7 @@ export const editEmployeeEmailHelper= async (docIDInput,emailInput)=>{
  //field of a record, so that it changes from the string 420 
  //to an actual valid clockOut time
  export const clockOutFunc = async(newEmployeeID,
-    newClockOutTime,newHoursWorked)=>{
+    newClockOutTime,newHoursWorked, newLatitude, newLongitude)=>{
 //gets all clock records for a given employee
 var clockRecords= await firebase.firestore()
 .collection('clocking')
@@ -339,7 +345,9 @@ if(clockOutField===null){
     .doc(clockDocumentID)
     .update({
         clockOut:newClockOutTime,
-        hoursWorked:newHoursWorked
+        hoursWorked:newHoursWorked,
+        latitude:newLatitude,
+        longitude:newLongitude
     })
      .then(() => {
     console.log('clock record updated!');

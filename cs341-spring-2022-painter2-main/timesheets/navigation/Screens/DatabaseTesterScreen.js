@@ -162,13 +162,10 @@ async function handler(siteInput){
   setDistanceFromSite(await getDistFromSite(siteCoordinates[0],siteCoordinates[1]))
   //let siteCoord = (await getOurCoords())
   setSiteMarker({latitude: siteCoord[0], longitude: siteCoord[1]})
-<<<<<<< HEAD
   setLocationTest({latitude: yourLat, longitude: yourLong})
   console.log(siteMarker)
-=======
   //console.log(siteMarker)
   
->>>>>>> d3ca51c8c7e36a20273991e3ed4aefb89db44b62
 }
 
 
@@ -187,9 +184,15 @@ async function handler(siteInput){
 
       <Text> </Text>
       
+      
 
       {/* Map with marker for current location */}
       <MapView style={styler.map} region={mapRegion} > 
+        {dtsContext.timecardInfo.map(geoData => 
+          
+          <Marker coordinate={{latitude: geoData.lat, longitude: geoData.long}} title= {geoData.name} />
+        )}
+
         <Marker coordinate={locationTest} title='yourMarker' />
         <Marker coordinate={siteMarker} title='SiteMarker'>
           <FontAwesome name="map-marker" size={40} color="#1F1BEA" />
