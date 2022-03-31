@@ -5,19 +5,38 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import  {Picker}  from '@react-native-picker/picker';
-import { clockInFunc, clockOutFunc,returnDailyClockRecords, getOpenJobsites } from './databaseFunctions'
+import { clockInFunc, clockOutFunc,returnDailyClockRecords, getTimesheetsByID, getOpenJobsites } from './databaseFunctions'
+import { getOurCoords  } from './geoFunctions'
 import { useContext } from 'react';
 import AppContext from '../Context.js';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {Component} from 'react'
 import { number } from 'prop-types';
 
-
-
 //The Home Screen
+
+
+
 export default function HomeScreen() {
   
   const [jobSite, setJobSite] = useState(' ');
+  const[totalTime,setTotalTime]=useState(0);
+  const[otherTextVal,setOtherTextVal] =useState("");
+  const[latitude,setLatitude]=useState(0);
+  const[longitude,setLongitude]=useState(0);
+  const [location, setLocation] = useState({
+    latitude: 0,
+    longitude: 0,
+  });
+  const [markerInfo, setMarkerInfo] = useState({
+    name: "",
+    lat: 0,
+    long: 0,
+  });
+  const [testArray,setTestArray]=useState([]);
+
+  const hsContext = useContext(AppContext);
+  //const tsContext = useContext(AppContext);
   const [task, setTask] = useState(' ');
   const [clockIn, setClock] = useState(true);
   const [color,setColor]=useState('green');
@@ -64,9 +83,13 @@ export default function HomeScreen() {
     var string = month+"/"+day+"/"+year
     return string
   }
-  const[dbData,setdbData] = useState();
-  const[gate,setGate] = useState(0);
+ 
+  const[gate,setGate]=useState(true);
+
+  const[testGate,setTestGate]=useState(true);
+
   
+  const[dbData,setdbData] = useState();
   useEffect(()=>{
     const getData = async() => {
       var data = await returnDailyClockRecords(tsContext.currentId,getDay())
@@ -80,9 +103,202 @@ export default function HomeScreen() {
       setTotalHoursWorked(totalHours);
       setdbData(data);
     }
-      getData()
+    getData()
+    
+    
     return;
   },[gate])
+
+  useEffect(() => {
+          //when they clock in, store their time
+          setGate(!gate)
+          if(clockIn)
+          {
+            var hours = new Date().getHours();
+            var min = new Date().getMinutes();
+            hours = 9;
+            min = 0;
+            console.log("clock in");
+            setColor('red'); // Changes button color
+
+            (async () =>{
+              // let yourLat=(await getOurCoords())[0];
+              // let yourLong=(await getOurCoords())[1];
+              setLatitude((await getOurCoords())[0]);
+              setLongitude((await getOurCoords())[1]);
+              console.log("YOUR LATITIUDE: " + latitude);
+              console.log("YOUR LONGITUDE: " + longitude);
+              //setLocation({latitude: yourLat, longitude: yourLong});
+
+              if(selectedValue == "Other") {
+                await clockInFunc("David",2,getDay(),timeCheck(hours,min),jobSite, otherTextVal, latitude, longitude)
+                
+                let arr = [];
+                for(let i=1; i<4;i++) {
+                  console.log("i is: " + i);
+                  let tsheet = await getTimesheetsByID(i);
+                  console.log(tsheet);
+                  let inputName = tsheet[0].name;
+                  let inputLong = tsheet[0].longitude;
+                  let inputLat = tsheet[0].latitude;
+                  const marker = {name: inputName, lat: inputLat, long:inputLong};
+                  console.log("THIS IS MARKER");
+                  console.log(marker);
+                  setMarkerInfo(marker);
+                  arr.push(marker);
+                  //hsContext.setTCInfo([markerInfo]);
+                  console.log("timecard info: ");
+                  //console.log( hsContext.timecardInfo);
+                  //hsContext.setTCInfo([markerInfo]);
+                  //let tmp = (hsContext.timecardInfo);
+                }
+                hsContext.setTCInfo(arr);
+                // let tsheet = await getTimesheetsByID(2);
+                // console.log(tsheet);
+                // let inputName = tsheet[0].name;
+                // let inputLong = tsheet[0].longitude;
+                // let inputLat = tsheet[0].latitude;
+                // const marker = {name: inputName, lat: inputLat, long:inputLong};
+                // console.log(marker);
+                // setMarkerInfo(marker);
+                // console.log("Testing marker name: " + markerInfo.name);
+                // console.log("Testing marker long: " + markerInfo.long);
+                // console.log("Testing marker lat: " + markerInfo.lat);
+                // hsContext.setTCInfo([markerInfo]);
+                // console.log(hsContext.timecardInfo[0]);
+                // console.log("Name: " + ((hsContext.timecardInfo)[0]).name);
+                // console.log("long: " + ((hsContext.timecardInfo)[0]).long);
+                // console.log("lat: " + ((hsContext.timecardInfo)[0]).lat);
+
+                //hsContext.setTCInfo(tSheet);
+                //console.log("TEST TEST: " + (hsContext.tcInfo[0])[0]);
+                //console.log("TEST TEST2: " + hsContext.tcInfo[1]);
+              }
+              else {
+                await clockInFunc("David",2,getDay(),timeCheck(hours,min),jobSite, otherTextVal, latitude, longitude)
+                
+                let arr = [];
+                for(let i=1; i<4;i++) {
+                  console.log("i is: " + i);
+                  let tsheet = await getTimesheetsByID(i);
+                  console.log(tsheet);
+                  let inputName = tsheet[0].name;
+                  let inputLong = tsheet[0].longitude;
+                  let inputLat = tsheet[0].latitude;
+                  const marker = {name: inputName, lat: inputLat, long:inputLong};
+                  console.log("THIS IS MARKER");
+                  console.log(marker);
+                  setMarkerInfo(marker);
+                  arr.push(marker);
+                  //hsContext.setTCInfo([markerInfo]);
+                  console.log("timecard info: ");
+                  //console.log( hsContext.timecardInfo);
+                  //hsContext.setTCInfo([markerInfo]);
+                  //let tmp = (hsContext.timecardInfo);
+                }
+                hsContext.setTCInfo(arr);
+                // console.log("TESTTT_________");
+                // console.log("Size: " + hsContext.timecardInfo.length);
+                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length]);
+                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length - 1]);
+                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length - 2]);
+                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length - 3]);
+                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length - 4]);
+                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length - 5]);
+                
+                // let tsheet = await getTimesheetsByID(2);
+                // console.log(tsheet);
+                // let inputName = tsheet[0].name;
+                // let inputLong = tsheet[0].longitude;
+                // let inputLat = tsheet[0].latitude;
+                // const marker = {name: inputName, lat: inputLat, long:inputLong};
+                // console.log(marker);
+                // setMarkerInfo(marker);
+                // console.log("Testing marker name: " + markerInfo.name);
+                // console.log("Testing marker long: " + markerInfo.long);
+                // console.log("Testing marker lat: " + markerInfo.lat);
+                // hsContext.setTCInfo([markerInfo]);
+                // console.log(hsContext.timecardInfo[0]);
+                // console.log("Name: " + ((hsContext.timecardInfo)[0]).name);
+                // console.log("long: " + ((hsContext.timecardInfo)[0]).long);
+                // console.log("lat: " + ((hsContext.timecardInfo)[0]).lat);
+                //console.log("TEST TEST2: " + hsContext.tcInfo[1]);
+              } 
+
+            //clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite)
+            })()
+
+            
+                
+              
+              
+            setGate(!gate)
+              
+              //stores the total minutes work for later
+              hours = (hours)*60 + min
+              setTime(hours)
+          }
+          //when they clock out, store their time
+          if(clockIn == false){
+              var hours = new Date().getHours();
+              var min = new Date().getMinutes();
+              hours = 17;
+              min = 0;
+              setColor('green'); //changes button color
+                var dbhours = hours*60 + min;
+                dbhours =(dbhours-time)/60;
+                setTotalTime(prevTime=>prevTime + dbhours);
+              
+              (async () =>{
+                setLatitude((await getOurCoords())[0]);
+                setLongitude((await getOurCoords())[1]);
+                console.log("YOUR LATITIUDE: " + latitude);
+                console.log("YOUR LONGITUDE: " + longitude);
+              
+                console.log("clocking out")
+                 await clockOutFunc(2,timeCheck(hours,min),dbhours, latitude, longitude)
+
+                 let arr = [];
+                 for(let i=1; i<4;i++) {
+                   console.log("i is: " + i);
+                   let tsheet = await getTimesheetsByID(i);
+                   console.log(tsheet);
+                   let inputName = tsheet[0].name;
+                   let inputLong = tsheet[0].longitude;
+                   let inputLat = tsheet[0].latitude;
+                   const marker = {name: inputName, lat: inputLat, long:inputLong};
+                   console.log("THIS IS MARKER");
+                   console.log(marker);
+                   setMarkerInfo(marker);
+                   arr.push(marker);
+                   //hsContext.setTCInfo([markerInfo]);
+                   console.log("timecard info: ");
+                   //console.log( hsContext.timecardInfo);
+                   //hsContext.setTCInfo([markerInfo]);
+                   //let tmp = (hsContext.timecardInfo);
+                 }
+                 hsContext.setTCInfo(arr);
+              })()
+              // setColor('green') //changes button color
+              // var dbhours = hours*60 + min
+              // dbhours =(dbhours-time)/60
+              // setTotalTime(prevTime=>prevTime + dbhours)
+              
+              //   console.log("clocking out")
+              //   clockOutFunc(2,timeCheck(hours,min),dbhours)
+                setGate(!gate)
+              
+          }
+      }, [clockIn])
+
+  
+ function clockInClockOut()
+{
+  setClock(!clockIn)
+  return clockIn ? setButtonText("Clock in")  : setButtonText("Clock out")
+
+}
+//formats the time
 
   useEffect(() => {
     getOpenJobsites().then(jbs => setItems(jbs));
@@ -91,6 +307,7 @@ export default function HomeScreen() {
  //formats the time
 function timeCheck(hours, min)
 {
+  
   if(min <10)
   {
     min = '0'+min
@@ -108,6 +325,7 @@ function timeCheck(hours, min)
     return  12 + ":" + min + ":" + "am"
   }
 }
+module.exports = timeCheck(13,0)
   
   function clocking(value)
   {
@@ -143,7 +361,6 @@ function clockInClockOut()
 {
   setClock(!clockIn);
   return clockIn ? setButtonText("Clock in")  : setButtonText("Clock out")
-
 }
 
 function inputCheck()
@@ -227,8 +444,10 @@ return (
             setRequiredText2(null);
           }
           else{
+            setOtherTextVal(text);
             setRequiredText2(true);
           }
+
         }}
     />
     <Text> </Text>
@@ -237,13 +456,16 @@ return (
           <Text style={styles.title}>In</Text>
           <Text style={styles.title}>Out</Text>
           <Text style={styles.title}>Time</Text>
-    </View>
+        </View>
+
     <FlatList
       data={dbData}
       
       keyExtractor={(item) => item.clockID}
       renderItem={ ({item}) => 
+      
         <View style = {styles.listWrapper}>
+          
           <Text style={styles.title}>{item.clockIn}</Text>
           <Text style={styles.title}>{item.clockOut}</Text>
           <Text style={styles.title}>{item.hoursWorked}</Text>
@@ -253,9 +475,8 @@ return (
     <Button title ="refresh" onPress={()=> {
       //console.log("refresh")
       setGate(!gate)
-
-    }}
-    />
+    
+    }}/>
     <Button color ={color} title ={buttonText}  onPress={() => {
 
         if(inputCheck())
@@ -268,10 +489,15 @@ return (
         else{
           //console.log("no")
         }
+        
     }}
+  
+    
     />
   </View>
+
 );
+
 }
 const styles = StyleSheet.create({
   container: {
@@ -279,6 +505,7 @@ const styles = StyleSheet.create({
   backgroundColor: "white"
   //alignItems: "center",
   //justifyContent: 'center',
+
   },
   input: {
       borderWidth:1,
@@ -344,5 +571,5 @@ const styles = StyleSheet.create({
     borderWidth: .5
   }
 
-});
 
+});
