@@ -1,17 +1,17 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, StatusBar, TouchableOpacity, Button, Alert} from 'react-native';
+import { Text, View, TouchableOpacity, Button, Alert} from 'react-native';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import styles from './styles/timesheetStyle.js';
 import { useState, useEffect } from 'react';
-import { getAllEmployees, editEmployeeRole, changeRole, removeEmployee, get} from './databaseFunctions.js';
+import { getAllEmployees, changeRole, removeEmployee} from './databaseFunctions.js';
 import { useContext } from 'react';
 import AppContext from '../Context.js';
 import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
 import { Ionicons } from '@expo/vector-icons';
-
     
 
 export default function AdminScreen({ navigation }) {
+        const [refresh, setRefresh] = useState(false)
         const [timesheetsData, setTimeSheetsData] = useState([])
         const [useData, setUseData] = useState ([])
         const tsContext = useContext(AppContext);
@@ -51,19 +51,19 @@ export default function AdminScreen({ navigation }) {
      }
     
     //CONFIRM ROLE CHANGE
-    const chRole = async(empID, role) => {
-        Alert.alert('Confirm Role Change?', empID + ": " + role, [{
+    const chRole = async(emp, role) => {
+        Alert.alert('Confirm Role Change?', emp.name + ": " + role, [{
                 text: 'Cancel',
-                onPress: () => console.log('admin: Cancel Pressed'),
+                onPress: () => setRefresh(!refresh),
                 style: 'cancel',
-        }, { text: 'OK', onPress: () => onClickListener(empID, role) },]);
+        }, { text: 'OK', onPress: () => onClickListener(emp.employeeID, role) },]);
     }
     
     //CONFIRM DELETE
     const delEmp = async( item ) => {
         Alert.alert('Delete ' + item.name + '?', 'This cannot be undone', [{
                 text: 'Cancel',
-                onPress: () => console.log('admin: Cancel Pressed'),
+                onPress: () => onClickListener(item.employeeID, "cancel"),
                 style: 'cancel',
         }, { text: 'OK', onPress: () => onClickListener(item.employeeID, "del") },]);
     }
@@ -72,18 +72,39 @@ export default function AdminScreen({ navigation }) {
     const onClickListener = (empID, buttonID) => {
         if (buttonID == "del"){
             console.log('admin: delete confirmed');
-            //removeEmployee(empID);
+            removeEmployee(empID);
         } else {
             console.log('admin: role change confirmed - ' + empID + '-' + buttonID);
-            //changeRole(empID, buttonID);
-            return;
+            changeRole(empID, buttonID);
         }
+        setRefresh(!refresh)
+        return;
     }
     
     
         
     function renderItem ({ item }) {
-        console.log("admin: " + item.employeeID + "-" + tsContext.currentId)
+      if(tsContext.currentRole == 'Bookkeep'){
+        if( item.employeeID === tsContext.currentId ){
+          console.log("admin: found myself");
+          return;
+      }
+       else {
+           return (
+      <View style={{
+          padding: 0,
+          borderWidth: 1,
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between'}}>
+      <View style={{justifyContent: "flex-start", paddingLeft: 10}}>
+          <Text style={styles.listText}>{item.name}</Text>
+          <Text style={{fontSize: 12}}>{item.email}</Text>
+      </View>
+       </View>
+       );}
+      }
+        //console.log("admin: " + item.employeeID + "-" + tsContext.currentId)
     if( item.employeeID === tsContext.currentId ){
         console.log("admin: found myself");
         return;
@@ -106,7 +127,7 @@ export default function AdminScreen({ navigation }) {
                 data={roleData}
                 value={item.role}
                 containerStyle={styles.conStyle}
-                onChangeText={(val) => chRole(item.name, val)}
+                onChangeText={(val) => chRole(item, val)}
             />
      <TouchableOpacity onPress={() => delEmp(item)}>
                 <Ionicons name={'close-circle-outline'} size={30} style={styles.inputLineIcon}/>
