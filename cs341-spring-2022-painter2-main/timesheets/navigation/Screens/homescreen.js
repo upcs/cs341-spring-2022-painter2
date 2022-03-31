@@ -116,10 +116,8 @@ export default function HomeScreen() {
           {
             var hours = new Date().getHours();
             var min = new Date().getMinutes();
-            hours = 9;
-            min = 0;
             console.log("clock in");
-            setColor('red'); // Changes button color
+            setColor('green'); // Changes button color
 
             (async () =>{
               // let yourLat=(await getOurCoords())[0];
@@ -130,9 +128,7 @@ export default function HomeScreen() {
               console.log("YOUR LONGITUDE: " + longitude);
               //setLocation({latitude: yourLat, longitude: yourLong});
 
-              if(selectedValue == "Other") {
-                await clockInFunc("David",2,getDay(),timeCheck(hours,min),jobSite, otherTextVal, latitude, longitude)
-                
+              if(selectedValue == "Other") {                
                 let arr = [];
                 for(let i=1; i<4;i++) {
                   console.log("i is: " + i);
@@ -174,9 +170,7 @@ export default function HomeScreen() {
                 //console.log("TEST TEST: " + (hsContext.tcInfo[0])[0]);
                 //console.log("TEST TEST2: " + hsContext.tcInfo[1]);
               }
-              else {
-                await clockInFunc("David",2,getDay(),timeCheck(hours,min),jobSite, otherTextVal, latitude, longitude)
-                
+              else {                
                 let arr = [];
                 for(let i=1; i<4;i++) {
                   console.log("i is: " + i);
@@ -242,9 +236,7 @@ export default function HomeScreen() {
           if(clockIn == false){
               var hours = new Date().getHours();
               var min = new Date().getMinutes();
-              hours = 17;
-              min = 0;
-              setColor('green'); //changes button color
+              setColor('red'); //changes button color
                 var dbhours = hours*60 + min;
                 dbhours =(dbhours-time)/60;
                 setTotalTime(prevTime=>prevTime + dbhours);
@@ -256,8 +248,6 @@ export default function HomeScreen() {
                 console.log("YOUR LONGITUDE: " + longitude);
               
                 console.log("clocking out")
-                 await clockOutFunc(2,timeCheck(hours,min),dbhours, latitude, longitude)
-
                  let arr = [];
                  for(let i=1; i<4;i++) {
                    console.log("i is: " + i);
@@ -337,7 +327,7 @@ module.exports = timeCheck(13,0)
       var hours = new Date().getHours()
       var min = new Date().getMinutes()
       //console.log("clock in")
-      clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite,task)
+      clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite,task,longitude,latitude)
       //stores the total minutes work for later
       hours = (hours)*60 + min
       setTime(hours)
