@@ -2308,9 +2308,9 @@
     "wcwidth" "^1.0.1"
 
 "@react-native-community/datetimepicker@^6.1.0":
-  "integrity" "sha512-RD9KDNDYyJkEEpw0L/pQ5xPptkHp5FXK05ISTaCWo7O2RlTkRKcxen8UVMQ56wjSx/VPT6OpLxI4wrLO6sx/Xg=="
-  "resolved" "https://registry.npmjs.org/@react-native-community/datetimepicker/-/datetimepicker-6.1.0.tgz"
-  "version" "6.1.0"
+  "integrity" "sha512-/ZYDcxMEM/LoTvf4tk1bheaK/yZu3UPPSlolz3RgUDFWixiNacDWu1ZiW8LOhaWs8PnfyGH47xQtEmTxW41mZw=="
+  "resolved" "https://registry.npmjs.org/@react-native-community/datetimepicker/-/datetimepicker-6.1.1.tgz"
+  "version" "6.1.1"
   dependencies:
     "invariant" "^2.2.4"
 
@@ -4110,7 +4110,24 @@
   "resolved" "https://registry.npmjs.org/charenc/-/charenc-0.0.2.tgz"
   "version" "0.0.2"
 
-"chokidar@^2.1.8", "chokidar@^3.4.0":
+"chokidar@^2.1.8":
+  "version" "2.1.8"
+  dependencies:
+    "anymatch" "^2.0.0"
+    "async-each" "^1.0.1"
+    "braces" "^2.3.2"
+    "glob-parent" "^3.1.0"
+    "inherits" "^2.0.3"
+    "is-binary-path" "^1.0.0"
+    "is-glob" "^4.0.0"
+    "normalize-path" "^3.0.0"
+    "path-is-absolute" "^1.0.0"
+    "readdirp" "^2.2.1"
+    "upath" "^1.1.1"
+  optionalDependencies:
+    "fsevents" "^1.2.7"
+
+"chokidar@^3.4.0":
   "integrity" "sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw=="
   "resolved" "https://registry.npmjs.org/chokidar/-/chokidar-3.5.3.tgz"
   "version" "3.5.3"
@@ -11370,15 +11387,6 @@
   dependencies:
     "prop-types" "^15.5.9"
     "react-native-material-ripple" "^0.9.1"
-
-"react-native-material-dropdown-v2-fixed@^0.11.3":
-  "integrity" "sha512-+Oj4XJYVl9CJUNljhFiu53+4UeyLEr/Z0YNEzpyV2xYiJBx50+k/I9ddo91F9C3HaVCCpSCQdSEYY/REUd7Cjg=="
-  "resolved" "https://registry.npmjs.org/react-native-material-dropdown-v2-fixed/-/react-native-material-dropdown-v2-fixed-0.11.3.tgz"
-  "version" "0.11.3"
-  dependencies:
-    "prop-types" "^15.5.9"
-    "react-native-material-buttons" "^0.5.0"
-    "react-native-material-ripple" "^0.8.0"
 
 "react-native-material-dropdown-v2-fixed@^0.11.3":
   "integrity" "sha512-+Oj4XJYVl9CJUNljhFiu53+4UeyLEr/Z0YNEzpyV2xYiJBx50+k/I9ddo91F9C3HaVCCpSCQdSEYY/REUd7Cjg=="
