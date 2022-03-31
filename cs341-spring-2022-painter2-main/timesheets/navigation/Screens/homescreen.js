@@ -140,7 +140,12 @@ function timeCheck(hours, min)
           
   }
  
+function clockInClockOut()
+{
+  setClock(!clockIn);
+  return clockIn ? setButtonText("Clock in")  : setButtonText("Clock out")
 
+}
 
 function inputCheck()
 {
