@@ -342,7 +342,7 @@ module.exports = timeCheck(13,0)
       //rounds hours to 2 decimal places
       dbhours = Number((dbhours).toFixed(2))
       //console.log("clocking out")
-      clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours)
+      clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours,longitude,latitude)
     }
           
   }
