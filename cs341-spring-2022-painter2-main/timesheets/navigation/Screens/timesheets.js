@@ -19,13 +19,15 @@ export default function TimesheetScreen({ navigation }) {
       
       const [timesheetsData, setTimeSheetsData] = useState([])
       const [useData, setUseData] = useState ([])
+      const [sortedByName, setSortedByName] = useState(false)
       const tsContext = useContext(AppContext);
 
       
       //sets the initial data
       useEffect(() => {
         const getData = async () => {
-          data = await getTimesheets();
+          data = await getTimesheets().catch(() => alert("Error connecting with database"));
+          if(data == []) alert("No Timesheets Found");
           //filters data if employee
           if(tsContext.currentRole == 'Employee') {
           const filteredData = data.filter(ts => ts.employeeID == tsContext.currentId);
@@ -48,8 +50,12 @@ export default function TimesheetScreen({ navigation }) {
      }
      
      const filterDataByDate = (searchDate) => {
-      const copy = timesheetsData.filter(ts => ts.date == searchDate);
-
+      const copy = [];
+       if(!sortedByName) {
+        copy = timesheetsData.filter(ts => ts.date == searchDate);
+       } else {
+        copy = useData.filter(ts=> ts.date == searchDate);
+       }
       console.log(copy)
       setUseData(copy)
       }
@@ -85,6 +91,7 @@ export default function TimesheetScreen({ navigation }) {
           
         </TouchableOpacity>
       );
+      
       const[isModalVisible,setIsModalVisible]=useState(false);
       const handleModal = () => {
         setIsModalVisible(()=> !isModalVisible)
@@ -176,7 +183,11 @@ export default function TimesheetScreen({ navigation }) {
                 <TextInput 
                   style={styles.searchBackground}
                   placeholder='Enter Employee Name'
-                  onChangeText={input => filterData(input)}
+                  onChangeText={input => {
+                    filterData(input)
+                    if(input == "") setSortedByName(false);
+                    else setSortedByName(true);
+                  }}
                   />
                   
                   <FlatList

@@ -5,26 +5,21 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import  {Picker}  from '@react-native-picker/picker';
-import { clockInFunc, clockOutFunc,returnDailyClockRecords, getTimesheetsByID } from './databaseFunctions'
+import { clockInFunc, clockOutFunc,returnDailyClockRecords, getTimesheetsByID, getOpenJobsites } from './databaseFunctions'
 import { getOurCoords  } from './geoFunctions'
 import { useContext } from 'react';
 import AppContext from '../Context.js';
+import DropDownPicker from 'react-native-dropdown-picker';
+import {Component} from 'react'
+import { number } from 'prop-types';
 
 //The Home Screen
 
 
 
 export default function HomeScreen() {
+  
   const [jobSite, setJobSite] = useState(' ');
-  const [clockIn, setClock] = useState(null);
-  const [color, setColor] = useState('green');
-  const [buttonText, setButtonText] = useState("Clock in");
-  const [requiredText, setRequiredText] = useState(null);
-  const [requiredText2, setRequiredText2] = useState(null);
-  const[selectedValue, setSelectedValue]=useState("");
-  const[other,setOther]=useState(false);
-  const[otherText,setOtherText] =useState("");
-  const[time,setTime]=useState(0);
   const[totalTime,setTotalTime]=useState(0);
   const[otherTextVal,setOtherTextVal] =useState("");
   const[latitude,setLatitude]=useState(0);
@@ -42,7 +37,43 @@ export default function HomeScreen() {
 
   const hsContext = useContext(AppContext);
   //const tsContext = useContext(AppContext);
+  const [task, setTask] = useState(' ');
+  const [clockIn, setClock] = useState(true);
+  const [color,setColor]=useState('green');
+  const [buttonText, setButtonText] = useState("Clock in");
+  const [requiredText, setRequiredText] = useState(null);
+  const [requiredText2, setRequiredText2] = useState(null);
+  const [selectedValue, setSelectedValue]=useState("");
+  const [other,setOther]=useState(false);
+  const [otherText,setOtherText] =useState("");
+  const [time,setTime]=useState(0);
+  const [totalHoursWorked, setTotalHoursWorked] = useState(0.0);
+
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {label: 'Apple', value: 'apple'},
+    {label: 'Banana', value: 'banana'}
+  ]);
+
+  const [openTask, setOpenTask] = useState(false);
+  const [valueTask, setValueTask] = useState(null);
+  const [itemsTask, setItemsTask] = useState([
+    {label: 'Pressure Wash', value: 'Pressure Wash'},
+    {label: 'Painting', value: 'Painting'},
+    {label: 'Prep', value: 'Prep'},
+    {label: 'Cleanup', value: 'Cleanup'},
+    {label: 'Travel', value: 'Travel'},
+    {label: 'Delivery', value: 'Delivery'},
+    {label: 'Office', value: 'Office'},
+    {label: 'Shop', value: 'Shop'},
+    {label: 'Other', value: 'Other'}
+  ]);
   
+  const tsContext = useContext(AppContext);
+  
+
+  //useEffect to get the jobsite data?
   function getDay()
   {
     var month = new Date().getMonth()
@@ -61,12 +92,16 @@ export default function HomeScreen() {
   const[dbData,setdbData] = useState();
   useEffect(()=>{
     const getData = async() => {
-      
-      var data = await returnDailyClockRecords("2",getDay())
-      
-      console.log("getting data")
-      //setGate(true)
-      setdbData(data)
+      var data = await returnDailyClockRecords(tsContext.currentId,getDay())
+      //console.log("Grabbing data")
+      var totalHours = 0.0; 
+      data.forEach(ts => {
+        if (ts.hoursWorked != 'NaN'){
+          totalHours += ts.hoursWorked;
+        }
+      })
+      setTotalHoursWorked(totalHours);
+      setdbData(data);
     }
     getData()
     
@@ -252,6 +287,12 @@ export default function HomeScreen() {
 
 }
 //formats the time
+
+  useEffect(() => {
+    getOpenJobsites().then(jbs => setItems(jbs));
+    return;
+  },[])
+ //formats the time
 function timeCheck(hours, min)
 {
   
@@ -283,10 +324,8 @@ module.exports = timeCheck(13,0)
       setButtonText("Clock out")
       var hours = new Date().getHours()
       var min = new Date().getMinutes()
-      hours = 9
-      min = 0
-      console.log("clock in")
-      clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite)
+      //console.log("clock in")
+      clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite,task)
       //stores the total minutes work for later
       hours = (hours)*60 + min
       setTime(hours)
@@ -296,12 +335,12 @@ module.exports = timeCheck(13,0)
       setButtonText("Clock in")
       var hours = new Date().getHours()
       var min = new Date().getMinutes()
-      hours = 17
-      min = 0
       var dbhours = hours*60 + min
       dbhours =(dbhours-time)/60
-      console.log("clocking out")
-      clockOutFunc("2",timeCheck(hours,min),dbhours)
+      //rounds hours to 2 decimal places
+      dbhours = Number((dbhours).toFixed(2))
+      //console.log("clocking out")
+      clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours)
     }
           
   }
@@ -310,75 +349,77 @@ function clockInClockOut()
 {
   setClock(!clockIn);
   return clockIn ? setButtonText("Clock in")  : setButtonText("Clock out")
-
-
 }
+
+function inputCheck()
+{
+  if(jobSite != null && requiredText2!=null)
+    {
+      return true;
+    }
+    else if(jobSite == null && requiredText2 == null)
+    {
+      Alert.alert("Please Enter Jobsite and Select Task");
+      return false;
+    }
+    else if(jobSite == null)
+    {
+      Alert.alert("Please Enter Jobsite");
+      return false;
+    }
+    else if(requiredText2 == null && other ==true)
+    {
+      Alert.alert("Please type in Task")
+      return false;
+    }
+    else if(requiredText2== null && selectedValue==="")
+    {
+      Alert.alert("Please select Task")
+      return false;
+    }
+}
+
 
 return (
   <View style={styles.container}>
-    <Text style={styles.totalTimeText} > Total time:{totalTime} </Text>
-    <Text></Text>
-
-    <Text> </Text>
-    <Text style={styles.textLabel} > Enter Jobsite: </Text>
-    <TextInput
-    style={styles.input}
-    placeholder="e.g. Apartment "
-    /* required text field */
-    onChangeText={text => {
-    //if text input is empty, null
-    if(text === "")
-    {
-      setRequiredText(null);
-    }
-    else
-    {
-      setRequiredText(true);
-      setJobSite(text);
-    }
-    }}
+    <Text style={styles.totalTimeText} > Total Hours Worked Today: {totalHoursWorked}  </Text>
+    <DropDownPicker
+      placeholder='Select a Jobsite'
+      open={open}
+      value={value}
+      items={items}
+      setOpen={setOpen}
+      setValue={setValue}
+      setItems={setItems}
+      onChangeValue={js => setJobSite(js)}
+      zIndex={1000}
     />
-    <View style={{ height: 175, padding: 20 }}>
-      <Picker
-        selectedValue={selectedValue}
-        style={styles.selectMenu} itemStyle= {{height:150}}
-        onValueChange={(itemValue) => {
-          setSelectedValue(itemValue);
-          setOther(false);
-          setOtherText("");
-          setRequiredText2(true);
-          //if the didn't select a task return null
-          if(itemValue ==="")
-          {
+    <DropDownPicker
+      placeholder='Select a Task'
+      zIndex={1}
+      label
+      open={openTask}
+      value={valueTask}
+      items={itemsTask}
+      setOpen={setOpenTask}
+      setValue={setValueTask}
+      setItems={setItemsTask}
+      onChangeValue={tsk => {
+        setTask(tsk);
+        setOther(false);
+        setOtherText("");
+        setRequiredText2(true);
 
-            setRequiredText2(null);
-
-          }
-          //if they select "other" task, activate text input box to allow them to enter in task
-          if(itemValue === "Other")
-          {
-            setRequiredText2(null);
-            setOther(true);
-            setOtherText("Please Enter work");
-          }
-          if(itemValue !== "Other" && itemValue !=="") {
-            setOtherTextVal(itemValue);
-          }
-        }}
-        >
-          <Picker.Item label ="Select Task" value = "" />
-          <Picker.Item label ="Pressure Wash" value ="Pressure Wash" />
-          <Picker.Item label ="Painting" value = "Painting" />
-          <Picker.Item label ="Prep" value = "Prep" />
-          <Picker.Item label ="cleanup" value = "Cleanup" />
-          <Picker.Item label ="Travel" value = "Travel" />
-          <Picker.Item label ="Delivery" value = "Delivery" />
-          <Picker.Item label ="Office" value = "Office" />
-          <Picker.Item label ="Shop" value = "Shop" />
-          <Picker.Item label ="Other" value = "Other" />
-
-        </Picker>
-    </View>
+        if(tsk === "") {
+          setRequiredText2(null);
+        }
+        if(tsk === "Other") {
+          setRequiredText2(null);
+          setOther(true);
+          setOtherText("Please Enter Work");
+        }
+      }}
+    />
 
       <TextInput
         editable={other}
@@ -419,38 +460,27 @@ return (
         </View>
       }
     />
-
+    <Button title ="refresh" onPress={()=> {
+      //console.log("refresh")
+      setGate(!gate)
+    
+    }}/>
     <Button color ={color} title ={buttonText}  onPress={() => {
 
-    if(requiredText != null && requiredText2!=null)
-    {
-      //console.log("button pressed");
-      setTestGate(false)
-      //console.log(testGate)
-      
-      clockInClockOut();
-    }
-
-    else if(requiredText == null && requiredText2 == null)
-    {
-      Alert.alert("Please Enter Jobsite and Select Task");
-    }
-    else if(requiredText == null)
-    {
-      Alert.alert("Please Enter Jobsite");
-    }
-    else if(requiredText2 == null && other ==true)
-    {
-
-      Alert.alert("Please type in Task")
-    }
-    else if(requiredText2== null && selectedValue==="")
-    {
-      Alert.alert("Please select Task")
-    }
-
+        if(inputCheck())
+        {
+          setGate(!gate)
+          setClock(!clockIn)
+          clocking(clockIn)
+         
+        }
+        else{
+          //console.log("no")
+        }
+        
     }}
-
+  
+    
     />
   </View>
 
@@ -530,7 +560,4 @@ const styles = StyleSheet.create({
   }
 
 
-
-
 });
-
