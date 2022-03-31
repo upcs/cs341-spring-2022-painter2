@@ -4,7 +4,7 @@ import 'firebase/firestore';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-import { getTimesheets, getTimesheetsForID,displayAllEmployees, findUserByEmail, getEmployeeByID, returnDailyClockRecords } from '../navigation/Screens/databaseFunctions'
+import { getTimesheets, getTimesheetsByID,displayAllEmployees,removeEmployee ,findUserByEmail, getEmployeeByID, returnDailyClockRecords, addJobsite,clockInFunc,clockOutFunc,removeTimesheet, closeJobsite, openJobsite,getAllJobsites, changeRole,createNewEmployee, changeClockIn } from '../navigation/Screens/databaseFunctions'
 import { enableIndexedDbPersistence } from 'firebase/firestore';
 import { Alert } from 'react-native';
 //this config key used to connect to firestore database
@@ -221,16 +221,150 @@ test('findUserByEmail works correctly', () => {
              expect(clockRecord.date).not.toBe("1-11-22");
      
          })
-  
         })
- 
     })
-   
- 
  });
 
+test("adding jobsite functions correctly", () => {
+    addJobsite("testAddress,testCustomer,testJobsite").then(js => {
+        expect(js.address).toBe("testAddress")
+        expect(js.customer).toBe("testCustomer")
+        expect(js.jobName).toBe("testJobsite")
+    })
+})
+test("closing and opening jobsite functions correctly", () =>  {
+    addJobsite("testAddress,testCustomer,testJobsite").then(js=> {
+        closeJobsite(js.jobNum).then(site => {
+            expect(site.status).toBe("Closed")
+         })
+        openJobsite(js.jobNum).then(site => {
+            expect(site.status).toBe("Open")
+        })
+    })
+})
+
+test("getAllJobsites works correctly",() => {
+    getAllJobsites().then(jobsites => jobsites.forEach(js =>{
+        expect(js.address != null).toBe(true);
+        expect(js.customer != null).toBe(true);
+        expect(js.jobName != null).toBe(true);
+        expect(js.jobNum != null).toBe(true)
+    }))
+})
+
+test("Clocking-in and clocking-out functions correctly",() => {
+    clockInFunc("TestName",0,"date","timeIn","jobsite","task",0,0).then(ts => {
+        expect(ts.name).toBe("TestName")
+        expect(ts.employeeID).toBe(0)
+        expect(ts.date).toBe("date")
+        expect(ts.timeIn).toBe("timeIn")
+        expect(ts.jobsite).toBe("jobsite")
+        expect(ts.task).toBe("task")
+        expect(ts.longitude).toBe(0)
+        expect(ts.latitude).toBe(0)
+        clockOutFunc(ts.employeeID,0,0,ts.latitude,ts.longitude).then(ts2 => {
+            expect(ts2.name).toBe("TestName")
+            expect(ts2.employeeID).toBe(0)
+            expect(ts2.date).toBe("date")
+            expect(ts2.timeIn).toBe("timeIn")
+            expect(ts2.jobsite).toBe("jobsite")
+            expect(ts2.task).toBe("task")
+            expect(ts2.longitude).toBe(0)
+            expect(ts2.latitude).toBe(0)
+            expect(ts2.hoursWorked).toBe(0)
+            expect(ts2.timeOut).toBe(0)
+
+        })
+    })
+}) 
+
+test("change clockin and clockout functions correctly", () => {
+    clockInFunc("TestName",0,"date","timeIn","jobsite","task",0,0).then(ts => {
+        expect(ts.name).toBe("TestName")
+        expect(ts.employeeID).toBe(0)
+        expect(ts.date).toBe("date")
+        expect(ts.timeIn).toBe("timeIn")
+        expect(ts.jobsite).toBe("jobsite")
+        expect(ts.task).toBe("task")
+        expect(ts.longitude).toBe(0)
+        expect(ts.latitude).toBe(0)
+        clockOutFunc(ts.employeeID,0,0,ts.latitude,ts.longitude).then(ts2 => {
+            expect(ts2.name).toBe("TestName")
+            expect(ts2.employeeID).toBe(0)
+            expect(ts2.date).toBe("date")
+            expect(ts2.timeIn).toBe("timeIn")
+            expect(ts2.jobsite).toBe("jobsite")
+            expect(ts2.task).toBe("task")
+            expect(ts2.longitude).toBe(0)
+            expect(ts2.latitude).toBe(0)
+            expect(ts2.hoursWorked).toBe(0)
+            expect(ts2.timeOut).toBe(0)
+            changeClockIn(10,ts.employeeID,ts.clockID).then(change1 => {
+                expect(change1.clockIn).toBe(10)
+            })
+            changeClockOut(10,ts.employeeID,ts.clockID).then(change2 => {
+                expect(chagne2.clockOut).toBe(10)
+            })
+        })
+    })
+})
+
+test("removeTimesheet functions correctly",() => {
+    clockInFunc("TestName",0,"date","timeIn","jobsite","task",0,0).then(t => {
+        t.removeTimesheet(t.employeeID,t.clockID).then(ts => {
+            expect(ts.name).toBe(null)
+            expect(ts.employeeID).toBe(null)
+            expect(ts.date).toBe(null)
+            expect(ts.timeIn).toBe(null)
+            expect(ts.jobsite).toBe(null)
+            expect(ts.task).toBe(null)
+            expect(ts.longitude).toBe(null)
+            expect(ts.latitude).toBe(null)
+        })
 
 
+})
+})
+
+test("createNewEmployee functions correctly",() => {
+    createNewEmployee("name","email","pass","Employee").then(acc => {
+        expect(acc.name).toBe("name")
+        expect(acc.email).toBe("email")
+        expect(acc.password).toBe(!null)
+        expect(acc.role).toBe("Employee")
+        expect(acc.employeeID).toBe(!null)
+    })
+})
+
+test("changeRole functions correctly",() => {
+    createNewEmployee("name","email","pass","Employee").then(acc => {
+        changeRole(acc.employeeID,"Admin").then(acc2 => {
+            expect(acc2.name).toBe("name")
+            expect(acc2.email).toBe("email")
+            expect(acc2.password).toBe(!null)
+            expect(acc2.role).toBe("Admin")
+            expect(acc2.employeeID).toBe(!null)
+        })
+    })
+})
+
+test("removeEmployee functions correctly",() => {
+    createNewEmployee("name","email","pass","Employee").then(acc => {
+        removeEmployee(acc.employeeID).then(acc2 => {
+            expect(acc2.name).toBe(null)
+            expect(acc2.email).toBe(null)
+            expect(acc2.password).toBe(null)
+            expect(acc2.role).toBe(null)
+            expect(acc2.employeeID).toBe(null)
+        })
+    })
+})
+
+test("getTimesheetsById functions correctly",() => {
+    getTimesheetsByID(2).then(ts => ts.forEach(t => {
+        expect(t.employeeID).toBe(2);
+    }))
+})
 
 
 
