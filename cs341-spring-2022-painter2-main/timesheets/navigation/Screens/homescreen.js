@@ -11,6 +11,7 @@ import AppContext from '../Context.js';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {Component} from 'react'
 import { number } from 'prop-types';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 
@@ -139,12 +140,7 @@ function timeCheck(hours, min)
           
   }
  
-function clockInClockOut()
-{
-  setClock(!clockIn);
-  return clockIn ? setButtonText("Clock in")  : setButtonText("Clock out")
 
-}
 
 function inputCheck()
 {
@@ -173,6 +169,18 @@ function inputCheck()
       return false;
     }
 }
+const onClock = () =>{
+  if(inputCheck())
+  {
+    setGate(!gate)
+    setClock(!clockIn)
+    clocking(clockIn)
+  }
+  else{
+  //console.log("no")
+  }
+
+};
 
 
 return (
@@ -215,7 +223,7 @@ return (
         }
       }}
     />
-
+      <View style = {{flexDirection:"row",justifyContent:"center"}}>
       <TextInput
         editable={other}
         style={styles.input}
@@ -231,8 +239,20 @@ return (
           }
         }}
     />
+    
+     
+    </View>
+    <TouchableOpacity
+      style={{padding:15,backgroundColor:'white',alignItems:"center", borderWidth:1, borderRadius:10}}
+      onPress={onClock}
+    >
+      <Text style ={{fontSize:20, color:'green'}}>{buttonText}</Text>
+
+
+    </TouchableOpacity>
     <Text> </Text>
 
+    <View>
     <View style = {styles.listWrapper}>
           <Text style={styles.title}>In</Text>
           <Text style={styles.title}>Out</Text>
@@ -256,33 +276,22 @@ return (
 
     }}
     />
-    <Button color ={color} title ={buttonText}  onPress={() => {
-
-        if(inputCheck())
-        {
-          setGate(!gate)
-          setClock(!clockIn)
-          clocking(clockIn)
-         
-        }
-        else{
-          //console.log("no")
-        }
-    }}
-    />
+    </View>
+   
   </View>
 );
 }
 const styles = StyleSheet.create({
   container: {
-  flex: 1,
-  backgroundColor: "white"
+  flex:1,
+  //backgroundColor: "#ab0e0e",
   //alignItems: "center",
   //justifyContent: 'center',
   },
   input: {
       borderWidth:1,
-      borderColor: '#777',
+      borderColor: 'black',
+      backgroundColor:'white',
       padding: 8,
       margin: 10,
       width: 200,
@@ -340,6 +349,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap:'wrap',
     borderBottomColor: 'white',
+    
     backgroundColor: '#ab0e0e',
     borderWidth: .5
   }
