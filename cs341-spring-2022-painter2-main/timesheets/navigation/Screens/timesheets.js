@@ -1,18 +1,13 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, StatusBar, TouchableOpacity, Button, Modal,ScrollView,Alert} from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Button, Modal, Alert} from 'react-native';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import styles from './styles/timesheetStyle.js';
-import 'firebase/firestore';
-import firebase from 'firebase/compat/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/firestore';
 import { useState, useEffect } from 'react';
 import { getTimesheets, addJobsite, changeRole,removeEmployee,changeClockIn, changeClockOut, removeTimesheet,getEmployeeList} from './databaseFunctions.js';
 import timesheetStyle from './styles/timesheetStyle.js';
 import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 import { useContext } from 'react';
 import AppContext from '../Context.js';
-import { backgroundColor } from 'react-native/Libraries/Components/View/ReactNativeStyleAttributes';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 export default function TimesheetScreen({ navigation }) {

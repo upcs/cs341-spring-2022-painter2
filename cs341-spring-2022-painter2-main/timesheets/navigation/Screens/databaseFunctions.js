@@ -100,6 +100,39 @@ function compare( a, b ) {
   return 0;
 }
 
+    // gets timesheets by ID
+    export const getTimesheetsByID = async (inputID) =>{
+      var allTimesheets= await firebase.firestore()
+              .collection('clocking')
+              .where('employeeID', '==', inputID)
+              .get();
+      var timesheetsArray=[];
+      for(let i=0;i<(allTimesheets.docs).length;i++){
+        let timesheetsData=(allTimesheets.docs[i]).data();
+        timesheetsArray.push(timesheetsData);
+      }
+      //var lastTimesheet = timesheetsArray.length - 1;
+      var latestClockID = 0;
+      for (let i=0;i<timesheetsArray.length;i++){
+        singleTimehseet=timesheetsArray[i];
+        console.log(singleTimehseet.clockID);
+        if(singleTimehseet.clockID > latestClockID){
+          console.log("if statement is true");
+          latestClockID = singleTimehseet.clockID;
+        }
+      }
+      console.log("LatestClockID: " + latestClockID);
+      var latestTimesheet=[];
+      for(let i=0;i<timesheetsArray.length;i++){
+        if(timesheetsArray[i].clockID==latestClockID){
+          latestTimesheet.push(timesheetsArray[i]);
+        }
+      }
+      console.log("This is the latest timesheet");
+      console.log(latestTimesheet[0]);
+      return latestTimesheet;
+
+    }
 
 
 //edits email field of record in the database
@@ -189,7 +222,7 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
         let data =(fetchedEmployee.docs[i].data());
         emailEmployeeArray.push(data);
       }
-      //console.log(emailEmployeeArray);
+      console.log(emailEmployeeArray);
       return emailEmployeeArray;
   }
   
@@ -211,7 +244,7 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
 
     }
         
-         //console.log(IDEmployeeArray);
+         console.log(IDEmployeeArray);
          Alert.alert(IDMessage);
          return IDEmployeeArray;
       
@@ -221,7 +254,7 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
 //with the employee name, employee ID, date and 
 //clock in time as the parameter
  export const clockInFunc= async(newName,newEmployeeID,newDate
-,newClockInTime, newJobSite, newTask )=>{
+,newClockInTime, newJobSite, newTask, newLatitude, newLongitude )=>{
     //gets all clock records for a given employee
     var clockRecords= await firebase.firestore()
     .collection('clocking')
@@ -261,8 +294,10 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
         clockIn:newClockInTime,
         clockOut:null,
         jobSite:newJobSite, 
+        hoursWorked:0, 
         task:newTask,
-        hoursWorked:0  
+        latitude:newLatitude,
+        longitude:newLongitude
         });
       
     
@@ -294,14 +329,14 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
  //field of a record, so that it changes from the string 420 
  //to an actual valid clockOut time
  export const clockOutFunc = async(newEmployeeID,
-    newClockOutTime,newHoursWorked)=>{
+    newClockOutTime,newHoursWorked, newLatitude, newLongitude)=>{
 //gets all clock records for a given employee
 var clockRecords= await firebase.firestore()
 .collection('clocking')
 .where('employeeID','==',newEmployeeID)
 .get()
 
-//console.log((clockRecords.docs).length);
+console.log((clockRecords.docs).length);
 //if amount of clock records for an employee is zero a clock out is not possible
 //otherwise, if there are clock in records, then a clock out is possible
 if((clockRecords.docs).length!=0){
@@ -317,8 +352,8 @@ if(data.clockID>maxClockID){
 
 }
 
-//console.log(maxClockID);
-//console.log(index);
+console.log(maxClockID);
+console.log(index);
 
 var clockOutField=((clockRecords.docs[index]).data()).clockOut;
 //document id of most recent clock in record is fetched
@@ -336,7 +371,9 @@ if(clockOutField===null){
     .doc(clockDocumentID)
     .update({
         clockOut:newClockOutTime,
-        hoursWorked:newHoursWorked
+        hoursWorked:newHoursWorked,
+        latitude:newLatitude,
+        longitude:newLongitude
     })
      .then(() => {
     console.log('clock record updated!');
@@ -394,47 +431,13 @@ export const addJobsite = async(addressInp, customerInp, jobNameInp) => {
 //finds an employee by ID and chagnes their role
 export const changeRole = async(id, newRole) => {
     console.log('databaseFunctions: role change - ', newRole + id )
-    const employee = await firebase.firestore().collection('employees').where('employeeID','==',id).get();
+    var emp = await firebase.firestore().collection('employees').where('employeeID','==',id).get();
     //console.log('databaseFunctions: employee - ', employee)
-    const docID = await employee.doc[0].id
+    console.log('databaseFunctions: employee - ', emp.docs)
+    var docID = emp.docs[0].id;
     firebase.firestore().collection('employees').doc(docID).update({role:newRole});
     console.log('databaseFunctions: User role updated!');
   }
-
-//export const editEmployeeRoleHelper = async (docIDInput,roleInput)=>{
-//    //console.log(docIDInput);
-//    firebase.firestore()
-//       .collection('employees')
-//       .doc(docIDInput)
-//       .update({
-//           role:roleInput
-//       })
-//        .then(() => {
-//       console.log('databaseFunctions: User role updated!');
-//       });
-//
-//
-//
-//   }
-//   //edits an employee record that it finds with the employeeID input
-//   //takes this record and changes the data in the email address field
-//   export const editEmployeeRole =  async (IDInput,roleInput) =>{
-//    firebase.firestore()
-//       .collection('employees')
-//       .where('employeeID','==',IDInput)
-//       .get()
-//       .then(querySnapshot => {
-//           let firstDocument=querySnapshot.docs[0];
-//           //the document id of the corresponding document is retreived
-//           //this doc id is fed into helper function, that takes
-//           //document ID as a parameter
-//           //helper function essentially handles the editing part
-//           editEmployeeEmailHelper(firstDocument.id,roleInput);
-//
-//
-//       });
-//   }
-
 
 
 //finds an employee by ID and changes clock in time
@@ -456,7 +459,7 @@ export const changeJobSite = async(newJobSite,id,clockID) => {
   var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
   var docID = employee.docs[0].id
   console.log(docID)
-  firebase.firestore().collection('clocking').doc(docID).update({jobSite:newJobSite});
+  await firebase.firestore().collection('clocking').doc(docID).update({jobSite:newJobSite});
 }
 
 //finds an employee by id and removes them from database
