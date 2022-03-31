@@ -3,18 +3,20 @@ import { Text, View, StyleSheet, TouchableOpacity, Button, Modal, Alert} from 'r
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import styles from './styles/timesheetStyle.js';
 import { useState, useEffect } from 'react';
-import { getTimesheets, addJobsite, changeRole,removeEmployee,changeClockIn, changeClockOut, removeTimesheet} from './databaseFunctions.js';
+import { getTimesheets, addJobsite, changeRole,removeEmployee,changeClockIn, changeClockOut, removeTimesheet,getEmployeeList} from './databaseFunctions.js';
+import timesheetStyle from './styles/timesheetStyle.js';
+import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 import { useContext } from 'react';
 import AppContext from '../Context.js';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import DropDownPicker from 'react-native-dropdown-picker';
 export default function TimesheetScreen({ navigation }) {
       
       const [timesheetsData, setTimeSheetsData] = useState([])
       const [useData, setUseData] = useState ([])
       const [sortedByName, setSortedByName] = useState(false)
       const tsContext = useContext(AppContext);
-
+      const [gate,setGate]=useState(false)
       
       //sets the initial data
       useEffect(() => {
@@ -33,22 +35,19 @@ export default function TimesheetScreen({ navigation }) {
         }
         getData()
         return;
-     }, [])
+     }, [gate])
 
-     const filterData = (searchName) => {
-        const copy = timesheetsData.filter(ts => ts.name.toString().toLowerCase().trim().includes(searchName.toString().toLowerCase().trim()));
-
+     const filterData = (searchName,x) => {
+        const copy = timesheetsData.filter(ts => ts.name.toString().toLowerCase().trim().includes(
+          searchName.toString().toLowerCase().trim()) &&ts.date == x.toLocaleDateString());
+        //console.log(ts.date)
+        console.log(x)
         console.log(copy)
         setUseData(copy)
      }
      
      const filterDataByDate = (searchDate) => {
-      const copy = [];
-       if(!sortedByName) {
-        copy = timesheetsData.filter(ts => ts.date == searchDate);
-       } else {
-        copy = useData.filter(ts=> ts.date == searchDate);
-       }
+      const copy = timesheetsData.filter(ts => ts.date == searchDate );
       console.log(copy)
       setUseData(copy)
       }
@@ -80,7 +79,7 @@ export default function TimesheetScreen({ navigation }) {
          //send "item" to a function to get item.employeeID
          //so you can set it to a useStateHook to use for databaseFunction
         <TouchableOpacity onPress={handleModal}>
-          <Item name={item.name +": " + item.date +"("+item.clockID+")"}/>
+          <Item  name={item.name +": " + item.date+" "+item.clockIn+"-"+item.clockOut +" ("+item.hoursWorked+") hours"}/>
           
         </TouchableOpacity>
       );
@@ -88,8 +87,8 @@ export default function TimesheetScreen({ navigation }) {
       const[isModalVisible,setIsModalVisible]=useState(false);
       const handleModal = () => {
         setIsModalVisible(()=> !isModalVisible)
-        
       };
+      
       const [selectedDate, setSelectedDate] = useState(new Date());
 
 
@@ -101,19 +100,26 @@ export default function TimesheetScreen({ navigation }) {
       const jobSite = "University of portland" 
       const [selectedTimeIn,setSelectedTimeIn]=useState(new Date());
       const [selectedTimeOut,setSelectedTimeOut]=useState(new Date());
+      const [test,setTest]=useState("none")
+
+
+      //filters the list by selected date
       const onChange = (event, selectedDate) => {
         const currentDate = selectedDate;
         
         setSelectedDate(currentDate);
         console.log(selectedDate)
         filterDataByDate(selectedDate.toLocaleDateString());
+        setTest(selectedDate.toLocaleDateString())
       };
+      //updates the clock in time
       const onChangeClockIn = (event, selectTime) => {
         const currentTime = selectTime;
         setSelectedTimeIn(currentTime);
         setClockInTime(currentTime.toLocaleString().substring(10));
         console.log(currentTime);
       }
+      //updates the clock out time
       const onChangeClockOut = (event, selectTime) => {
         const currentTime = selectTime;
         setSelectedTimeOut(currentTime);
@@ -122,25 +128,34 @@ export default function TimesheetScreen({ navigation }) {
       }
       const showConfirmDialog =()=>{
         return Alert.alert(
-          "Are your sure?",
-          "Are you sure you want to delete this timesheet?",
+          "Delete Timesheet?",
+          "This cannot be undone",
           [
-            // The "Yes" button
+            // The "Cancel" button
             {
-              text: "Yes",
+              text: "Cancel",
+            },
+            
+            {
+              text: "Ok",
               onPress: () => {
                 removeTimesheet("2",1)
               },
             },
-            // The "No" button
-            // Does nothing but dismiss the dialog when tapped
-            {
-              text: "No",
-            },
           ]
         );
       };
-      
+      useEffect(() => {
+        getEmployeeList().then(jbs => setItems(jbs));
+        return;
+      },[])
+      const [open, setOpen] = useState(false);
+      const [value, setValue] = useState("");
+      const [items, setItems] = useState([
+        {label: 'Apple', value: 'apple'},
+        
+      ]);
+
 
           if(tsContext.currentRole == 'Employee') {
             return (
@@ -161,27 +176,50 @@ export default function TimesheetScreen({ navigation }) {
           } else {
             return (
               <View style={styles.container}>
+                {/* red header on top  */}
                 <View style={styles.header}>
                   <Text style={styles.headerText}>My Timesheets</Text>
-                  
                 </View>
-                <DateTimePicker
-                  value={selectedDate}
-                  mode='date'
-                  onChange={onChange}
-                />
-                <Button title="Export" onPress={() => toCsv(timesheetsData)}/>
+                <DropDownPicker
+                      zIndex={1}
+                      open={open}
+                      value={value}
+                      items={items}
+                      setOpen={setOpen}
+                      setValue={setValue}
+                      setItems={setItems}
+                      searchable={true}
+                      searchPlaceholder="Type in a name you want to search for"
+                      onChangeValue={input => {
+                        console.log("input: "+input)
+                        filterData(input,selectedDate)
+                        if(input == "") setSortedByName(false);
+                        else setSortedByName(true);
+                      }}
+                    />
+                <View>
+
+                 
+                    <DateTimePicker
+                      value={selectedDate}
+                      mode='date'
+                      onChange={onChange}
+                    />
+                    
+                  
+                    <TouchableOpacity
+                      style={{padding:5,backgroundColor:'white',alignItems:"center", borderWidth:1, borderRadius:10}}
+                      onPress={()=> {
+                        setGate(!gate)
+
+                      }}
+                    >
+                      <Text style ={{fontSize:20, color:'red'}}>Refresh</Text>
+
+
+                    </TouchableOpacity>
+                </View>
                 
-               
-                <TextInput 
-                  style={styles.searchBackground}
-                  placeholder='Enter Employee Name'
-                  onChangeText={input => {
-                    filterData(input)
-                    if(input == "") setSortedByName(false);
-                    else setSortedByName(true);
-                  }}
-                  />
                   
                   <FlatList
                 data={useData}
@@ -197,40 +235,73 @@ export default function TimesheetScreen({ navigation }) {
                         { edit ? 
                      // edit time   
                     <View>
-                        <Text>Time In:</Text>
-                        <DateTimePicker
-                        value={selectedTimeIn}
-                        mode='time' 
-                        onChange={onChangeClockIn}
-                        
-                      />
-                        <Text>Time Out:</Text>
-                        <DateTimePicker
-                        value={selectedTimeOut}
-                        mode='time' 
-                        onChange={onChangeClockOut}
-                      />
+                      <View style ={{flexDirection: "row", justifyContent:"center"}}>
+                        <View>
+                          <Text>Time In:         </Text>
+                          <DateTimePicker
+                          value={selectedTimeIn}
+                          mode='time' 
+                          onChange={onChangeClockIn}
+                          
+                        />
+                        </View>
+
+                        <View>
+                          <Text>Time Out:         </Text>
+                          <DateTimePicker
+                          value={selectedTimeOut}
+                          mode='time' 
+                          onChange={onChangeClockOut}
+                        />
+                        </View>
+                      </View>
+                      <Text></Text>
+                      
+                      <View style ={{flexDirection: "row", justifyContent:"center"}}>
+                      <TextInput style={styles2.input2}
+                        placeholder={jobSite}
+                        placeholderTextColor="grey"
+                        editable={true}
+                      
+                      >
+
+
+
+                      </TextInput>
+                      </View>
                             
                     </View>:
                     //normal time
                     <View>
-                      
-                        <Text>Time In:</Text>
-                        
-                            <TextInput style={styles2.input} 
-                            value = {clockIn} 
-                            editable ={false}/> 
+                      <View style = {{flexDirection:"row",justifyContent:"center"}}>
+                      <View>
+                        <Text >    Time In:</Text>
+                        <TextInput style={styles2.input} 
+                          value = {clockIn} 
+                          editable ={false}/> 
+                      </View>
+
+                      <View>      
                         <Text>Time Out:</Text>
                             <TextInput style={styles2.input} 
                             value = {clockOut} 
                             editable ={false}/> 
+                      </View>
+                      </View>
+                      <View style ={{flexDirection: "row", justifyContent:"center"}}>
+                      <TextInput style={styles2.input2}
+                        placeholder={jobSite}
+                        placeholderTextColor="black"
+                        editable={false}
+                      
+                      >
+                      </TextInput>
+                      </View>
                     </View>}
 
-
-                    <Text>Job Site: {jobSite}</Text>
-                    <View style={{flexDirection:"row"}}>
+                    <View style={{flexDirection:"row",justifyContent:"center"}}>
                     <Button title= "Edit" style={{height:65,marginTop:15,position:"absolute"}}onPress={() => setEdit(!edit)}/>
-                    <Button title ="Submit" onPress={() => {changeClockIn(clockIn,"2",1), changeClockOut(clockOut,"2",1)}}/>
+                    <Button title ="Submit" onPress={() => {changeClockIn(clockIn,2,1), changeClockOut(clockOut,2,1)}}/>
                     <Button title = "DELETE" onPress={()=>{showConfirmDialog()}}/>
                     <Button title ="close" onPress={handleModal}/>
                     </View>
@@ -284,7 +355,7 @@ const Modalstyles= StyleSheet.create({
 const styles2 = StyleSheet.create({
   container: {
   flex: 1,
-  backgroundColor: "white",
+  //backgroundColor: "white",
   alignItems: "center",
   justifyContent: 'center',
 
@@ -295,6 +366,13 @@ const styles2 = StyleSheet.create({
       padding: 8,
       margin: 10,
       width: 100,
+  },
+  input2: {
+    borderWidth:1,
+    borderColor: '#777',
+    padding: 8,
+    margin: 10,
+    width: 220,
   }
 });
   
