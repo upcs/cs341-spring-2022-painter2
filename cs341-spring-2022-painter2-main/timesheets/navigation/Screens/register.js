@@ -42,11 +42,11 @@ export default function RegisterScreen({ navigation }) {
 //              *******************************************
             var value = await findUserByEmail(creds.email)
             if (Object.keys(value).length > 0){
-                //console.log("Result: ", "Account exists")
+                console.log("Result: ", "Account exists")
                 Alert.alert("Error", "Email already exists")
             }
             else {
-                //console.log("P1-set: ", log);
+                console.log("P1-set: ", log);
 //              *******************************************
                 await createNewEmployee(creds.name,creds.email,log,"Employee")
                 await addFireBaseUser(creds.email,creds.p1);
