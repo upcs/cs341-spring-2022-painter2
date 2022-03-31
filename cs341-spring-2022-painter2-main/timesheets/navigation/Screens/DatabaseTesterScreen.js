@@ -5,6 +5,9 @@ import {Platform,StyleSheet,Text,View,TextInput,Button, Alert, Dimensions} from 
 import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons'; 
+import { getTimesheetsByID } from './databaseFunctions';
+import { useContext } from 'react';
+import AppContext from '../Context.js';
 
 
 export default function DatabaseTesterScreen() {
@@ -18,6 +21,7 @@ const [siteCoord,setSiteCoord]=useState([0,0]);
 const [yourLocation,setYourLocation]=useState("");
 const [yourCoord,setYourCoord]=useState([0,0]);
 const [distanceFromSite,setDistanceFromSite]=useState(0);
+const dtsContext = useContext(AppContext);
 
 // state var for the where the map initially displays (Coordinates for Portland)
 const [mapRegion, setmapRegion] = useState({
@@ -34,6 +38,10 @@ const [location, setLocation] = useState({
 });
 const [error, setError] = React.useState(null)
 const [siteMarker, setSiteMarker] = useState({
+  latitude: 0,
+  longitude: 0,
+});
+const [locationTest, setLocationTest] = useState({
   latitude: 0,
   longitude: 0,
 });
@@ -154,6 +162,8 @@ async function handler(siteInput){
   setDistanceFromSite(await getDistFromSite(siteCoordinates[0],siteCoordinates[1]))
   //let siteCoord = (await getOurCoords())
   setSiteMarker({latitude: siteCoord[0], longitude: siteCoord[1]})
+  setLocationTest({latitude: yourLat, longitude: yourLong})
+  console.log(siteMarker)
   //console.log(siteMarker)
   
 }
@@ -173,11 +183,17 @@ async function handler(siteInput){
       <Text style={styler.line}>_______________________________________________</Text>
 
       <Text> </Text>
-
+      
+      
 
       {/* Map with marker for current location */}
       <MapView style={styler.map} region={mapRegion} > 
-        <Marker coordinate={location} title='yourMarker' />
+        {dtsContext.timecardInfo.map(geoData => 
+          
+          <Marker coordinate={{latitude: geoData.lat, longitude: geoData.long}} title= {geoData.name} />
+        )}
+
+        <Marker coordinate={locationTest} title='yourMarker' />
         <Marker coordinate={siteMarker} title='SiteMarker'>
           <FontAwesome name="map-marker" size={40} color="#1F1BEA" />
         </Marker>
@@ -187,13 +203,13 @@ async function handler(siteInput){
 
       <Text style={styler.labelText}> Current Location:</Text>
       <Text style={styler.boldText}> {yourLocation} </Text>
-      <Text style={styler.text}> ({yourCoord[0]},{yourCoord[1]}) </Text>
+      {/* <Text style={styler.text}> ({yourCoord[0]},{yourCoord[1]}) </Text> */}
 
       <Text> </Text>
-      <Text> </Text>
+      {/* <Text> </Text> */}
 
-      <Text style={styler.labelText}> Coordinates of Job site:</Text>
-      <Text style={styler.text}> ({siteCoord[0]},{siteCoord[1]}) </Text>
+      {/* <Text style={styler.labelText}> Coordinates of Job site:</Text>
+      <Text style={styler.text}> ({siteCoord[0]},{siteCoord[1]}) </Text> */}
 
       <Text> </Text>
 
@@ -255,7 +271,7 @@ const styler = StyleSheet.create({
         },
         map: {
           width: Dimensions.get('window').width,
-          height: Dimensions.get('window').height/4,
+          height: Dimensions.get('window').height/2.5,
         },
 
         });
@@ -392,3 +408,42 @@ const styler = StyleSheet.create({
     
 //     });
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
