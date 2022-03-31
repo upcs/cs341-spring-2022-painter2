@@ -200,11 +200,6 @@ return (
       setValue={setValueTask}
       setItems={setItemsTask}
       onChangeValue={tsk => {
-        setTask(tsk);
-        setOther(false);
-        setOtherText("");
-        setRequiredText2(true);
-
         if(tsk === "") {
           setRequiredText2(null);
         }
@@ -212,6 +207,11 @@ return (
           setRequiredText2(null);
           setOther(true);
           setOtherText("Please Enter Work");
+        } else {
+          setTask(tsk);
+          setOther(false);
+          setOtherText("");
+          setRequiredText2(true);
         }
       }}
     />
@@ -227,6 +227,7 @@ return (
             setRequiredText2(null);
           }
           else{
+            setTask(text);
             setRequiredText2(true);
           }
         }}
