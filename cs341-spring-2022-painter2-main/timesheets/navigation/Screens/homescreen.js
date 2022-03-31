@@ -133,6 +133,7 @@ export default function HomeScreen() {
               if(selectedValue == "Other") {
                 await clockInFunc("David",2,getDay(),timeCheck(hours,min),jobSite, otherTextVal, latitude, longitude)
                 
+                let arr = [];
                 for(let i=1; i<4;i++) {
                   console.log("i is: " + i);
                   let tsheet = await getTimesheetsByID(i);
@@ -141,13 +142,17 @@ export default function HomeScreen() {
                   let inputLong = tsheet[0].longitude;
                   let inputLat = tsheet[0].latitude;
                   const marker = {name: inputName, lat: inputLat, long:inputLong};
+                  console.log("THIS IS MARKER");
                   console.log(marker);
                   setMarkerInfo(marker);
-                  hsContext.setTCInfo([...hsContext.timecardInfo, markerInfo]);
+                  arr.push(marker);
+                  //hsContext.setTCInfo([markerInfo]);
+                  console.log("timecard info: ");
+                  //console.log( hsContext.timecardInfo);
+                  //hsContext.setTCInfo([markerInfo]);
+                  //let tmp = (hsContext.timecardInfo);
                 }
-                console.log(hsContext.timecardInfo[0]);
-                console.log(hsContext.timecardInfo[1]);
-                console.log(hsContext.timecardInfo[2]);
+                hsContext.setTCInfo(arr);
                 // let tsheet = await getTimesheetsByID(2);
                 // console.log(tsheet);
                 // let inputName = tsheet[0].name;
@@ -172,6 +177,7 @@ export default function HomeScreen() {
               else {
                 await clockInFunc("David",2,getDay(),timeCheck(hours,min),jobSite, otherTextVal, latitude, longitude)
                 
+                let arr = [];
                 for(let i=1; i<4;i++) {
                   console.log("i is: " + i);
                   let tsheet = await getTimesheetsByID(i);
@@ -180,19 +186,25 @@ export default function HomeScreen() {
                   let inputLong = tsheet[0].longitude;
                   let inputLat = tsheet[0].latitude;
                   const marker = {name: inputName, lat: inputLat, long:inputLong};
+                  console.log("THIS IS MARKER");
                   console.log(marker);
                   setMarkerInfo(marker);
+                  arr.push(marker);
                   //hsContext.setTCInfo([markerInfo]);
                   console.log("timecard info: ");
                   //console.log( hsContext.timecardInfo);
                   //hsContext.setTCInfo([markerInfo]);
                   //let tmp = (hsContext.timecardInfo);
-                  hsContext.setTCInfo(testArray => [...testArray, markerInfo]);
                 }
-                console.log("TESTTT_________");
-                console.log(hsContext.timecardInfo[0]);
-                console.log(hsContext.timecardInfo[1]);
-                console.log(hsContext.timecardInfo[2]);
+                hsContext.setTCInfo(arr);
+                // console.log("TESTTT_________");
+                // console.log("Size: " + hsContext.timecardInfo.length);
+                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length]);
+                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length - 1]);
+                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length - 2]);
+                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length - 3]);
+                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length - 4]);
+                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length - 5]);
                 
                 // let tsheet = await getTimesheetsByID(2);
                 // console.log(tsheet);
@@ -246,26 +258,26 @@ export default function HomeScreen() {
                 console.log("clocking out")
                  await clockOutFunc(2,timeCheck(hours,min),dbhours, latitude, longitude)
 
-                for(let i=1; i<4;i++) {
-                  console.log("i is: " + i);
-                  let tsheet = await getTimesheetsByID(i);
-                  console.log(tsheet);
-                  let inputName = tsheet[0].name;
-                  let inputLong = tsheet[0].longitude;
-                  let inputLat = tsheet[0].latitude;
-                  const marker = {name: inputName, lat: inputLat, long:inputLong};
-                  console.log(marker);
-                  setMarkerInfo(marker);
-                  //hsContext.setTCInfo([markerInfo]);
-                  let tmp = (hsContext.timecardInfo);
-                  hsContext.setTCInfo(tmp => [...tmp, markerInfo]);
-                  // {hsContext.timecardInfo.map((a, i) => (
-                  //   <p key={i}>{a}</p>
-                  // ))}
-                }
-                console.log(hsContext.timecardInfo[0]);
-                console.log(hsContext.timecardInfo[1]);
-                console.log(hsContext.timecardInfo[2]);
+                 let arr = [];
+                 for(let i=1; i<4;i++) {
+                   console.log("i is: " + i);
+                   let tsheet = await getTimesheetsByID(i);
+                   console.log(tsheet);
+                   let inputName = tsheet[0].name;
+                   let inputLong = tsheet[0].longitude;
+                   let inputLat = tsheet[0].latitude;
+                   const marker = {name: inputName, lat: inputLat, long:inputLong};
+                   console.log("THIS IS MARKER");
+                   console.log(marker);
+                   setMarkerInfo(marker);
+                   arr.push(marker);
+                   //hsContext.setTCInfo([markerInfo]);
+                   console.log("timecard info: ");
+                   //console.log( hsContext.timecardInfo);
+                   //hsContext.setTCInfo([markerInfo]);
+                   //let tmp = (hsContext.timecardInfo);
+                 }
+                 hsContext.setTCInfo(arr);
               })()
               // setColor('green') //changes button color
               // var dbhours = hours*60 + min
