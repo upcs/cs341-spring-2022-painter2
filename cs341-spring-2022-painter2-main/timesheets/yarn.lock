@@ -11363,6 +11363,14 @@
     "prop-types" "^15.5.9"
     "react-native-material-ripple" "^0.7.0"
 
+"react-native-material-buttons@^0.6.0":
+  "integrity" "sha512-k/7hqGQJABWvU2wr61aOBuuLp7rrn26a65IUlJU1PPbfVwEJ10v0atxKsY4E0z6VO3m1DAWaAooN82BWmBITGQ=="
+  "resolved" "https://registry.npmjs.org/react-native-material-buttons/-/react-native-material-buttons-0.6.0.tgz"
+  "version" "0.6.0"
+  dependencies:
+    "prop-types" "^15.5.9"
+    "react-native-material-ripple" "^0.9.1"
+
 "react-native-material-dropdown-v2-fixed@^0.11.3":
   "integrity" "sha512-+Oj4XJYVl9CJUNljhFiu53+4UeyLEr/Z0YNEzpyV2xYiJBx50+k/I9ddo91F9C3HaVCCpSCQdSEYY/REUd7Cjg=="
   "resolved" "https://registry.npmjs.org/react-native-material-dropdown-v2-fixed/-/react-native-material-dropdown-v2-fixed-0.11.3.tgz"
@@ -11371,13 +11379,6 @@
     "prop-types" "^15.5.9"
     "react-native-material-buttons" "^0.5.0"
     "react-native-material-ripple" "^0.8.0"
-"react-native-material-buttons@^0.6.0":
-  "integrity" "sha512-k/7hqGQJABWvU2wr61aOBuuLp7rrn26a65IUlJU1PPbfVwEJ10v0atxKsY4E0z6VO3m1DAWaAooN82BWmBITGQ=="
-  "resolved" "https://registry.npmjs.org/react-native-material-buttons/-/react-native-material-buttons-0.6.0.tgz"
-  "version" "0.6.0"
-  dependencies:
-    "prop-types" "^15.5.9"
-    "react-native-material-ripple" "^0.9.1"
 
 "react-native-material-dropdown@^0.11.1":
   "integrity" "sha1-wP5DSo5heUHvkQukTS8HyPN1hP4="

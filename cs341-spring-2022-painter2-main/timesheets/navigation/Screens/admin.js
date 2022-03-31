@@ -119,16 +119,21 @@ export default function AdminScreen({ navigation }) {
           if(tsContext.currentRole == 'Employee') {
             return (
               <View style={styles.container}>
-                    <Text style={styles.headerText}>Admin</Text>
-                    <Text style={styles.alertText}>You do not have access to this page</Text>
+                    <View style={styles.header}>
+                      <Text style={styles.headerText}>Profile</Text>
+                    </View>
+                    <View style={{alignItems: 'center'}}>
+                        <Button title="Logout">Logout</Button>
+                    </View>
               </View>
             );
           } else {
             return (
               <View style={styles.container}>
                 <View style={styles.header}>
-                  <Text style={styles.headerText}>Employee List</Text>
+                  <Text style={styles.headerText}>Profiles</Text>
                 </View>
+                    <Button title="Logout">Logout</Button>
                 <TextInput 
                   style={styles.searchBackground}
                   placeholder='Enter Employee Name'
