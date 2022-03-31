@@ -21,7 +21,6 @@ import JobsiteConfigure from './Screens/jobsiteConfigure';
 
 const Tab = createBottomTabNavigator();
 
-
 //side menu options
 function CustomDrawerContent(props) {
   return (
@@ -45,46 +44,114 @@ function CustomDrawerContent(props) {
 //creates the side menu
 const Drawer = createDrawerNavigator();
 function BottomTabs() {
-  return(
-    <Tab.Navigator
-      initialRouteName='Home' //sets the homepage to appear on startup
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-              //console.log("Main Container: role - ", ts.currentRole);
-            //setting the icons of the navigation bar
-            if (route.name === 'Home') {
-              iconName = focused ? 'ios-time': 'ios-time-outline';
-            } 
-            else if (route.name === 'Timesheets') {
-              iconName = focused ? 'ios-document-text':'ios-document-text-outline';
-            }
-            else if (route.name === 'DatabaseTester') {
-              iconName = focused ? 'ios-map':'ios-map-outline';
-            }
-            else if (route.name === 'Profile') {
-                iconName = focused ? 'ios-person':'ios-person-outline';
-            }
-            else if (route.name === 'Jobsites') {
-              iconName = focused ? 'business':'business-outline';
-            }
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-          headerShown: false,
-          //currently using company colors from website
-          //color of the navigation bar
-          tabBarActiveTintColor: '#ab0e0e', //dark red
-          tabBarInactiveTintColor: '#7a7a7a', // grey
-        })}>
-          {/*adding the pages to the navigation bar*/ }
-        <Tab.Screen name="Timesheets" component={StackNav} />
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="DatabaseTester" component={DatabaseTesterScreen} />
-        <Tab.Screen name="Profile" component={AdminScreen} />
-        <Tab.Screen name="Jobsites" component={JobsiteConfigure} />
-
-    </Tab.Navigator>
-  );
+  const tsContext = useContext(AppContext)
+  if(tsContext.currentRole == "Admin") {
+    return(
+      <Tab.Navigator
+        initialRouteName='Home' //sets the homepage to appear on startup
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
+                //console.log("Main Container: role - ", ts.currentRole);
+              //setting the icons of the navigation bar
+              if (route.name === 'Home') {
+                iconName = focused ? 'ios-time': 'ios-time-outline';
+              } 
+              else if (route.name === 'Timesheets') {
+                iconName = focused ? 'ios-document-text':'ios-document-text-outline';
+              }
+              else if (route.name === 'Locations') {
+                iconName = focused ? 'ios-document-text':'ios-document-text-outline';
+              }
+              else if (route.name === 'Profile') {
+                  iconName = focused ? 'ios-person':'ios-person-outline';
+              }
+              else if (route.name === 'Jobsites') {
+                iconName = focused ? 'business':'business-outline';
+              }
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+            headerShown: false,
+            //currently using company colors from website
+            //color of the navigation bar
+            tabBarActiveTintColor: '#ab0e0e', //dark red
+            tabBarInactiveTintColor: '#7a7a7a', // grey
+          })}>
+            {/*adding the pages to the navigation bar*/ }
+          <Tab.Screen name="Timesheets" component={StackNav} />
+          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen name="Locations" component={DatabaseTesterScreen} />
+          <Tab.Screen name="Profile" component={AdminScreen} />
+          <Tab.Screen name="Jobsites" component={JobsiteConfigure} />
+  
+      </Tab.Navigator>
+    );
+  } else if (tsContext.currentRole == "Employee"){
+    return(
+      <Tab.Navigator
+        initialRouteName='Home' //sets the homepage to appear on startup
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
+                //console.log("Main Container: role - ", ts.currentRole);
+              //setting the icons of the navigation bar
+              if (route.name === 'Home') {
+                iconName = focused ? 'ios-time': 'ios-time-outline';
+              } 
+              else if (route.name === 'Timesheets') {
+                iconName = focused ? 'ios-document-text':'ios-document-text-outline';
+              }
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+            headerShown: false,
+            //currently using company colors from website
+            //color of the navigation bar
+            tabBarActiveTintColor: '#ab0e0e', //dark red
+            tabBarInactiveTintColor: '#7a7a7a', // grey
+          })}>
+            {/*adding the pages to the navigation bar*/ }
+          <Tab.Screen name="Timesheets" component={StackNav} />
+          <Tab.Screen name="Home" component={HomeScreen} />
+      </Tab.Navigator>
+    );
+  } else {
+    return(
+      <Tab.Navigator
+        initialRouteName='Home' //sets the homepage to appear on startup
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName;
+                //console.log("Main Container: role - ", ts.currentRole);
+              //setting the icons of the navigation bar
+              if (route.name === 'Home') {
+                iconName = focused ? 'ios-time': 'ios-time-outline';
+              } 
+              else if (route.name === 'Timesheets') {
+                iconName = focused ? 'ios-document-text':'ios-document-text-outline';
+              }
+              else if (route.name === 'Locations') {
+                iconName = focused ? 'ios-document-text':'ios-document-text-outline';
+              }
+              else if (route.name === 'Jobsites') {
+                iconName = focused ? 'ios-document-text':'ios-document-text-outline';
+              }
+              return <Ionicons name={iconName} size={size} color={color} />;
+            },
+            headerShown: false,
+            //currently using company colors from website
+            //color of the navigation bar
+            tabBarActiveTintColor: '#ab0e0e', //dark red
+            tabBarInactiveTintColor: '#7a7a7a', // grey
+          })}>
+            {/*adding the pages to the navigation bar*/ }
+          <Tab.Screen name="Timesheets" component={StackNav} />
+          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen name="Locations" component={DatabaseTesterScreen} />
+          <Tab.Screen name="Jobsites" component={JobsiteConfigure} />
+  
+      </Tab.Navigator>
+    );
+  }
 }
 
 export default function MainContainer() {

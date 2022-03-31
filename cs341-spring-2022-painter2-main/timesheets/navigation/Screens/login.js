@@ -13,6 +13,7 @@ export default function LoginScreen({ navigation }) {
     const tsContext = useContext(AppContext);
     const [creds, setCreds] = useState({
         email: "a@a.com",password: "a"
+        email: "", password:""
     });
     
 
