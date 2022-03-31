@@ -14,7 +14,7 @@ import TimesheetScreen from './Screens/timesheets';
 import HomeScreen from './Screens/homescreen';
 import StackNav from './Screens/Stack'
 import DatabaseTesterScreen from './Screens/DatabaseTesterScreen';
-
+import JobsiteConfigure from './Screens/jobsiteConfigure';
 
 
 const homeName = 'Home';
@@ -31,7 +31,7 @@ function CustomDrawerContent(props) {
         onPress={() => props.navigation.closeDrawer()}
       />
       <DrawerItem
-        label="Spanish"
+        label="Español"
         onPress={() => props.navigation.closeDrawer()}
       />
       <DrawerItem
@@ -61,6 +61,9 @@ function BottomTabs() {
             else if (route.name === 'DatabaseTester') {
               iconName = focused ? 'ios-document-text':'ios-document-text-outline';
             }
+            else if (route.name === 'jobsiteConfigure') {
+              iconName = focused ? 'ios-document-text':'ios-document-text-outline';
+            }
             return <Ionicons name={iconName} size={size} color={color} />;
           },
           headerShown: false,
@@ -73,7 +76,7 @@ function BottomTabs() {
         <Tab.Screen name="Timesheets" component={StackNav} />
         <Tab.Screen name="Home" component={HomeScreen} />
         <Tab.Screen name="DatabaseTester" component={DatabaseTesterScreen} />
-        
+        <Tab.Screen name="JobsiteConfigure" component={JobsiteConfigure} />
 
     </Tab.Navigator>
   );

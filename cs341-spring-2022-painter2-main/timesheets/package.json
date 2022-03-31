@@ -15,8 +15,9 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^12.0.0",
+    "@react-native-community/datetimepicker": "^6.1.0",
     "@react-native-community/masked-view": "*",
-    "@react-native-picker/picker": "2.3.0",
+    "@react-native-picker/picker": "^2.4.0",
     "@react-navigation/bottom-tabs": "6.0.4",
     "@react-navigation/drawer": "6.1.3",
     "@react-navigation/elements": "1.0.4",
@@ -33,14 +34,17 @@
     "expo-jwt": "^1.4.1",
     "expo-location": "^14.0.2",
     "expo-status-bar": "~1.2.0",
-    "firebase": "^9.6.7",
+    "firebase": "^9.6.10",
     "pouchdb": "^7.2.2",
+    "prop-types": "15.8.1",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
+    "react-native-dropdown-picker": "^5.3.0",
     "react-native-geolocation-service": "^5.3.0-beta.4",
     "react-native-gesture-handler": "~1.10.2",
     "react-native-maps": "0.27.1",
+    "react-native-material-dropdown": "^0.11.1",
     "react-native-pager-view": "5.4.6",
     "react-native-paper": "^4.7.2",
     "react-native-reanimated": "~2.2.0",
@@ -48,8 +52,13 @@
     "react-native-screens": "~3.8.0",
     "react-native-tab-view": "^3.0.0",
     "react-native-web": "0.17.1",
+<<<<<<< HEAD
     "react-navigation-stack": "^2.10.4",
     "prop-types": "16.0.0"
+=======
+    "react-navigation-stack": "^2.10.4"
+    
+>>>>>>> d3ca51c8c7e36a20273991e3ed4aefb89db44b62
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

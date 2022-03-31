@@ -6,7 +6,7 @@ import 'firebase/firestore';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-
+import {auth} from './firebaseSettings'
 
 //this config key used to connect to firestore database
 const firebaseConfig = {
@@ -367,19 +367,115 @@ export const returnDailyClockRecords= async (newEmployeeID,newDate)=>{
  //the back of an array
  for(let i=0;i<(dateRecords.docs).length;i++){
   let currentClockRecord=(dateRecords.docs[i]).data();
- 
 //if the json object has matching date to the date in question,
 //we add that json data to the array
   if(currentClockRecord.date===newDate){
     clocksForDateArray.push(currentClockRecord);
-
   }
-
-
  }
  //console.log(clocksForDateArray);
 return clocksForDateArray;
+}
 
 
+//adds a jobsite to the database
+export const addJobsite = async(addressInp, customerInp, jobNameInp) => {
+  const year = new Date().getFullYear().toString().substring(2);
+  var jobsites = await firebase.firestore().collection('jobsites').where('jobYear','==',year).get();
+
+  firebase.firestore().collection('jobsites').add(
+    {
+      address:addressInp,
+      customer:customerInp,
+      jobName:jobNameInp,
+      jobNum: year + "-" + (jobsites.size + 101),
+      status: "Open"
+    }
+  );
+}
+
+//finds an employee by ID and chagnes their role
+export const changeRole = async(newRole,id) => {
+    var emplyoee = await firebase.firestore().collection('employees').where('employeeID','==',id).get();
+    var docID = emplyoee.docs[0].id
+    firebase.firestore().collection('employees').doc(docID).update({role:newRole});
+  }
+
+//finds an employee by ID and changes clock in time
+export const changeClockIn = async(newClockIn,id,clockID) => {
+  var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
+  var docID = employee.docs[0].id
+  console.log(docID)
+  firebase.firestore().collection('clocking').doc(docID).update({clockIn:newClockIn});
+}  
+//finds an employee by ID and changes clock out time
+export const changeClockOut = async(newClockOut,id,clockID) => {
+  var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
+  var docID = employee.docs[0].id
+  console.log(docID)
+  firebase.firestore().collection('clocking').doc(docID).update({clockOut:newClockOut});
+}  
+//finds an employee by ID and changes clock in time
+export const changeJobSite = async(newJobSite,id,clockID) => {
+  var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
+  var docID = employee.docs[0].id
+  console.log(docID)
+  firebase.firestore().collection('clocking').doc(docID).update({jobSite:newJobSite});
+}  
+
+//finds an employee by id and removes them from database
+export const removeEmployee = async(id) => {
+  var emplyoee = await firebase.firestore().collection('employees').where('employeeID','==',id).get();
+  var docID = emplyoee.docs[0].id;
+  firebase.firestore().collection('employees').doc(docID).delete();
+}
+
+//finds a timesheet by id and removes it from database
+export const removeTimesheet = async(id,clockID) => {
+  var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
+  var docID = employee.docs[0].id;
+  firebase.firestore().collection('clocking').doc(docID).delete();
+}
+//sets the status field of a jobsite to "Closed"
+export const closeJobsite = async(inpJobNum) => {
+  var jobs = await firebase.firestore().collection('jobsites').where('jobNum','==',inpJobNum).get();
+  var jobID = jobs.docs[0].id
+  firebase.firestore().collection('jobsites').doc(jobID).update({status:"Closed"});
+}
+//sets the status field of a jobsite to "Open"
+export const openJobsite = async(inpJobNum) => {
+  var jobs = await firebase.firestore().collection('jobsites').where('jobNum','==',inpJobNum).get();
+  var jobID = jobs.docs[0].id
+  firebase.firestore().collection('jobsites').doc(jobID).update({status:"Open"});
+}
+//gets all jobsite data recods
+export const getAllJobsites = async() => {
+  var allJobsites = await firebase.firestore().collection('jobsites').get();
+return allJobsites;
+}
+
+export const getOpenJobsites = async() => {
+  var jobsites = await firebase.firestore().collection('jobsites').where("Status",'==',"Open").get();
+  var jobsiteArr = [];
+  for(let i=0;i<(jobsites.docs).length;i++){
+    let jobsitesData=(jobsites.docs[i]).data();
+    jobsiteArr.push(jobsitesData);
+}
+console.log("Jobsites fetched");
+return jobsiteArr;
 
 }
+
+//authentification function that adds employee as firebase user
+//used to send out timesheet emails
+export const addFireBaseUser=async(emailInput,passInput)=>{
+auth
+.createUserWithEmailAndPassword(emailInput,passInput)
+.then(userDetails=>{
+console.log("Firebase Email: " +userDetails.user.email+" Firebase Password: " +userDetails.user.password )
+
+})
+.catch(err=>console.log(err.message));
+}
+
+

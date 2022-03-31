@@ -17,9 +17,9 @@ export default function DatabaseTesterScreen() {
   //state var for your coordinates,yourCoord
   //state var for distance between yourself and site,distanceFromSite
 const [siteLocation,setSiteLocation]=useState("");
-const [siteCoord,setSiteCoord]=useState([]);
+const [siteCoord,setSiteCoord]=useState([0,0]);
 const [yourLocation,setYourLocation]=useState("");
-const [yourCoord,setYourCoord]=useState([]);
+const [yourCoord,setYourCoord]=useState([0,0]);
 const [distanceFromSite,setDistanceFromSite]=useState(0);
 const dtsContext = useContext(AppContext);
 
@@ -32,7 +32,10 @@ const [mapRegion, setmapRegion] = useState({
 });
 
 // State var for users current location
-const [location, setLocation] = React.useState(null)
+const [location, setLocation] = useState({
+  latitude: 0,
+  longitude: 0,
+});
 const [error, setError] = React.useState(null)
 const [siteMarker, setSiteMarker] = useState({
   latitude: 0,
@@ -46,11 +49,20 @@ const [locationTest, setLocationTest] = useState({
       // gets the users current location and sets it to location
       React.useEffect(() => {
         (async () =>{
-            let { status } = await Location.requestPermissionsAsync();
-            if(status !== 'granted'){
-                setError('Permission to access location was denied');
-                return;
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            Alert.alert('Permission to access location was denied');
+            return;
+          }
+          
+          let locationServiceEnabled = await Location.hasServicesEnabledAsync();
+          
+            if (!locationServiceEnabled) {
+          
+              Alert.alert("Your Location services are turned off. Turn them on Please");
+              return;
             }
+
             const locate = await Location.getCurrentPositionAsync({});
             setLocation(locate.coords)
             // let siteCoord = (await getOurCoords())
@@ -61,20 +73,7 @@ const [locationTest, setLocationTest] = useState({
       }, []);
   
       async function getOurCoords(){
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-          Alert.alert('Permission to access location was denied');
-          return;
-        }
-        
-        let locationServiceEnabled = await Location.hasServicesEnabledAsync();
-        
-          if (!locationServiceEnabled) {
-        
-            Alert.alert("Your Location services are turned off. Turn them on Please");
-            return;
-          }
-        
+       
       let coords = await Location.getCurrentPositionAsync({});
       //console.log("Latitude is: "+coords.coords.latitude)
       //console.log("Longitude is: "+coords.coords.longitude)
@@ -87,20 +86,7 @@ const [locationTest, setLocationTest] = useState({
     }
 
     async function getDistFromSite(siteLat,siteLong){
-      let { status } = await Location.requestForegroundPermissionsAsync();
-if (status !== 'granted') {
-  Alert.alert('Permission to access location was denied');
-  return;
-}
-
-let locationServiceEnabled = await Location.hasServicesEnabledAsync();
-
-  if (!locationServiceEnabled) {
-
-    Alert.alert("Your Location services are turned off. Turn them on Please");
-    return;
-  }
-  
+   
       // 3963.0 * arccos[(sin(lat1) * sin(lat2)) + cos(lat1) * cos(lat2) * cos(long2 – long1)]
       let ourLoc= await getOurCoords();
       let xRad1=(siteLat/180)*Math.PI;
@@ -116,20 +102,7 @@ let locationServiceEnabled = await Location.hasServicesEnabledAsync();
   
       }
   async function getStreetAddress(inputLat,inputLong){
-    let { status } = await Location.requestForegroundPermissionsAsync();
-if (status !== 'granted') {
-  Alert.alert('Permission to access location was denied');
-  return;
-}
-
-let locationServiceEnabled = await Location.hasServicesEnabledAsync();
-
-  if (!locationServiceEnabled) {
-
-    Alert.alert("Your Location services are turned off. Turn them on Please");
-    return;
-  }
-  
+ 
     let coordCollection = await Location.reverseGeocodeAsync({
       latitude:inputLat,
       longitude:inputLong
@@ -150,19 +123,7 @@ return streetAddress;
   }
    
   async function getCoordFromAddress(inputStreetLocation){
-    let { status } = await Location.requestForegroundPermissionsAsync();
-if (status !== 'granted') {
-  Alert.alert('Permission to access location was denied');
-  return;
-}
-
-let locationServiceEnabled = await Location.hasServicesEnabledAsync();
-
-  if (!locationServiceEnabled) {
-
-    Alert.alert("Your Location services are turned off. Turn them on Please");
-    return;
-  }
+ 
   
   
     let extractedCoord = await Location.geocodeAsync(inputStreetLocation);
@@ -184,17 +145,30 @@ let locationServiceEnabled = await Location.hasServicesEnabledAsync();
   }
 
 async function handler(siteInput){
- let siteCoordinates= await getCoordFromAddress(siteInput);
- setSiteCoord(siteCoordinates);
   let yourLat=(await getOurCoords())[0];
-  let yourLong=(await getOurCoords())[1];
-  setYourLocation(await getStreetAddress(yourLat,yourLong));
-  setYourCoord([yourLat,yourLong]);
+    let yourLong=(await getOurCoords())[1];
+    setYourLocation(await getStreetAddress(yourLat,yourLong));
+    setYourCoord([yourLat,yourLong]);
+  if(siteInput===""){
+    return;
+
+  }
+  
+  
+ let siteCoordinates= await getCoordFromAddress(siteInput);
+
+ setSiteCoord(siteCoordinates);
+  
   setDistanceFromSite(await getDistFromSite(siteCoordinates[0],siteCoordinates[1]))
   //let siteCoord = (await getOurCoords())
   setSiteMarker({latitude: siteCoord[0], longitude: siteCoord[1]})
+<<<<<<< HEAD
   setLocationTest({latitude: yourLat, longitude: yourLong})
   console.log(siteMarker)
+=======
+  //console.log(siteMarker)
+  
+>>>>>>> d3ca51c8c7e36a20273991e3ed4aefb89db44b62
 }
 
 

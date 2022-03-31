@@ -4,9 +4,8 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, Text,  View, TextInput,  TouchableHighlight, Alert, Linking} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from './styles/loginStyle.js';
-import {createNewEmployee, findUserByEmail} from './databaseFunctions';
+import {createNewEmployee, findUserByEmail,addFireBaseUser} from './databaseFunctions';
 import {encodePass} from './styles/base64';
-
 
 
 export default function RegisterScreen({ navigation }) {
@@ -17,6 +16,7 @@ export default function RegisterScreen({ navigation }) {
     const onClickListener = (viewID) => {
         //Alert.alert("Register")
         validateReg()
+
         //navigation.navigate("Login");
     }
 
@@ -49,6 +49,7 @@ export default function RegisterScreen({ navigation }) {
                 console.log("P1-set: ", log);
 //              *******************************************
                 await createNewEmployee(creds.name,creds.email,log,"Employee")
+                await addFireBaseUser(creds.email,creds.p1);
                 navigation.pop()
             }
         } else {
