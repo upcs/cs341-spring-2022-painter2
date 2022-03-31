@@ -439,41 +439,6 @@ export const changeRole = async(id, newRole) => {
     console.log('databaseFunctions: User role updated!');
   }
 
-//export const editEmployeeRoleHelper = async (docIDInput,roleInput)=>{
-//    //console.log(docIDInput);
-//    firebase.firestore()
-//       .collection('employees')
-//       .doc(docIDInput)
-//       .update({
-//           role:roleInput
-//       })
-//        .then(() => {
-//       console.log('databaseFunctions: User role updated!');
-//       });
-//
-//
-//
-//   }
-//   //edits an employee record that it finds with the employeeID input
-//   //takes this record and changes the data in the email address field
-//   export const editEmployeeRole =  async (IDInput,roleInput) =>{
-//    firebase.firestore()
-//       .collection('employees')
-//       .where('employeeID','==',IDInput)
-//       .get()
-//       .then(querySnapshot => {
-//           let firstDocument=querySnapshot.docs[0];
-//           //the document id of the corresponding document is retreived
-//           //this doc id is fed into helper function, that takes
-//           //document ID as a parameter
-//           //helper function essentially handles the editing part
-//           editEmployeeEmailHelper(firstDocument.id,roleInput);
-//
-//
-//       });
-//   }
-
-
 
 //finds an employee by ID and changes clock in time
 export const changeClockIn = async(newClockIn,id,clockID) => {
@@ -494,7 +459,7 @@ export const changeJobSite = async(newJobSite,id,clockID) => {
   var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
   var docID = employee.docs[0].id
   console.log(docID)
-  firebase.firestore().collection('clocking').doc(docID).update({jobSite:newJobSite});
+  await firebase.firestore().collection('clocking').doc(docID).update({jobSite:newJobSite});
 }
 
 //finds an employee by id and removes them from database
