@@ -215,8 +215,6 @@ export default function TimesheetScreen({ navigation }) {
                       }}
                     >
                       <Text style ={{fontSize:20, color:'red'}}>Refresh</Text>
-
-
                     </TouchableOpacity>
                 </View>
                 

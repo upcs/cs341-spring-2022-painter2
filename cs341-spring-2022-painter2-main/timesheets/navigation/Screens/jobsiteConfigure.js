@@ -1,8 +1,10 @@
 import React, { useState,useEffect } from "react";
 import { StyleSheet, Text,  View, TextInput,Button,Pressable,  TouchableHighlight, Alert, Linking} from 'react-native';
 import {Picker} from '@react-native-picker/picker'
+import tstyles from './styles/timesheetStyle.js';
 import {getAllJobsites,addJobsite,closeJobsite, openJobsite} from './databaseFunctions'
 import { FlatList } from 'react-native'
+import { Ionicons } from '@expo/vector-icons';
 
 export default function JobsiteConfigure(){
 const [address,setAddress]=useState("");
@@ -76,7 +78,6 @@ async function closeJobsiteHandler(inputJobNum){
 
 }
 //calls close jobsite function and re-renders flatlist
-
 async function openJobsiteHandler(inputSiteNum){
    await openJobsite(inputSiteNum);
    await reRender();
@@ -99,7 +100,6 @@ async function openJobsiteHandler(inputSiteNum){
         titleStyle:{
          fontSize: 20,
          fontWeight: "bold",
-         fontFamily: "Times New Roman",
          backgroundColor: "red",
          paddingLeft:10,
          paddingRight:10,
@@ -109,22 +109,10 @@ async function openJobsiteHandler(inputSiteNum){
          borderWidth:5,
          borderColor:"black",
          borderRadius:20
-
-       
-
-
       },
       jobsiteStyle:{
-         fontSize: 10,
+         fontSize: 20,
          fontWeight: "bold",
-         fontFamily: "Verdana",
-         backgroundColor: "rgb(151, 188, 247)",
-        
-         borderWidth:5,
-         borderColor:"black",
-         marginBottom:0,
-        
-
       },
       inputStyle:{
          height: 40,
@@ -140,51 +128,40 @@ async function openJobsiteHandler(inputSiteNum){
        marginBottom:0,
        width:350,
        height:30
-
-
       },
-      rowStyle:{
-      borderWidth:5,
-      borderColor:"red",
-    
-
+      rowTitleStyle:{
+        color:'#A00000',
+          fontWeight: 'bold',
+          fontSize:20,
+          padding: 2
       },
+    rowStyle:{
+      color:'#A00000',
+        fontWeight: 'bold',
+        padding: 4
+    },
       cellStyle:{
-      margin:5
-
+        margin: 0,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+          alignItems: 'center',
       },
-
       buttonStyle:{
       padding:5,
       borderWidth:5,
       backgroundColor:"green",
       borderRadius:10,
       marginBottom:5
-
-      }
-
-,
-      listTitle:{
-         padding:5,
-         borderWidth:5,
-         backgroundColor:"pink",
-         fontSize:20
-   
-   
-         },
-         flatStyle:{
-         height: 150,
-   
-         flexGrow: 0
-         }
-
-       
-     })   
+      },
+    listBody: {
+        alignItems: 'flex-end',
+    },
+})
 
 return(
-   <View style ={styles.container}> 
+   <View style={styles.container}> 
  
-   <Text style={styles.jobsiteStyle}> Enter In Address of Jobsite</Text>
+   <Text style={styles.jobsiteStyle}>Jobsite Address</Text>
    <TextInput
         style={styles.inputStyle}
       onChangeText={(val)=>{ setAddress(val)}} 
@@ -192,13 +169,13 @@ return(
        
 
    
-      <Text style={styles.jobsiteStyle}> Enter In Customer of Jobsite</Text>
+      <Text style={styles.jobsiteStyle}>Customer</Text>
       <TextInput
         style={styles.inputStyle}
         onChangeText={(val)=>{ setCustomer(val)}} 
       
       />
-       <Text style={styles.jobsiteStyle}> Enter In Jobsite Name</Text>
+       <Text style={styles.jobsiteStyle}>Name of Job</Text>
       <TextInput
        style={styles.inputStyle}
        onChangeText={(val)=>{ setJobName(val)}} 
@@ -236,23 +213,30 @@ return(
 
 
 
-    <Text style={styles.listTitle}>List of Jobsites in Database </Text> 
+    <Text style={styles.jobsiteStyle}>Jobsites</Text>
     <FlatList
     style={styles.flatStyle}
     keyExtractor={(item)=>item.jobNum}
    data={jobsiteCollection.toString().split("?")}
 
-   renderItem={({item})=>(
-  <View style={styles.cellStyle}>
-  <Text style={styles.rowStyle}>Jobsite Address: {item.split("|")[0]}</Text>
-  <Text style={styles.rowStyle}>Jobsite Customer: {item.split("|")[1]}</Text>
-  <Text style={styles.rowStyle}>Jobsite Name:  {item.split("|")[2]}</Text>
-  <Text style={styles.rowStyle}>Jobsite Number: {item.split("|")[3]}</Text>
-  <Text style={styles.rowStyle}>Jobsite Status: {item.split("|")[4]}</Text>
-
-   </View>
-
-
+   renderItem={({item})=>
+       (
+        item.length <= 0? null:(
+        <View style={{borderWidth: 4,flex:1}}>
+        <View style={styles.cellStyle}>
+            <View style={{justifyContent: "flex-start"}}>
+                <Text style={styles.rowTitleStyle}>{item.split("|")[2]}</Text>
+        <Text style={{padding: 4}}>{item.split("|")[1]}</Text>
+            </View>
+            <View style={styles.listBody}>
+        <Text style={{padding:4,textAlign:'right'}}>#{item.split("|")[3]}</Text>
+        {item.split("|")[4] == 'Open'?
+            <Ionicons name={'ios-checkmark-circle'} size={30} style={{color:'#00A000'}}/> :
+            <Ionicons name={'ios-close-circle'} size={30} style={{color:'#A00000'}}/>}
+            </View>
+        </View>
+        <Text style={styles.rowStyle}>{item.split("|")[0]}</Text>
+            </View>)
    )}/>
      
   

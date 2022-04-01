@@ -65,4 +65,20 @@ inputLineIcon: {
     marginLeft: 15,
     color:'#A00000',
 },
+searchBarContainer: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 5,
+    height:40,
+    flexDirection: 'row',
+    alignItems:'center'
+},
+searchBar: {
+    marginLeft:5,
+    flex:1,
+}
+    
   });
