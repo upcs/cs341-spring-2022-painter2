@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from "react";
-import { StyleSheet, Text,  View, TextInput,Button,Pressable,  TouchableHighlight, Alert, Linking} from 'react-native';
+import { StyleSheet, Text,  View, TextInput,Button,Pressable,  TouchableHighlight, Alert, Linking, TouchableOpacity} from 'react-native';
 import {Picker} from '@react-native-picker/picker'
 import tstyles from './styles/timesheetStyle.js';
 import {getAllJobsites,addJobsite,closeJobsite, openJobsite} from './databaseFunctions'
@@ -90,9 +90,9 @@ async function openJobsiteHandler(inputSiteNum){
 
     const styles = StyleSheet.create ({
         container: {
-          
+            flex:1,
+            justifyContent: 'flex-start',
            justifyContent: 'center',
-           alignItems: 'center',
            backgroundColor: 'white',
           
         },
@@ -113,14 +113,17 @@ async function openJobsiteHandler(inputSiteNum){
       jobsiteStyle:{
          fontSize: 20,
          fontWeight: "bold",
+          textAlign: 'center',
+          margin: 1
       },
       inputStyle:{
          height: 40,
          width:350,
-         margin: 12,
+         margin: 3,
          borderWidth: 1,
+          borderColor: '#A00000',
          padding: 10,
-       marginBottom:0
+          alignSelf: 'center'
       },
       pickerStyle:{
          flex:1,
@@ -132,11 +135,10 @@ async function openJobsiteHandler(inputSiteNum){
       rowTitleStyle:{
         color:'#A00000',
           fontWeight: 'bold',
-          fontSize:20,
+          fontSize:25,
           padding: 2
       },
     rowStyle:{
-      color:'#A00000',
         fontWeight: 'bold',
         padding: 4
     },
@@ -148,20 +150,60 @@ async function openJobsiteHandler(inputSiteNum){
       },
       buttonStyle:{
       padding:5,
-      borderWidth:5,
-      backgroundColor:"green",
-      borderRadius:10,
-      marginBottom:5
+      borderWidth:1,
+      backgroundColor:"#A00000",
+          color:'#FFFFFF',
+      borderRadius:5,
+      margin:10,
+          alignSelf: 'center'
       },
     listBody: {
         alignItems: 'flex-end',
     },
+    header: {
+      backgroundColor: '#ab0e0e',
+      alignItems: 'center',
+      padding: 10,
+    },
+    headerText: {
+      fontWeight: 'bold',
+      fontSize: 22,
+      color: '#fff'
+    },
 })
 
+    const onClickListener = (siteID, what) => {
+        if (what == "open"){
+            console.log('jobsite: open confirmed');
+            openJobsiteHandler(siteID);
+        } else {
+            console.log('jobsite: close confirmed');
+            closeJobsiteHandler(siteID);
+        }
+        return;
+    }
+    
+    const changeSite = async(siteID, what) => {
+        Alert.alert('Confirm', 'Open/Close this job?', [{
+                text: 'Cancel',
+                onPress: () => reRender(),
+                style: 'cancel',
+        }, { text: 'OK', onPress: () => onClickListener(siteID, what) },]);
+    }
+    
 return(
    <View style={styles.container}> 
- 
-   <Text style={styles.jobsiteStyle}>Jobsite Address</Text>
+       <View style={styles.header}>
+         <Text style={styles.headerText}>Add a Site</Text>
+         
+       </View>
+       <Text style={styles.jobsiteStyle}>Name of Job</Text>
+      <TextInput
+       style={styles.inputStyle}
+       onChangeText={(val)=>{ setJobName(val)}}
+       
+      />
+   <Text style={styles.jobsiteStyle}>Address</Text>
    <TextInput
         style={styles.inputStyle}
       onChangeText={(val)=>{ setAddress(val)}} 
@@ -175,64 +217,40 @@ return(
         onChangeText={(val)=>{ setCustomer(val)}} 
       
       />
-       <Text style={styles.jobsiteStyle}>Name of Job</Text>
-      <TextInput
-       style={styles.inputStyle}
-       onChangeText={(val)=>{ setJobName(val)}} 
        
-      /> 
 
 <Pressable onPress={()=>addJobsiteHandler(address,customer,jobName)}style={styles.buttonStyle} >
-      <Text >submit</Text>
-    </Pressable> 
-     <Text style={styles.jobsiteStyle}> Enter in Jobsite Number to Close</Text>
-      <TextInput
-        style={styles.inputStyle}
-        onChangeText={(val)=>{ setJobDelete(val)}}
-      />
-
-<Pressable onPress={()=>closeJobsiteHandler(parseInt(jobDelete))}style={styles.buttonStyle} >
-      <Text >submit</Text>
-    </Pressable> 
-
-
-
-
-    <Text style={styles.jobsiteStyle}> Enter in Jobsite Number to Open</Text>
-      <TextInput
-        style={styles.inputStyle}
-        onChangeText={(val)=>{ setJobOpen(val)}}
-      />
-
-<Pressable onPress={()=>openJobsiteHandler(parseInt(jobOpen))}style={styles.buttonStyle} >
-      <Text >submit</Text>
-    </Pressable> 
-
-
-
-
-
-
-    <Text style={styles.jobsiteStyle}>Jobsites</Text>
+       <Text style={{fontSize: 15, color:'white', padding: 3}}>ADD <Ionicons name={'md-add'} size={20}/></Text>
+    </Pressable>
+       
+       <View style={styles.header}>
+         <Text style={styles.headerText}>Jobsites</Text>
+       </View>
+       
     <FlatList
-    style={styles.flatStyle}
-    keyExtractor={(item)=>item.jobNum}
+    keyExtractor={(item)=>item.split("|")[3]}
    data={jobsiteCollection.toString().split("?")}
 
    renderItem={({item})=>
        (
         item.length <= 0? null:(
-        <View style={{borderWidth: 4,flex:1}}>
+        <View style={{borderWidth: 4, padding:3}}>
         <View style={styles.cellStyle}>
             <View style={{justifyContent: "flex-start"}}>
                 <Text style={styles.rowTitleStyle}>{item.split("|")[2]}</Text>
         <Text style={{padding: 4}}>{item.split("|")[1]}</Text>
             </View>
             <View style={styles.listBody}>
+                                {item.split("|")[4] == 'Open'?
+                                    (<TouchableOpacity onPress={() => changeSite(item.split("|")[3],'close')}>
+                                    <Ionicons name={'ios-checkmark-circle'} size={40} style={{color:'#00A000'}}/>
+                                    </TouchableOpacity>
+                                    ):
+                                    (<TouchableOpacity onPress={() => changeSite(item.split("|")[3],'open')}>
+                                    <Ionicons name={'ios-close-circle'} size={40} style={{color:'#A00000'}}/>
+                                    </TouchableOpacity>
+                                     )}
         <Text style={{padding:4,textAlign:'right'}}>#{item.split("|")[3]}</Text>
-        {item.split("|")[4] == 'Open'?
-            <Ionicons name={'ios-checkmark-circle'} size={30} style={{color:'#00A000'}}/> :
-            <Ionicons name={'ios-close-circle'} size={30} style={{color:'#A00000'}}/>}
             </View>
         </View>
         <Text style={styles.rowStyle}>{item.split("|")[0]}</Text>
