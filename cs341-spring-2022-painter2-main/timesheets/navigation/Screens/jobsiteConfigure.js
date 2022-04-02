@@ -121,7 +121,7 @@ async function openJobsiteHandler(inputSiteNum){
          width:350,
          margin: 3,
          borderWidth: 1,
-          borderColor: '#A00000',
+          borderColor: '#ab0e0e',
           borderRadius: 5,
          padding: 5,
           alignSelf: 'center'
@@ -134,12 +134,13 @@ async function openJobsiteHandler(inputSiteNum){
        height:30
       },
       rowTitleStyle:{
-        color:'#A00000',
+        color:'#ab0e0e',
           fontWeight: 'bold',
           fontSize:25,
           padding: 2,
       textShadowRadius: 1,
-      textShadowColor: '#000000'
+      textShadowColor: '#000000',
+      textShadowOffset: {width: 1, height: 1}
       },
     rowStyle:{
         fontWeight: 'bold',
@@ -153,7 +154,7 @@ async function openJobsiteHandler(inputSiteNum){
       },
       buttonStyle:{
       padding:5,
-      backgroundColor:"#A00000",
+      backgroundColor:"#ab0e0e",
           color:'#FFFFFF',
       borderRadius:5,
       margin:10,
@@ -249,7 +250,7 @@ return(
                                     </TouchableOpacity>
                                     ):
                                     (<TouchableOpacity onPress={() => changeSite(item.split("|")[3],'open')}>
-                                    <Ionicons name={'ios-close-circle'} size={40} style={{color:'#A00000'}}/>
+                                    <Ionicons name={'ios-close-circle'} size={40} style={{color:'#ab0e0e'}}/>
                                     </TouchableOpacity>
                                      )}
         <Text style={{padding:4,textAlign:'right'}}>#{item.split("|")[3]}</Text>

@@ -246,11 +246,11 @@ export default function TimesheetScreen({ navigation }) {
 
                       }}
                     >
-                    <Ionicons name={'ios-refresh-circle'} size={50} style={{color:'#A00000'}}/>
+                    <Ionicons name={'ios-refresh-circle'} size={50} style={{color:'#ab0e0e'}}/>
                     </TouchableOpacity>
                 </View>
                 
-                    <View style={{borderColor:'#A00000', borderWidth: 3}}></View>
+                    <View style={{borderColor:'#ab0e0e', borderWidth: 3}}></View>
                   <FlatList
                 data={useData}
                 renderItem={renderItem}

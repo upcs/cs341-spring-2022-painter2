@@ -123,7 +123,7 @@ export default function AdminScreen({ navigation }) {
     </View>
     <View style={styles.listBody}>
             <Dropdown
-                iconColor='#A00000'
+                iconColor='#ab0e0e'
                 data={roleData}
                 value={item.role}
                 containerStyle={styles.conStyle}

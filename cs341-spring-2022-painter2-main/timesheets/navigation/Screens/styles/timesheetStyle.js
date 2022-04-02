@@ -41,7 +41,7 @@ export default StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold',
         fontSize: 20,
-        color: '#A00000'
+        color: '#ab0e0e'
     },
 listBody: {
     padding: 15,
@@ -57,14 +57,15 @@ conStyle: {
 listText: {
     fontWeight: 'bold',
   fontSize: 25,
-    color: '#A00000',
+    color: '#ab0e0e',
     textShadowRadius: 1,
-    textShadowColor: '#000000'
+    textShadowColor: '#000000',
+textShadowOffset: {width: 1, height: 1}
 },
 
 inputLineIcon: {
     marginLeft: 15,
-    color:'#A00000',
+    color:'#ab0e0e',
 },
 searchBarContainer: {
     backgroundColor: '#FFFFFF',
@@ -84,7 +85,7 @@ searchBar: {
 timeText1: {
     fontSize:16,
     fontWeight:'bold',
-    color:'#A00000'
+    color:'#ab0e0e'
 },
 timeText2: {
     fontSize:16,
