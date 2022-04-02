@@ -122,6 +122,7 @@ async function openJobsiteHandler(inputSiteNum){
          margin: 3,
          borderWidth: 1,
           borderColor: '#A00000',
+          borderRadius: 5,
          padding: 5,
           alignSelf: 'center'
       },
@@ -152,7 +153,6 @@ async function openJobsiteHandler(inputSiteNum){
       },
       buttonStyle:{
       padding:5,
-      borderWidth:1,
       backgroundColor:"#A00000",
           color:'#FFFFFF',
       borderRadius:5,
