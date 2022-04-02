@@ -10,6 +10,7 @@ import { useContext } from 'react';
 import AppContext from '../Context.js';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { Ionicons } from '@expo/vector-icons';
 export default function TimesheetScreen({ navigation }) {
       
       const [timesheetsData, setTimeSheetsData] = useState([])
@@ -75,12 +76,36 @@ export default function TimesheetScreen({ navigation }) {
         </View>
       );
         
-       const renderItem = ({ item }) => (
+       const renderItem = ({ item }) =>
+    (
          //send "item" to a function to get item.employeeID
          //so you can set it to a useStateHook to use for databaseFunction
-        <TouchableOpacity onPress={handleModal}>
-          <Item  name={item.name +": " + item.date+" "+item.clockIn+"-"+item.clockOut +" ("+item.hoursWorked+") hours"}/>
-          
+    <TouchableOpacity onPress={handleModal}>
+     <View style={{borderBottomWidth:2}}>
+        <View style={{flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    margin: 10,
+                    marginBottom: 0
+                    }}>
+     <Text style={styles.listText}>{item.name}</Text>
+     <Text style={{fontSize:18,fontStyle:'italic', fontWeight: 'bold'}}>{item.date}</Text>
+        </View>
+     <View style={{flexDirection: 'row',
+                 justifyContent: 'space-between',
+                margin: 10
+                 }}>
+     <Text style={styles.timeText1}>IN: <Text style={styles.timeText2}>
+        {item.clockIn}</Text>
+     </Text>
+     <Text style={styles.timeText1}>OUT: <Text style={styles.timeText2}>
+        {item.clockOut}</Text>
+     </Text>
+     <Text style={styles.timeText1}><Text style={styles.timeText2}>
+        {item.hoursWorked}</Text> hours
+     </Text>
+     </View>
+        </View>
         </TouchableOpacity>
       );
       
@@ -181,6 +206,7 @@ export default function TimesheetScreen({ navigation }) {
                   <Text style={styles.headerText}>My Timesheets</Text>
                 </View>
                 <DropDownPicker
+                    style={{marginTop:10}}
                       zIndex={1}
                       open={open}
                       value={value}
@@ -197,28 +223,34 @@ export default function TimesheetScreen({ navigation }) {
                         else setSortedByName(true);
                       }}
                     />
-                <View>
+                    <View style={{padding: 5,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    margin: 0
+                        
+                    }}>
 
                  
                     <DateTimePicker
+                    style={{flex:1}}
                       value={selectedDate}
                       mode='date'
                       onChange={onChange}
                     />
                     
-                  
                     <TouchableOpacity
-                      style={{padding:5,backgroundColor:'white',alignItems:"center", borderWidth:1, borderRadius:10}}
+                      style={{alignItems:"center", marginLeft: 5}}
                       onPress={()=> {
                         setGate(!gate)
 
                       }}
                     >
-                      <Text style ={{fontSize:20, color:'red'}}>Refresh</Text>
+                    <Ionicons name={'ios-refresh-circle'} size={50} style={{color:'#A00000'}}/>
                     </TouchableOpacity>
                 </View>
                 
-                  
+                    <View style={{borderColor:'#A00000', borderWidth: 3}}></View>
                   <FlatList
                 data={useData}
                 renderItem={renderItem}

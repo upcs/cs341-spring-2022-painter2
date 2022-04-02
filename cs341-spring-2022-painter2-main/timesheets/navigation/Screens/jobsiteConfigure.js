@@ -117,12 +117,12 @@ async function openJobsiteHandler(inputSiteNum){
           margin: 1
       },
       inputStyle:{
-         height: 40,
+         height: 30,
          width:350,
          margin: 3,
          borderWidth: 1,
           borderColor: '#A00000',
-         padding: 10,
+         padding: 5,
           alignSelf: 'center'
       },
       pickerStyle:{
@@ -136,7 +136,9 @@ async function openJobsiteHandler(inputSiteNum){
         color:'#A00000',
           fontWeight: 'bold',
           fontSize:25,
-          padding: 2
+          padding: 2,
+      textShadowRadius: 1,
+      textShadowColor: '#000000'
       },
     rowStyle:{
         fontWeight: 'bold',
@@ -234,11 +236,11 @@ return(
    renderItem={({item})=>
        (
         item.length <= 0? null:(
-        <View style={{borderWidth: 4, padding:3}}>
+        <View style={{borderBottomWidth: 2, padding:3}}>
         <View style={styles.cellStyle}>
             <View style={{justifyContent: "flex-start"}}>
                 <Text style={styles.rowTitleStyle}>{item.split("|")[2]}</Text>
-        <Text style={{padding: 4}}>{item.split("|")[1]}</Text>
+        <Text style={{padding: 4,fontSize:18}}>{item.split("|")[1]}</Text>
             </View>
             <View style={styles.listBody}>
                                 {item.split("|")[4] == 'Open'?

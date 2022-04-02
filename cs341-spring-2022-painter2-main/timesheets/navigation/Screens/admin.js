@@ -99,7 +99,7 @@ export default function AdminScreen({ navigation }) {
           justifyContent: 'space-between'}}>
       <View style={{justifyContent: "flex-start", paddingLeft: 10}}>
           <Text style={styles.listText}>{item.name}</Text>
-          <Text style={{fontSize: 12}}>{item.email}</Text>
+          <Text style={{fontSize: 16, fontStyle:'italic', marginTop: 5}}>{item.email}</Text>
       </View>
        </View>
        );}
@@ -119,7 +119,7 @@ export default function AdminScreen({ navigation }) {
         justifyContent: 'space-between'}}>
     <View style={{justifyContent: "flex-start", paddingLeft: 10}}>
         <Text style={styles.listText}>{item.name}</Text>
-        <Text style={{fontSize: 12}}>{item.email}</Text>
+        <Text style={{fontSize: 16, fontStyle:'italic', marginTop: 5}}>{item.email}</Text>
     </View>
     <View style={styles.listBody}>
             <Dropdown

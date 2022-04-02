@@ -9,8 +9,7 @@ export default StyleSheet.create({
     header: {
       backgroundColor: '#ab0e0e',
       alignItems: 'center',
-      padding: 20,
-      borderWidth:1,
+      padding: 10,
     },
     headerText: {
       fontWeight: 'bold',
@@ -57,8 +56,10 @@ conStyle: {
 },
 listText: {
     fontWeight: 'bold',
-  fontSize: 18,
-    color: '#A00000'
+  fontSize: 25,
+    color: '#A00000',
+    textShadowRadius: 1,
+    textShadowColor: '#000000'
 },
 
 inputLineIcon: {
@@ -79,6 +80,17 @@ searchBarContainer: {
 searchBar: {
     marginLeft:5,
     flex:1,
+},
+timeText1: {
+    fontSize:16,
+    fontWeight:'bold',
+    color:'#A00000'
+},
+timeText2: {
+    fontSize:16,
+    fontStyle:'italic',
+    fontWeight:'normal',
+    color:'#000'
 }
     
   });
