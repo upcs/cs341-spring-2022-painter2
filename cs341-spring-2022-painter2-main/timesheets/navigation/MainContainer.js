@@ -50,6 +50,7 @@ function BottomTabs() {
       <Tab.Navigator
         initialRouteName='Home' //sets the homepage to appear on startup
           screenOptions={({ route }) => ({
+            tabBarStyle: styles.navigator,
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
                 //console.log("Main Container: role - ", ts.currentRole);
@@ -65,8 +66,8 @@ function BottomTabs() {
             headerShown: false,
             //currently using company colors from website
             //color of the navigation bar
-            tabBarActiveTintColor: '#ab0e0e', //dark red
-            tabBarInactiveTintColor: '#7a7a7a', // grey
+            tabBarActiveTintColor: '#FFF', //white
+            tabBarInactiveTintColor: '#000', // red
           })}>
             {/*adding the pages to the navigation bar*/ }
             <Tab.Screen name="Home" component={HomeScreen} />
@@ -78,6 +79,7 @@ function BottomTabs() {
       <Tab.Navigator
         initialRouteName='Home' //sets the homepage to appear on startup
           screenOptions={({ route }) => ({
+            tabBarStyle: styles.navigator,
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
                 //console.log("Main Container: role - ", ts.currentRole);
@@ -102,14 +104,15 @@ function BottomTabs() {
             headerShown: false,
             //currently using company colors from website
             //color of the navigation bar
-            tabBarActiveTintColor: '#ab0e0e', //dark red
-            tabBarInactiveTintColor: '#7a7a7a', // grey
+            tabBarActiveTintColor: '#FFF', //white
+            tabBarInactiveTintColor: '#000', // black
           })}>
             {/*adding the pages to the navigation bar*/ }
-            <Tab.Screen name="Home" component={HomeScreen} />
+            
           <Tab.Screen name="Timesheets" component={StackNav} />
-          <Tab.Screen name="Locations" component={DatabaseTesterScreen} />
           <Tab.Screen name="Profiles" component={AdminScreen} />
+          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen name="Locations" component={DatabaseTesterScreen} />
           <Tab.Screen name="Jobsites" component={JobsiteConfigure} />
   
       </Tab.Navigator>
@@ -128,5 +131,16 @@ export default function MainContainer() {
         <Drawer.Screen name="Timesheet" component={BottomTabs} />
       </Drawer.Navigator>
   </NavigationContainer>
-);
+  );
 }
+
+const styles = StyleSheet.create ({
+  navigator: {
+    backgroundColor: '#ab0e0e',
+    paddingTop: 3
+  },
+  header: {
+    backgroundColor: '#ab0e0e',
+    padding: 10,
+  }
+})

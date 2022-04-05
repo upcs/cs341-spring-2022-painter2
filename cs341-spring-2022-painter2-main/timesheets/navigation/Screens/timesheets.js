@@ -86,14 +86,16 @@ export default function TimesheetScreen({ navigation }) {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     margin: 10,
-                    marginBottom: 0
+                    marginVertical: 5
                     }}>
      <Text style={styles.listText}>{item.name}</Text>
      <Text style={{fontSize:18,fontStyle:'italic', fontWeight: 'bold'}}>{item.date}</Text>
         </View>
      <View style={{flexDirection: 'row',
                  justifyContent: 'space-between',
-                margin: 10
+                 backgroundColor: '#FFF',
+                 marginHorizontal: 10,
+                 marginBottom: 5
                  }}>
      <Text style={styles.timeText1}>IN: <Text style={styles.timeText2}>
         {item.clockIn}</Text>
@@ -203,7 +205,7 @@ export default function TimesheetScreen({ navigation }) {
               <View style={styles.container}>
                 {/* red header on top  */}
                 <View style={styles.header}>
-                  <Text style={styles.headerText}>My Timesheets</Text>
+                  <Text style={styles.headerText}>Timesheets</Text>
                 </View>
                 <DropDownPicker
                     style={{marginTop:10}}
@@ -228,7 +230,6 @@ export default function TimesheetScreen({ navigation }) {
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     margin: 0
-                        
                     }}>
 
                  

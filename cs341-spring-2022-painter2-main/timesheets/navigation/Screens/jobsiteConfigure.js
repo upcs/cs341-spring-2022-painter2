@@ -32,7 +32,7 @@ useEffect(() => {
        }
     
        setJobsiteCollection(addressArr);
-       console.log(jobsiteCollection);
+       console.log("Jobsite: jobs-",jobsiteCollection);
 
       
    });
@@ -171,7 +171,7 @@ async function openJobsiteHandler(inputSiteNum){
     headerText: {
       fontWeight: 'bold',
       fontSize: 22,
-      color: '#fff'
+      color: '#fff',
     },
 })
 
@@ -196,7 +196,7 @@ async function openJobsiteHandler(inputSiteNum){
     
 return(
    <View style={styles.container}> 
-       <View style={styles.header}>
+       {/* <View style={styles.header}>
          <Text style={styles.headerText}>Add a Site</Text>
          
        </View>
@@ -224,7 +224,7 @@ return(
 
 <Pressable onPress={()=>addJobsiteHandler(address,customer,jobName)}style={styles.buttonStyle} >
        <Text style={{fontSize: 15, color:'white', padding: 3}}>ADD <Ionicons name={'md-add'} size={20}/></Text>
-    </Pressable>
+    </Pressable> */}
        
        <View style={styles.header}>
          <Text style={styles.headerText}>Jobsites</Text>
@@ -245,14 +245,11 @@ return(
             </View>
             <View style={styles.listBody}>
                                 {item.split("|")[4] == 'Open'?
-                                    (<TouchableOpacity onPress={() => changeSite(item.split("|")[3],'close')}>
-                                    <Ionicons name={'ios-checkmark-circle'} size={40} style={{color:'#00A000'}}/>
-                                    </TouchableOpacity>
-                                    ):
-                                    (<TouchableOpacity onPress={() => changeSite(item.split("|")[3],'open')}>
-                                    <Ionicons name={'ios-close-circle'} size={40} style={{color:'#ab0e0e'}}/>
-                                    </TouchableOpacity>
-                                     )}
+                                    (<Ionicons name={'ios-checkmark-circle'} 
+                                    size={40} style={{color:'#00A000'}}/>):
+                                    (
+                                    <Ionicons name={'ios-close-circle'} 
+                                    size={40} style={{color:'#ab0e0e'}}/>)}
         <Text style={{padding:4,textAlign:'right'}}>#{item.split("|")[3]}</Text>
             </View>
         </View>
