@@ -54,7 +54,7 @@ export default function AdminScreen({ navigation }) {
     const chRole = async(emp, role) => {
         Alert.alert('Confirm Role Change?', emp.name + ": " + role, [{
                 text: 'Cancel',
-                onPress: () => setRefresh(!refresh),
+                onPress: () => setRefresh(true),
                 style: 'cancel',
         }, { text: 'OK', onPress: () => onClickListener(emp.employeeID, role) },]);
     }
@@ -99,7 +99,7 @@ export default function AdminScreen({ navigation }) {
           justifyContent: 'space-between'}}>
       <View style={{justifyContent: "flex-start", paddingLeft: 10}}>
           <Text style={styles.listText}>{item.name}</Text>
-          <Text style={{fontSize: 12}}>{item.email}</Text>
+          <Text style={{fontSize: 16, fontStyle:'italic', marginTop: 5}}>{item.email}</Text>
       </View>
        </View>
        );}
@@ -119,11 +119,11 @@ export default function AdminScreen({ navigation }) {
         justifyContent: 'space-between'}}>
     <View style={{justifyContent: "flex-start", paddingLeft: 10}}>
         <Text style={styles.listText}>{item.name}</Text>
-        <Text style={{fontSize: 12}}>{item.email}</Text>
+        <Text style={{fontSize: 16, fontStyle:'italic', marginTop: 5}}>{item.email}</Text>
     </View>
     <View style={styles.listBody}>
             <Dropdown
-                iconColor='#A00000'
+                iconColor='#ab0e0e'
                 data={roleData}
                 value={item.role}
                 containerStyle={styles.conStyle}
@@ -155,11 +155,14 @@ export default function AdminScreen({ navigation }) {
                   <Text style={styles.headerText}>Profiles</Text>
                 </View>
                     <Button title="Logout">Logout</Button>
+                    <View style={styles.searchBarContainer}>
+                    <Ionicons name={'ios-search'} size={25} style={styles.inputLineIcon}/>
                 <TextInput 
-                  style={styles.searchBackground}
+                  style={styles.searchBar}
                   placeholder='Enter Employee Name'
                   onChangeText={(input) => filterData(input)}
                   />
+                </View>
                 <FlatList
                 data={useData}
                 renderItem={renderItem}

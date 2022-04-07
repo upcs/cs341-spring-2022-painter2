@@ -5,21 +5,21 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems:'center',
-        backgroundColor:'#A00000'
+        backgroundColor:'#ab0e0e'
     },
     forgot: {
         flex: 1,
         paddingTop: 100,
         justifyContent: 'flex-start',
         alignItems:'center',
-        backgroundColor:'#A00000'
+        backgroundColor:'#ab0e0e'
     },
     reg: {
         //paddingTop: 50,
         flex: 1,
         justifyContent: 'flex-start',
         alignItems:'center',
-        backgroundColor:'#A00000'
+        backgroundColor:'#ab0e0e'
     },
     title: {
         fontSize:30,
@@ -51,7 +51,6 @@ export default StyleSheet.create({
     inputs:{
         height:45,
         marginLeft:5,
-        borderColor: '#FF0000',
         flex:1,
     },
     inputIcon:{
@@ -77,7 +76,7 @@ export default StyleSheet.create({
       },
     inputLineIcon: {
         marginLeft: 5,
-        color:'#A00000',
+        color:'#ab0e0e',
     },
     notes: {
         color:'#FFFFFF',

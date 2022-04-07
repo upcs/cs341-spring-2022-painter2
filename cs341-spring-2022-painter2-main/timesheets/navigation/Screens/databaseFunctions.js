@@ -502,10 +502,21 @@ export const getOpenJobsites = async() => {
     let jobsitesData=(jobsites.docs[i]).data();
     jobsiteArr.push({"label": jobsitesData.jobName, "value": jobsitesData.jobNum});
 }
+
 console.log(jobsiteArr);
 console.log("Jobsites fetched");
 return jobsiteArr;
 
+}
+export const getEmployeeList = async() => {
+  var employees = await firebase.firestore().collection('employees').get();
+  var employeeList = [];
+  for(let i=0;i<(employees.docs).length;i++){
+    let employeesData=(employees.docs[i]).data();
+    employeeList.push({"label": employeesData.name, "value": employeesData.name});
+}
+return employeeList;
+console.log("Jobsites fetched");
 }
 
 //authentification function that adds employee as firebase user
