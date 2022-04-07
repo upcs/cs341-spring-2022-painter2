@@ -50,6 +50,12 @@ export default function LoginScreen({ navigation }) {
                     tsContext.setCurrEmail(user[0].email);
                     tsContext.setCurrRole(user[0].role);
                     tsContext.setCurrId(user[0].employeeID);
+                    try {
+                        await signInWithEmailAndPassword(auth, value.email, value.password);
+                      } catch (error) {
+                          Alert.alert('Error', error)
+                          return false;
+                        }
                     navigation.navigate("Main", creds);
                     return true;
                 }

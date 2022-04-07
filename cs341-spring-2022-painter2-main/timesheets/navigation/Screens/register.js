@@ -48,10 +48,14 @@ export default function RegisterScreen({ navigation }) {
             else {
                 console.log("P1-set: ", log);
 //              *******************************************
-                await createNewEmployee(creds.name,creds.email,log,"Employee")
-                await addFireBaseUser(creds.email,creds.p1);
-                Alert.alert("User Created")
-                navigation.pop()
+                try {
+                    await addFireBaseUser(creds.email, creds.p1, creds.name, log);
+                } catch (error) {
+                    Alert.alert('Error', error)
+                    return false;
+                }
+                navigation.pop();
+                return true;
             }
         } else {
             Alert.alert("Error", "Please input valid credentials")
