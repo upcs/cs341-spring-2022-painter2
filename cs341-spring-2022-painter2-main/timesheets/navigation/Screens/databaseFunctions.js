@@ -254,7 +254,7 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
 //with the employee name, employee ID, date and 
 //clock in time as the parameter
  export const clockInFunc= async(newName,newEmployeeID,newDate
-,newClockInTime, newJobSite, newTask, newLatitude, newLongitude )=>{
+,newClockInTime, newJobSite, newTask, ciLatitude, ciLongitude)=>{
     //gets all clock records for a given employee
     var clockRecords= await firebase.firestore()
     .collection('clocking')
@@ -296,10 +296,10 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
         jobSite:newJobSite, 
         hoursWorked:0, 
         task:newTask,
-        cinLatitude:newLatitude,
-        cinLongitude:newLongitude,
-        coutLatitude:null,
-        coutLongitude:null
+        ClockInLatitude:ciLatitude,
+        ClockInLongitude:ciLongitude,
+        ClockOutLatitude: null,
+        ClockOutLongitude: null
         });
       
     
@@ -311,14 +311,19 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
         firebase.firestore()
         .collection("clocking")
         .add({
-        name:newName,
-        employeeID:newEmployeeID,
-        date:newDate,
-        clockID:0,
-        clockIn:newClockInTime,
-        clockOut:null,
-        hoursWorked:0  
-   
+          name:newName,
+          employeeID:newEmployeeID,
+          date:newDate,
+          clockID:0,
+          clockIn:newClockInTime,
+          clockOut:null,
+          jobSite:newJobSite, 
+          hoursWorked:0, 
+          task:newTask,
+          ClockInLatitude:ciLatitude,
+          ClockInLongitude:ciLongitude,
+          ClockOutLatitude: null,
+          ClockOutLongitude: null
         });
 
 
@@ -374,8 +379,8 @@ if(clockOutField===null){
     .update({
         clockOut:newClockOutTime,
         hoursWorked:newHoursWorked,
-        coutLatitude:newLatitude,
-        coutLongitude:newLongitude
+        ClockOutLatitude:newLatitude,
+        ClockOutLongitude:newLongitude
     })
      .then(() => {
     console.log('clock record updated!');

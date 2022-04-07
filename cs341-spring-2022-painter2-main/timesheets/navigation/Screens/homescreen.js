@@ -302,7 +302,7 @@ module.exports = timeCheck(13,0)
       var hours = new Date().getHours()
       var min = new Date().getMinutes()
       //console.log("clock in")
-      clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite,task,longitude,latitude)
+      clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite,task,latitude,longitude)
       //stores the total minutes work for later
       hours = (hours)*60 + min
       setTime(hours)
@@ -317,7 +317,7 @@ module.exports = timeCheck(13,0)
       //rounds hours to 2 decimal places
       dbhours = Number((dbhours).toFixed(2))
       //console.log("clocking out")
-      clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours,longitude,latitude)
+      clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours,latitude,longitude)
     }
           
   }
