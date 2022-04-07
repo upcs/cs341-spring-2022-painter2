@@ -296,8 +296,10 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
         jobSite:newJobSite, 
         hoursWorked:0, 
         task:newTask,
-        latitude:newLatitude,
-        longitude:newLongitude
+        cinLatitude:newLatitude,
+        cinLongitude:newLongitude,
+        coutLatitude:null,
+        coutLongitude:null
         });
       
     
@@ -372,8 +374,8 @@ if(clockOutField===null){
     .update({
         clockOut:newClockOutTime,
         hoursWorked:newHoursWorked,
-        latitude:newLatitude,
-        longitude:newLongitude
+        coutLatitude:newLatitude,
+        coutLongitude:newLongitude
     })
      .then(() => {
     console.log('clock record updated!');
