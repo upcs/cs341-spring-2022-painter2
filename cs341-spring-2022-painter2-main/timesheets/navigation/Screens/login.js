@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Text, View, TextInput, StyleSheet, Alert, TouchableHighlight} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from './styles/loginStyle.js';
-import {findUserByEmail} from './databaseFunctions';
+import {findUserByEmail, signInUser} from './databaseFunctions';
 import {encodePass, decodePass} from './styles/base64';
 import AppContext from '../Context.js';
 import { useContext } from 'react';
@@ -36,9 +36,9 @@ export default function LoginScreen({ navigation }) {
     //Helper function that does all the validating for the login
     const validateLogin = async() => {
         if(creds.email.length != 0 && creds.password.length != 0){
-            console.log("login.js: input email - ", creds.email);
+            console.log("login: input email - ", creds.email);
             var user = await findUserByEmail(creds.email); //<-----
-            console.log("login.js: userFound - ", user);
+            console.log("login: userFound - ", user);
             //var user = await firebase.firestore().collection('clocking').where('employeeID','==',id)
             console.log(user);
             if (Object.keys(user).length > 0){
@@ -51,7 +51,7 @@ export default function LoginScreen({ navigation }) {
                     tsContext.setCurrRole(user[0].role);
                     tsContext.setCurrId(user[0].employeeID);
                     try {
-                        await signInWithEmailAndPassword(auth, value.email, value.password);
+                        await signInUser(creds.email, creds.password);
                       } catch (error) {
                           Alert.alert('Error', error)
                           return false;

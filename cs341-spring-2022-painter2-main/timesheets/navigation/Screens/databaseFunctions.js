@@ -222,7 +222,7 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
         let data =(fetchedEmployee.docs[i].data());
         emailEmployeeArray.push(data);
       }
-      console.log(emailEmployeeArray);
+      console.log('db: userfound-', emailEmployeeArray);
       return emailEmployeeArray;
   }
   
@@ -537,7 +537,14 @@ export const addFireBaseUser = async(emailInput, passInput, name, en)=>{
 }
 
 export const signInUser=async(emailInput,passInput)=>{
-  auth
-  .signInWithEmailAndPassword(emailInput,passInput)
-  .catch(err=>(console.log('db: error-', err)));
+  try {
+    await auth.signInWithEmailAndPassword(emailInput,passInput)
+  } catch (err){
+    return Error(err);
   }
+  return true;
+}
+
+export const signOutUser = async() => {
+  auth.signOut();
+}
