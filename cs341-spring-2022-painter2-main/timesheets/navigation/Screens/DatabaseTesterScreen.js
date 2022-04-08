@@ -5,7 +5,7 @@ import {Platform,StyleSheet,Text,View,TextInput,Button, Alert, Dimensions} from 
 import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons'; 
-import { getTimesheetsByID } from './databaseFunctions';
+import { getTimesheetsByID, getOpenJobsites } from './databaseFunctions';
 import { useContext } from 'react';
 import AppContext from '../Context.js';
 import {getCoordFromAddress,getStreetAddress,getDistFromSite,getOurCoords} from '../Screens/geoFunctions'
@@ -41,6 +41,8 @@ const [siteLocation,setSiteLocation]=useState("");
 const [siteCoord,setSiteCoord]=useState([0,0]);
 const [yourLocation,setYourLocation]=useState("");
 const [yourCoord,setYourCoord]=useState([0,0]);
+const [openJobsites,setOpenJobsites]=useState(null);
+const [openJobsitesCoords,setOpenJobsitesCoords]=useState(null);
 const [distanceFromSite,setDistanceFromSite]=useState(0);
 const dtsContext = useContext(AppContext);
 
@@ -100,9 +102,43 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
 
             }
            alert(alertMessage)
-          
 
+            setOpenJobsites(await getOpenJobsites());
+
+            // console.log("The open jobsites are: ");
+            // console.log(openJobsites[0]);
+            // console.log(openJobsites[1]);
+            // console.log(openJobsites[2]);
+            // console.log(openJobsites[3]);
+            // console.log(openJobsites[4]);
+
+            var siteCoordArr = [];
+            
+            console.log("Number of open Jobsites: " + openJobsites.length)
+            for(let i=0; i < openJobsites.length ; i++) {
+
+              var latLongNameObject ={
+                name:null,
+                longitude:null,
+                latitude:null
+              }
+
+              console.log("The value of i: " + i);
+              let coords = await getCoordFromAddress(openJobsites[i].address);
+              latLongNameObject.latitude = coords[0];
+              latLongNameObject.longitude = coords[1];
+              latLongNameObject.name = openJobsites[i].label;
+              siteCoordArr.push(latLongNameObject);
+            }
+
+            // console.log("The open jobsite coords are: ");
+            // console.log(siteCoordArr[0]);
+            // console.log(siteCoordArr[1]);
+            // console.log(siteCoordArr[2]);
+            // console.log(siteCoordArr[3]);
+            // console.log(siteCoordArr[4]);
            
+            setOpenJobsitesCoords(siteCoordArr);
 
 
         
@@ -166,6 +202,10 @@ async function handler(siteInput){
         filteredCoordinates.map(coordData=>
           <Marker coordinate={{latitude: coordData.latitude, longitude: coordData.longitude}} title="Pranav"   />
            
+        )}
+        {openJobsitesCoords.map(geoInfo => 
+          
+          <Marker pinColor={'blue'} coordinate={{latitude: geoInfo.latitude, longitude: geoInfo.longitude}} title= {geoInfo.name} />
         )}
 
         <Marker coordinate={locationTest} title='yourMarker' />
