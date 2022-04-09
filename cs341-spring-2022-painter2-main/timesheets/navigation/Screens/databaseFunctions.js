@@ -505,7 +505,7 @@ export const getOpenJobsites = async() => {
   var jobsiteArr = [];
   for(let i=0;i<(jobsites.docs).length;i++){
     let jobsitesData=(jobsites.docs[i]).data();
-    jobsiteArr.push({"label": jobsitesData.jobName, "value": jobsitesData.jobNum});
+    jobsiteArr.push({"label": jobsitesData.jobName, "value": jobsitesData.jobName});
 }
 console.log(jobsiteArr);
 console.log("Jobsites fetched");
