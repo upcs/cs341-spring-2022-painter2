@@ -12,13 +12,14 @@ import AppContext from '../Context.js';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {Component} from 'react'
 import { number } from 'prop-types';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 //The Home Screen
 
 
 
 export default function HomeScreen() {
-  
+  const day = new Date()
   const [jobSite, setJobSite] = useState(' ');
   const[totalTime,setTotalTime]=useState(0);
   const[otherTextVal,setOtherTextVal] =useState("");
@@ -327,7 +328,7 @@ module.exports = timeCheck(13,0)
       var hours = new Date().getHours()
       var min = new Date().getMinutes()
       //console.log("clock in")
-      clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite,task,longitude,latitude)
+      clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite,task,latitude,longitude)
       //stores the total minutes work for later
       hours = (hours)*60 + min
       setTime(hours)
@@ -342,7 +343,7 @@ module.exports = timeCheck(13,0)
       //rounds hours to 2 decimal places
       dbhours = Number((dbhours).toFixed(2))
       //console.log("clocking out")
-      clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours,longitude,latitude)
+      clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours,latitude,longitude)
     }
           
   }
@@ -380,12 +381,26 @@ function inputCheck()
       return false;
     }
 }
+const onClock = () =>{
+  if(inputCheck())
+  {
+    setGate(!gate)
+    setClock(!clockIn)
+    clocking(clockIn)
+  }
+  else{
+  //console.log("no")
+  }
+
+};
 
 
 return (
   <View style={styles.container}>
     <Text style={styles.totalTimeText} > Total Hours Worked Today: {totalHoursWorked}  </Text>
+    <View style={{backgroundColor:'#DDD'}}>
     <DropDownPicker
+      style={{marginVertical: 10}}
       placeholder='Select a Jobsite'
       open={open}
       value={value}
@@ -422,10 +437,14 @@ return (
         }
       }}
     />
-
+      <View style = {{flexDirection:"row",
+                      justifyContent:"space-evenly",
+                      alignItems: 'center'}}>
+      <Text style={styles.time}>{new Date().toLocaleString()}</Text>
       <TextInput
         editable={other}
-        style={styles.input}
+        style={[styles.input, otherText == "" ? 
+        {backgroundColor: '#AAA'} : {backgroundColor: '#FFF'}]}
         placeholder={otherText}
         placeholderTextColor="black"
         onChangeText={text => {
@@ -440,13 +459,46 @@ return (
 
         }}
     />
-    <Text> </Text>
+    
+     
+    </View>
+    <TouchableOpacity
+      style={{padding:15,
+        backgroundColor:'white',
+        alignItems:"center", 
+        borderWidth:1, 
+        borderRadius:8,
+        alignSelf:'center',
+        paddingHorizontal: 80,
+        marginBottom:5}}
+      onPress={onClock}
+    >
+      <Text style ={{fontSize:20, color:'green'}}>{buttonText}</Text>
+    </TouchableOpacity>
+    
+    <View>
+    <View style={{flexDirection: 'row',
+                justifyContent: 'space-between',
+                backgroundColor: '#ab0e0e',
+                paddingLeft: 8,
+                alignItems: 'center'
+                 }}>
+     <Text style={styles.timeText}>IN</Text>
+     <Text style={styles.timeText}>OUT</Text>
+     <View style={{flexDirection: 'row', alignItems: 'center'}}>
+     <Text style={styles.timeText}>TIME</Text>
+     <TouchableOpacity
+                      style={{alignItems:"center", marginLeft: 10}}
+                      onPress={()=> {
+                        setGate(!gate)
 
-    <View style = {styles.listWrapper}>
-          <Text style={styles.title}>In</Text>
-          <Text style={styles.title}>Out</Text>
-          <Text style={styles.title}>Time</Text>
-        </View>
+                      }}
+                    >
+                    <Ionicons name={'ios-refresh-circle'} size={40} style={{color:'#FFF'}}/>
+                    </TouchableOpacity>
+                    </View>
+     </View>
+     </View>
 
     <FlatList
       data={dbData}
@@ -456,34 +508,14 @@ return (
       
         <View style = {styles.listWrapper}>
           
-          <Text style={styles.title}>{item.clockIn}</Text>
-          <Text style={styles.title}>{item.clockOut}</Text>
-          <Text style={styles.title}>{item.hoursWorked}</Text>
+          <Text style={{fontSize: 18}}>{item.clockIn}</Text>
+          <Text style={{fontSize: 18, paddingRight: 15}}>{item.clockOut}</Text>
+          <Text style={{fontSize: 18, paddingRight: 30}}>{item.hoursWorked} hours</Text>
         </View>
       }
     />
-    <Button title ="refresh" onPress={()=> {
-      //console.log("refresh")
-      setGate(!gate)
-    
-    }}/>
-    <Button color ={color} title ={buttonText}  onPress={() => {
-
-        if(inputCheck())
-        {
-          setGate(!gate)
-          setClock(!clockIn)
-          clocking(clockIn)
-         
-        }
-        else{
-          //console.log("no")
-        }
-        
-    }}
-  
-    
-    />
+    </View>
+   
   </View>
 
 );
@@ -491,18 +523,20 @@ return (
 }
 const styles = StyleSheet.create({
   container: {
-  flex: 1,
-  backgroundColor: "white"
+  flex:1,
+  //backgroundColor: "#ab0e0e",
   //alignItems: "center",
   //justifyContent: 'center',
 
   },
   input: {
       borderWidth:1,
-      borderColor: '#777',
+      borderColor: 'black',
       padding: 8,
       margin: 10,
       width: 200,
+      borderRadius: 8
+      
   },
   selectMenu: {
     flex: 1,
@@ -512,12 +546,11 @@ const styles = StyleSheet.create({
   totalTimeText: {
     textAlign: 'center',
     backgroundColor: "#ab0e0e",
-    alignSelf: 'stretch',
     fontWeight: 'bold',
-    fontSize: 25,
-    borderWidth: 1,
-    borderColor: "black",
+    fontSize: 22,
     color: '#fff',
+    padding: 10,
+
   },
   textLabel: {
     textAlign: 'center',
@@ -543,23 +576,25 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 16,
   },
-  title: {
-    fontSize: 15,
+  timeText: {
+    fontSize: 20,
     fontWeight:'bold',
-    flex: 1,
-    marginHorizontal:10,
-    color: 'white'
-
+    color: 'white',
   },
   listWrapper:{
-    flexGrow:0,
-
     flexDirection: 'row',
     flexWrap:'wrap',
-    borderBottomColor: 'white',
-    backgroundColor: '#ab0e0e',
-    borderWidth: .5
+    borderBottomWidth: 1,
+    backgroundColor: '#FFF',
+    justifyContent: 'space-between',
+    padding: 5
+  },
+  time: {
+    color:'#ab0e0e',
+          fontSize:16,
+          padding: 2,
+      textShadowRadius: 1,
+      textShadowColor: '#000000',
+      textShadowOffset: {width: 0, height: 1}
   }
-
-
 });
