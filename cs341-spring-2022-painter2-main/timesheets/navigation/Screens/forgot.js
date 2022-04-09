@@ -21,7 +21,7 @@ return(
                        placeholder={ "Email" }
                        keyboardType="email-address"
                        underlineColorAndroid='transparent'
-                        onChangeText={(em) => setEmail(em.toLowerCase)}
+                       onEndEditing={em => alert(em.nativeEvent.text)}
                  />
                  </View>
                  <TouchableHighlight onPress={() => onClickListener("submit")} >
