@@ -108,13 +108,14 @@ export default function HomeScreen() {
     
     
     return;
-  },[gate])
+  },[gate]) 
 
   useEffect(() => {
           //when they clock in, store their time
           setGate(!gate)
           if(clockIn)
           {
+            
             var hours = new Date().getHours();
             var min = new Date().getMinutes();
             console.log("clock in");
@@ -126,6 +127,7 @@ export default function HomeScreen() {
               setLatitude((await getOurCoords())[0]);
               setLongitude((await getOurCoords())[1]);
               console.log("YOUR LATITIUDE: " + latitude);
+              console.log("david test")
               console.log("YOUR LONGITUDE: " + longitude);
               //setLocation({latitude: yourLat, longitude: yourLong});
 
@@ -411,10 +413,11 @@ return (
         }
       }}
     />
+    
       <View style = {{flexDirection:"row",
                       justifyContent:"space-evenly",
                       alignItems: 'center'}}>
-      <Text style={styles.time}>{new Date().toLocaleString()}</Text>
+      
       <TextInput
         editable={other}
         style={[styles.input, otherText == "" ? 

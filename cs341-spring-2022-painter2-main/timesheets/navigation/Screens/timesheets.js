@@ -128,7 +128,7 @@ export default function TimesheetScreen({ navigation }) {
       const [selectedTimeIn,setSelectedTimeIn]=useState(new Date());
       const [selectedTimeOut,setSelectedTimeOut]=useState(new Date());
       const [test,setTest]=useState("none")
-
+      const [editedBy, setEditedBy]=useState("");
 
       //filters the list by selected date
       const onChange = (event, selectedDate) => {
@@ -295,11 +295,11 @@ export default function TimesheetScreen({ navigation }) {
                         editable={true}
                       
                       >
-
-
-
                       </TextInput>
                       </View>
+                      
+                      
+                      
                             
                     </View>:
                     //normal time
@@ -328,11 +328,16 @@ export default function TimesheetScreen({ navigation }) {
                       >
                       </TextInput>
                       </View>
+
+                      <View style ={{flexDirection: "row", justifyContent:"center"}}>
+                      <Text>Edited by: {editedBy}</Text>
+                      </View>
+
                     </View>}
 
                     <View style={{flexDirection:"row",justifyContent:"center"}}>
                     <Button title= "Edit" style={{height:65,marginTop:15,position:"absolute"}}onPress={() => setEdit(!edit)}/>
-                    <Button title ="Submit" onPress={() => {changeClockIn(clockIn,2,1), changeClockOut(clockOut,2,1)}}/>
+                    <Button title ="Submit" onPress={() => {changeClockIn(clockIn,2,1,tsContext.currentName), changeClockOut(clockOut,2,1,tsContext.currentName)}}/>
                     <Button title = "DELETE" onPress={()=>{showConfirmDialog()}}/>
                     <Button title ="close" onPress={handleModal}/>
                     </View>
