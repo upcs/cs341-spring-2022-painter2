@@ -14,6 +14,10 @@ export default function TimesheetScreen({ navigation }) {
       const [useData, setUseData] = useState ([])
       const [sortedByName, setSortedByName] = useState(false)
       const [currEdit, setCurrEdit] = useState({});
+
+      const [newTimeIn,setNewTimeIn] = useState("");
+      const [newTimeOut, setNewTimeOut] = useState("");
+
       const tsContext = useContext(AppContext);
 
       
@@ -220,14 +224,15 @@ export default function TimesheetScreen({ navigation }) {
                     <View>
                       
                         <Text>Time In:</Text>
-                        
-                            <TextInput style={styles2.input} 
+                        <TextInput style={styles2.input} 
                             value = {currEdit.clockIn} 
-                            editable ={false}/> 
+                            editable ={false}
+                            onEndEditing ={ti => setNewTimeIn(ti.nativeEvent.text)}/> 
                         <Text>Time Out:</Text>
                             <TextInput style={styles2.input} 
                             value = {currEdit.clockOut} 
-                            editable ={false}/> 
+                            editable ={false}
+                            onEndEditing={to => setNewTimeIn(to.nativeEvent.text)}/> 
                     </View>}
 
 
@@ -235,7 +240,7 @@ export default function TimesheetScreen({ navigation }) {
                     <Text>Task: {currEdit.task}</Text>
                     <View style={{flexDirection:"row"}}>
                     <Button title= "Edit" style={{height:65,marginTop:15,position:"absolute"}}onPress={() => setEdit(!edit)}/>
-                    <Button title ="Submit" onPress={() => {changeClockIn(clockIn,"2",1), changeClockOut(clockOut,"2",1)}}/>
+                    <Button title ="Submit" onPress={() => {changeClockIn(newTimeIn,currEdit.employeeID,currEdit.clockID), changeClockOut(newTimeOut,currEdit.employeeID,currEdit.clockID)}}/>
                     <Button title = "DELETE" onPress={()=>{showConfirmDialog()}}/>
                     <Button title ="close" onPress={handleModal}/>
                     </View>
