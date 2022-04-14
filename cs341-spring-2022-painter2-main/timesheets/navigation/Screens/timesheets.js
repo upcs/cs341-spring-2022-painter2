@@ -13,6 +13,7 @@ export default function TimesheetScreen({ navigation }) {
       const [timesheetsData, setTimeSheetsData] = useState([])
       const [useData, setUseData] = useState ([])
       const [sortedByName, setSortedByName] = useState(false)
+      const [currEdit, setCurrEdit] = useState({});
       const tsContext = useContext(AppContext);
 
       
@@ -79,7 +80,10 @@ export default function TimesheetScreen({ navigation }) {
        const renderItem = ({ item }) => (
          //send "item" to a function to get item.employeeID
          //so you can set it to a useStateHook to use for databaseFunction
-        <TouchableOpacity onPress={handleModal}>
+        <TouchableOpacity onPress={() => {
+          handleModal();
+          setCurrEdit(item);
+          }}>
           <Item name={item.name +": " + item.date +"("+item.clockID+")"}/>
           
         </TouchableOpacity>
@@ -218,16 +222,17 @@ export default function TimesheetScreen({ navigation }) {
                         <Text>Time In:</Text>
                         
                             <TextInput style={styles2.input} 
-                            value = {clockIn} 
+                            value = {currEdit.clockIn} 
                             editable ={false}/> 
                         <Text>Time Out:</Text>
                             <TextInput style={styles2.input} 
-                            value = {clockOut} 
+                            value = {currEdit.clockOut} 
                             editable ={false}/> 
                     </View>}
 
 
-                    <Text>Job Site: {jobSite}</Text>
+                    <Text>Job Site: {currEdit.jobSite}</Text>
+                    <Text>Task: {currEdit.task}</Text>
                     <View style={{flexDirection:"row"}}>
                     <Button title= "Edit" style={{height:65,marginTop:15,position:"absolute"}}onPress={() => setEdit(!edit)}/>
                     <Button title ="Submit" onPress={() => {changeClockIn(clockIn,"2",1), changeClockOut(clockOut,"2",1)}}/>
