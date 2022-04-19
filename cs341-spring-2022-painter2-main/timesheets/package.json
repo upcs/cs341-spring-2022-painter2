@@ -35,6 +35,7 @@
     "expo-location": "^14.0.2",
     "expo-status-bar": "~1.2.0",
     "firebase": "^9.6.10",
+    "nodemailer-react": "^1.0.2",
     "pouchdb": "^7.2.2",
     "prop-types": "15.8.1",
     "qs": "^6.10.3",
