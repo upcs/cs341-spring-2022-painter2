@@ -76,40 +76,44 @@ export default function TimesheetScreen({ navigation }) {
         </View>
       );
         
-       const renderItem = ({ item }) =>
-    (
-         //send "item" to a function to get item.employeeID
-         //so you can set it to a useStateHook to use for databaseFunction
-    <TouchableOpacity onPress={handleModal}>
-     <View style={{borderBottomWidth:2}}>
+       const renderItem = ({ item }) =>(
+        <TouchableOpacity onPress={() => {
+          handleModal()
+          setEditedBy(item.editedBy)
+          setClockInTime(item.clockIn)
+          setClockOutTime(item.clockOut)
+          
+
+        }}>
+        <View style={{borderBottomWidth:2}}>
+            <View style={{flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        margin: 10,
+                        marginVertical: 5
+                        }}>
+        <Text style={styles.listText}>{item.name}</Text>
+        <Text style={{fontSize:18,fontStyle:'italic', fontWeight: 'bold'}}>{item.date}</Text>
+            </View>
         <View style={{flexDirection: 'row',
                     justifyContent: 'space-between',
-                    alignItems: 'center',
-                    margin: 10,
-                    marginVertical: 5
+                    backgroundColor: '#FFF',
+                    marginHorizontal: 10,
+                    marginBottom: 5
                     }}>
-     <Text style={styles.listText}>{item.name}</Text>
-     <Text style={{fontSize:18,fontStyle:'italic', fontWeight: 'bold'}}>{item.date}</Text>
+        <Text style={styles.timeText1}>IN: <Text style={styles.timeText2}>
+            {item.clockIn}</Text>
+        </Text>
+        <Text style={styles.timeText1}>OUT: <Text style={styles.timeText2}>
+            {item.clockOut}</Text>
+        </Text>
+        <Text style={styles.timeText1}><Text style={styles.timeText2}>
+            {item.hoursWorked}</Text> hours
+        </Text>
         </View>
-     <View style={{flexDirection: 'row',
-                 justifyContent: 'space-between',
-                 backgroundColor: '#FFF',
-                 marginHorizontal: 10,
-                 marginBottom: 5
-                 }}>
-     <Text style={styles.timeText1}>IN: <Text style={styles.timeText2}>
-        {item.clockIn}</Text>
-     </Text>
-     <Text style={styles.timeText1}>OUT: <Text style={styles.timeText2}>
-        {item.clockOut}</Text>
-     </Text>
-     <Text style={styles.timeText1}><Text style={styles.timeText2}>
-        {item.hoursWorked}</Text> hours
-     </Text>
-     </View>
-        </View>
-        </TouchableOpacity>
-      );
+            </View>
+            </TouchableOpacity>
+          );
       
       const[isModalVisible,setIsModalVisible]=useState(false);
       const handleModal = () => {
@@ -119,10 +123,10 @@ export default function TimesheetScreen({ navigation }) {
       const [selectedDate, setSelectedDate] = useState(new Date());
 
 
-      const name = "david";
-      const date ="3/27/2022"
-      const [clockIn,setClockInTime] = useState("10:00am")
-      const [clockOut,setClockOutTime] = useState("11:00am")
+      //const name = "david";
+      //const date ="3/27/2022"
+      const [clockIn,setClockInTime] = useState()
+      const [clockOut,setClockOutTime] = useState()
       const [edit, setEdit] = useState(false);
       const jobSite = "University of portland" 
       const [selectedTimeIn,setSelectedTimeIn]=useState(new Date());
