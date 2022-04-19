@@ -82,6 +82,8 @@ export default function TimesheetScreen({ navigation }) {
           setEditedBy(item.editedBy)
           setClockInTime(item.clockIn)
           setClockOutTime(item.clockOut)
+          setEmpId(item.employeeID)
+          setClockId(item.clockID)
           
 
         }}>
@@ -127,7 +129,9 @@ export default function TimesheetScreen({ navigation }) {
       //const date ="3/27/2022"
       const [clockIn,setClockInTime] = useState()
       const [clockOut,setClockOutTime] = useState()
-      const [edit, setEdit] = useState(false);
+      const [clockId,setClockId]=useState()
+      const [empId,setEmpId]=useState()
+      const [edit, setEdit] = useState(false)
       const jobSite = "University of portland" 
       const [selectedTimeIn,setSelectedTimeIn]=useState(new Date());
       const [selectedTimeOut,setSelectedTimeOut]=useState(new Date());
@@ -341,7 +345,7 @@ export default function TimesheetScreen({ navigation }) {
 
                     <View style={{flexDirection:"row",justifyContent:"center"}}>
                     <Button title= "Edit" style={{height:65,marginTop:15,position:"absolute"}}onPress={() => setEdit(!edit)}/>
-                    <Button title ="Submit" onPress={() => {changeClockIn(clockIn,2,1,tsContext.currentName), changeClockOut(clockOut,2,1,tsContext.currentName)}}/>
+                    <Button title ="Submit" onPress={() => {changeClockIn(clockIn,empId,clockId,tsContext.currentName), changeClockOut(clockOut,empId,clockId,tsContext.currentName)}}/>
                     <Button title = "DELETE" onPress={()=>{showConfirmDialog()}}/>
                     <Button title ="close" onPress={handleModal}/>
                     </View>
