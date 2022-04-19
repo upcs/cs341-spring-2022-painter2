@@ -110,154 +110,6 @@ export default function HomeScreen() {
     return;
   },[gate]) 
 
-  useEffect(() => {
-          //when they clock in, store their time
-          setGate(!gate)
-          if(clockIn)
-          {
-            
-            var hours = new Date().getHours();
-            var min = new Date().getMinutes();
-            console.log("clock in");
-            setColor('green'); // Changes button color
-
-            (async () =>{
-              // let yourLat=(await getOurCoords())[0];
-              // let yourLong=(await getOurCoords())[1];
-              setLatitude((await getOurCoords())[0]);
-              setLongitude((await getOurCoords())[1]);
-              console.log("YOUR LATITIUDE: " + latitude);
-              console.log("david test")
-              console.log("YOUR LONGITUDE: " + longitude);
-              //setLocation({latitude: yourLat, longitude: yourLong});
-
-              if(selectedValue == "Other") {                
-                let arr = [];
-                for(let i=1; i<4;i++) {
-                  console.log("i is: " + i);
-                  let tsheet = await getTimesheetsByID(i);
-                  console.log(tsheet);
-                  let inputName = tsheet[0].name;
-                  let inputLong = tsheet[0].longitude;
-                  let inputLat = tsheet[0].latitude;
-                  const marker = {name: inputName, lat: inputLat, long:inputLong};
-                  console.log("THIS IS MARKER");
-                  console.log(marker);
-                  setMarkerInfo(marker);
-                  arr.push(marker);
-                  //hsContext.setTCInfo([markerInfo]);
-                  console.log("timecard info: ");
-                  //console.log( hsContext.timecardInfo);
-                  //hsContext.setTCInfo([markerInfo]);
-                  //let tmp = (hsContext.timecardInfo);
-                }
-                hsContext.setTCInfo(arr);
-                // let tsheet = await getTimesheetsByID(2);
-                // console.log(tsheet);
-                // let inputName = tsheet[0].name;
-                // let inputLong = tsheet[0].longitude;
-                // let inputLat = tsheet[0].latitude;
-                // const marker = {name: inputName, lat: inputLat, long:inputLong};
-                // console.log(marker);
-                // setMarkerInfo(marker);
-                // console.log("Testing marker name: " + markerInfo.name);
-                // console.log("Testing marker long: " + markerInfo.long);
-                // console.log("Testing marker lat: " + markerInfo.lat);
-                // hsContext.setTCInfo([markerInfo]);
-                // console.log(hsContext.timecardInfo[0]);
-                // console.log("Name: " + ((hsContext.timecardInfo)[0]).name);
-                // console.log("long: " + ((hsContext.timecardInfo)[0]).long);
-                // console.log("lat: " + ((hsContext.timecardInfo)[0]).lat);
-
-                //hsContext.setTCInfo(tSheet);
-                //console.log("TEST TEST: " + (hsContext.tcInfo[0])[0]);
-                //console.log("TEST TEST2: " + hsContext.tcInfo[1]);
-              }
-              else {                
-                let arr = [];
-                for(let i=1; i<4;i++) {
-                  console.log("i is: " + i);
-                  let tsheet = await getTimesheetsByID(i);
-                  console.log(tsheet);
-                  let inputName = tsheet[0].name;
-                  let inputLong = tsheet[0].longitude;
-                  let inputLat = tsheet[0].latitude;
-                  const marker = {name: inputName, lat: inputLat, long:inputLong};
-                  console.log("THIS IS MARKER");
-                  console.log(marker);
-                  setMarkerInfo(marker);
-                  arr.push(marker);
-                  //hsContext.setTCInfo([markerInfo]);
-                  console.log("timecard info: ");
-                  //console.log( hsContext.timecardInfo);
-                  //hsContext.setTCInfo([markerInfo]);
-                  //let tmp = (hsContext.timecardInfo);
-                }
-                hsContext.setTCInfo(arr);
-              } 
-
-            //clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite)
-            })()
-
-            
-                
-              
-              
-            setGate(!gate)
-              
-              //stores the total minutes work for later
-              hours = (hours)*60 + min
-              setTime(hours)
-          }
-          //when they clock out, store their time
-          if(clockIn == false){
-              var hours = new Date().getHours();
-              var min = new Date().getMinutes();
-              setColor('red'); //changes button color
-                var dbhours = hours*60 + min;
-                dbhours =(dbhours-time)/60;
-                setTotalTime(prevTime=>prevTime + dbhours);
-              
-              (async () =>{
-                setLatitude((await getOurCoords())[0]);
-                setLongitude((await getOurCoords())[1]);
-                console.log("YOUR LATITIUDE: " + latitude);
-                console.log("YOUR LONGITUDE: " + longitude);
-                clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours, latitude, longitude)
-                console.log("clocking out")
-                 let arr = [];
-                 for(let i=1; i<4;i++) {
-                   console.log("i is: " + i);
-                   let tsheet = await getTimesheetsByID(i);
-                   console.log(tsheet);
-                   let inputName = tsheet[0].name;
-                   let inputLong = tsheet[0].longitude;
-                   let inputLat = tsheet[0].latitude;
-                   const marker = {name: inputName, lat: inputLat, long:inputLong};
-                   console.log("THIS IS MARKER");
-                   console.log(marker);
-                   setMarkerInfo(marker);
-                   arr.push(marker);
-                   //hsContext.setTCInfo([markerInfo]);
-                   console.log("timecard info: ");
-                   //console.log( hsContext.timecardInfo);
-                   //hsContext.setTCInfo([markerInfo]);
-                   //let tmp = (hsContext.timecardInfo);
-                 }
-                 hsContext.setTCInfo(arr);
-              })()
-              // setColor('green') //changes button color
-              // var dbhours = hours*60 + min
-              // dbhours =(dbhours-time)/60
-              // setTotalTime(prevTime=>prevTime + dbhours)
-              
-              //   console.log("clocking out")
-              //   clockOutFunc(2,timeCheck(hours,min),dbhours)
-                setGate(!gate)
-              
-          }
-      }, [clockIn])
-
   
  function clockInClockOut()
 {
@@ -306,8 +158,42 @@ module.exports = timeCheck(13,0)
       //console.log("clock in")
       clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite,task,latitude,longitude)
       //stores the total minutes work for later
-      hours = (hours)*60 + min
-      setTime(hours)
+      hours = (hours)*60 + min;
+      setTime(hours);
+
+      (async () =>{
+        // let yourLat=(await getOurCoords())[0];
+        // let yourLong=(await getOurCoords())[1];
+        setLatitude((await getOurCoords())[0]);
+        setLongitude((await getOurCoords())[1]);
+        console.log("YOUR LATITIUDE: " + latitude);
+        console.log("YOUR LONGITUDE: " + longitude);
+        //setLocation({latitude: yourLat, longitude: yourLong});
+
+        if(selectedValue == "Other") {                
+          let arr = [];
+          for(let i=1; i<4;i++) {
+            console.log("i is: " + i);
+            let tsheet = await getTimesheetsByID(i);
+            console.log(tsheet);
+            let inputName = tsheet[0].name;
+            let inputLong = tsheet[0].longitude;
+            let inputLat = tsheet[0].latitude;
+            const marker = {name: inputName, lat: inputLat, long:inputLong};
+            console.log("THIS IS MARKER");
+            console.log(marker);
+            setMarkerInfo(marker);
+            arr.push(marker);
+            //hsContext.setTCInfo([markerInfo]);
+            console.log("timecard info: ");
+            //console.log( hsContext.timecardInfo);
+            //hsContext.setTCInfo([markerInfo]);
+            //let tmp = (hsContext.timecardInfo);
+          }
+          hsContext.setTCInfo(arr);
+          // let tsheet = await getTimesheetsByID(2);
+          // console.log(tsheet);
+      }})()
     }
     else
     {
@@ -317,9 +203,37 @@ module.exports = timeCheck(13,0)
       var dbhours = hours*60 + min
       dbhours =(dbhours-time)/60
       //rounds hours to 2 decimal places
-      dbhours = Number((dbhours).toFixed(2))
+      dbhours = Number((dbhours).toFixed(2));
       //console.log("clocking out")
-      clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours,latitude,longitude)
+      //clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours,latitude,longitude)
+      (async () =>{
+        setLatitude((await getOurCoords())[0]);
+        setLongitude((await getOurCoords())[1]);
+        console.log("YOUR LATITIUDE: " + latitude);
+        console.log("YOUR LONGITUDE: " + longitude);
+        clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours, latitude, longitude)
+        console.log("clocking out")
+         let arr = [];
+         for(let i=1; i<4;i++) {
+           console.log("i is: " + i);
+           let tsheet = await getTimesheetsByID(i);
+           console.log(tsheet);
+           let inputName = tsheet[0].name;
+           let inputLong = tsheet[0].longitude;
+           let inputLat = tsheet[0].latitude;
+           const marker = {name: inputName, lat: inputLat, long:inputLong};
+           console.log("THIS IS MARKER");
+           console.log(marker);
+           setMarkerInfo(marker);
+           arr.push(marker);
+           //hsContext.setTCInfo([markerInfo]);
+           console.log("timecard info: ");
+           //console.log( hsContext.timecardInfo);
+           //hsContext.setTCInfo([markerInfo]);
+           //let tmp = (hsContext.timecardInfo);
+         }
+         hsContext.setTCInfo(arr);
+      })()
     }
           
   }
