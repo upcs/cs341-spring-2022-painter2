@@ -108,7 +108,7 @@ export default function HomeScreen() {
     
     
     return;
-  },[gate])
+  },[gate]) 
 
   
  function clockInClockOut()
@@ -327,10 +327,11 @@ return (
         }
       }}
     />
+    
       <View style = {{flexDirection:"row",
                       justifyContent:"space-evenly",
                       alignItems: 'center'}}>
-      <Text style={styles.time}>{new Date().toLocaleString()}</Text>
+      
       <TextInput
         editable={other}
         style={[styles.input, otherText == "" ? 
