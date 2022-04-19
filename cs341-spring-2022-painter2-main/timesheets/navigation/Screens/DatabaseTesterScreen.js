@@ -5,10 +5,31 @@ import {Platform,StyleSheet,Text,View,TextInput,Button, Alert, Dimensions} from 
 import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons'; 
-import { getTimesheetsByID } from './databaseFunctions';
+import { getTimesheetsByID, getOpenJobsites } from './databaseFunctions';
 import { useContext } from 'react';
 import AppContext from '../Context.js';
+import {getCoordFromAddress,getStreetAddress,getDistFromSite,getOurCoords} from '../Screens/geoFunctions'
+import 'firebase/firestore';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+import {auth} from './firebaseSettings'
 
+//this config key used to connect to firestore database
+const firebaseConfig = {
+    apiKey: "AIzaSyCVu8npmz8_Mes5xQC6LBYTEBaw55ucAxRJXc",
+    authDomain: "timesheetdb-2b167.firebaseapp.com",
+    projectId: "timesheetdb-2b167",
+    storageBucket: "timesheetdb-2b167.appspot.com",
+    messagingSenderId: "533714654432",
+    appId: "1:533714654432:web:9a8adf4fa6f391b48f6c85",
+    measurementId: "G-S9ZRZDN57B"
+  };
+  
+  // Initialize Firebase
+  if(firebase.apps.length==0){
+   firebase.initializeApp(firebaseConfig);
+  }
 
 export default function DatabaseTesterScreen() {
   //state variable for text field of site location, siteLocation
@@ -20,6 +41,8 @@ const [siteLocation,setSiteLocation]=useState("");
 const [siteCoord,setSiteCoord]=useState([0,0]);
 const [yourLocation,setYourLocation]=useState("");
 const [yourCoord,setYourCoord]=useState([0,0]);
+const [openJobsites,setOpenJobsites]=useState(null);
+const [openJobsitesCoords,setOpenJobsitesCoords]=useState(null);
 const [distanceFromSite,setDistanceFromSite]=useState(0);
 const dtsContext = useContext(AppContext);
 
@@ -46,104 +69,87 @@ const [locationTest, setLocationTest] = useState({
   longitude: 0,
 });
 
-      // gets the users current location and sets it to location
-      React.useEffect(() => {
-        (async () =>{
-          let { status } = await Location.requestForegroundPermissionsAsync();
-          if (status !== 'granted') {
-            Alert.alert('Permission to access location was denied');
-            return;
-          }
-          
-          let locationServiceEnabled = await Location.hasServicesEnabledAsync();
-          
-            if (!locationServiceEnabled) {
-          
-              Alert.alert("Your Location services are turned off. Turn them on Please");
-              return;
+const [filteredCoordinates,setFilteredCoordinates]=useState([])
+
+    
+     async function refresh(){
+     
+          var collectionQuery =  await firebase.firestore()
+          .collection('clocking').get();
+
+          var realtimeTimesheets=  collectionQuery.docs;
+           var length=  realtimeTimesheets.length;
+           var coordArray= [];
+           for(let i=0;i< length;i++){
+            var recordData=  (realtimeTimesheets[i]).data()
+            var latLongObject ={
+              longitude:recordData.latitude,
+              latitude:recordData.longitude
+            }
+            if(("latitude" in recordData)==true && ("longitude" in recordData)==true){
+             coordArray.push(latLongObject);
             }
 
-            const locate = await Location.getCurrentPositionAsync({});
-            setLocation(locate.coords)
-            // let siteCoord = (await getOurCoords())
-            // setSiteMarker({latitude: siteCoord[0], longitude: siteCoord[1]})
-            // console.log(siteMarker)
 
-        })()
-      }, []);
-  
-      async function getOurCoords(){
-       
-      let coords = await Location.getCurrentPositionAsync({});
-      //console.log("Latitude is: "+coords.coords.latitude)
-      //console.log("Longitude is: "+coords.coords.longitude)
-     // 45.41567513430611, -122.74994738832297 
-     let arrCoord=[];
-     arrCoord.push(coords.coords.latitude);
-     arrCoord.push(coords.coords.longitude);
-     return arrCoord;
-
-    }
-
-    async function getDistFromSite(siteLat,siteLong){
-   
-      // 3963.0 * arccos[(sin(lat1) * sin(lat2)) + cos(lat1) * cos(lat2) * cos(long2 – long1)]
-      let ourLoc= await getOurCoords();
-      let xRad1=(siteLat/180)*Math.PI;
-      let xRad2=(ourLoc[0]/180)*Math.PI;
-      let yRad1=(siteLong/180)*Math.PI;
-      let yRad2=(ourLoc[1]/180)*Math.PI;
-      let productOfSines=Math.sin(xRad1)*Math.sin(xRad2);
-      let productOfCosines=Math.cos(xRad1)*Math.cos(xRad2)*Math.cos(yRad2-yRad1);
-      let distance=3963.00*Math.acos(productOfSines+productOfCosines);
-       //console.log("Your distance from the site is: "+distance+" miles");
-       return distance;
+           }
       
-  
+            setFilteredCoordinates(coordArray )
+            var alertMessage="";
+
+            for(let j=0;j<coordArray.length;j++){
+              alertMessage+="Lat = "+coordArray[j].latitude+", Long= "+coordArray[j].longitude;
+
+
+            }
+           alert(alertMessage)
+
+            setOpenJobsites(await getOpenJobsites());
+
+            // console.log("The open jobsites are: ");
+            // console.log(openJobsites[0]);
+            // console.log(openJobsites[1]);
+            // console.log(openJobsites[2]);
+            // console.log(openJobsites[3]);
+            // console.log(openJobsites[4]);
+
+            var siteCoordArr = [];
+            
+            console.log("Number of open Jobsites: " + openJobsites.length)
+            for(let i=0; i < openJobsites.length ; i++) {
+
+              var latLongNameObject ={
+                name:null,
+                longitude:null,
+                latitude:null
+              }
+
+              console.log("The value of i: " + i);
+              let coords = await getCoordFromAddress(openJobsites[i].address);
+              latLongNameObject.latitude = coords[0];
+              latLongNameObject.longitude = coords[1];
+              latLongNameObject.name = openJobsites[i].label;
+              siteCoordArr.push(latLongNameObject);
+            }
+
+            // console.log("The open jobsite coords are: ");
+            // console.log(siteCoordArr[0]);
+            // console.log(siteCoordArr[1]);
+            // console.log(siteCoordArr[2]);
+            // console.log(siteCoordArr[3]);
+            // console.log(siteCoordArr[4]);
+           
+            setOpenJobsitesCoords(siteCoordArr);
+
+
+        
+
       }
-  async function getStreetAddress(inputLat,inputLong){
- 
-    let coordCollection = await Location.reverseGeocodeAsync({
-      latitude:inputLat,
-      longitude:inputLong
-    });
-let streetInfo="";
-let cityName=""
-let stateName="";
-let zipCode="";
-coordCollection.forEach(record=>{
-  streetInfo=record.name;
-  cityName=record.city;
-  stateName=record.region;
-  zipCode=record.postalCode;
-});
-let streetAddress=streetInfo+" "+cityName+" "+stateName+" "+zipCode;
-//console.log("The street Address is :" +streetAddress);
-return streetAddress;
-  }
-   
-  async function getCoordFromAddress(inputStreetLocation){
- 
+       
+
+
+     
   
-  
-    let extractedCoord = await Location.geocodeAsync(inputStreetLocation);
-    let extractedLatitude=0;
-    let extractedLongitude=0;
-    extractedCoord.forEach(each=>{
-      extractedLatitude=each.latitude;
-      extractedLongitude=each.longitude;
-    });
-
-    let extractedCoordArray=[extractedLatitude,extractedLongitude];
-    //console.log("lat : "+extractedLatitude+" long: "+extractedLongitude);
-    return extractedCoordArray;
-  
- 
-
-
-
-  }
-
+     
 async function handler(siteInput){
   let yourLat=(await getOurCoords())[0];
     let yourLong=(await getOurCoords())[1];
@@ -181,7 +187,7 @@ async function handler(siteInput){
       <Button onPress={()=>handler(siteLocation)}title="Get Info About Site"/>
 
       <Text style={styler.line}>_______________________________________________</Text>
-
+      <Button onPress={()=>refresh()}title="refresh"/>
       <Text> </Text>
       
       
@@ -191,6 +197,15 @@ async function handler(siteInput){
         {dtsContext.timecardInfo.map(geoData => 
           
           <Marker coordinate={{latitude: geoData.lat, longitude: geoData.long}} title= {geoData.name} />
+        )}
+        {
+        filteredCoordinates.map(coordData=>
+          <Marker coordinate={{latitude: coordData.latitude, longitude: coordData.longitude}} title="Pranav"   />
+           
+        )}
+        {openJobsitesCoords.map(geoInfo => 
+          
+          <Marker pinColor={'blue'} coordinate={{latitude: geoInfo.latitude, longitude: geoInfo.longitude}} title= {geoInfo.name} />
         )}
 
         <Marker coordinate={locationTest} title='yourMarker' />
@@ -276,166 +291,6 @@ const styler = StyleSheet.create({
 
         });
         
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, {Component, useState} from 'react';
-// import {StyleSheet,Text,View,TextInput,Button, Alert} from 'react-native';
-// import {createNewEmployee,editEmployeeEmail,editEmployeeEmailHelper,
-// displayAllEmployees,getEmployeeByID,clockIn,clockOut,returnDailyClockRecords} from "./databaseFunctions";
-    
-// export default DatabaseTesterScreen= ()=>{
-
-// //all these are state variable for the values in the input text fields
-
-// const [nameText,setName]=useState("");
-// const [IDText,setID]=useState(0);
-// const [emailText,setEmail]=useState("");
-// const [phoneText,setPhone]=useState("");
-// const [ageText,setAge]=useState(0);
-
-// const [grabIDText,setGrabID]=useState("");
-// const [changeIDText,setChangeID]=useState("");
-// const [changeEmailText,setChangeEmail]=useState("");
-
-
-
-
-
-
-
-
-
-
-
-
-   
-  
-        
-        
-           
-        
-// return (
- 
-//     <View style={styler.fullPage}> 
-           
-         
-
-//     <Text>ID of employee you wanna grab </Text>
-//     <TextInput onChangeText={(val) => setGrabID(parseInt(val)) } style={styler.inputStyle}> </TextInput>
-//     <Button onPress={()=>getEmployeeByID(grabIDText)} title='submit'/>
-
-//     <Button onPress={ ()=> displayAllEmployees()}title='get all employees'/>
-
-
-//     <Text>name of employee you want to create </Text>
-//     <TextInput onChangeText={(val)=> setName(val)} style={styler.inputStyle}> </TextInput>
-
-//     <Text>ID of employee you want to create </Text>
-//     <TextInput onChangeText ={(val)=> setID(parseInt(val)) }style={styler.inputStyle}> </TextInput>
-   
-//     <Text>email of employee you want to create </Text>
-//     <TextInput onChangeText ={(val)=> setEmail(val)}style={styler.inputStyle}> </TextInput>
-
-//     <Text>phone number of employee you want to create </Text>
-//     <TextInput onChangeText ={(val)=> setPhone(val)}  style={styler.inputStyle}> </TextInput>
-
-//     <Text>age of employee you want to create </Text>
-//     <TextInput  onChangeText ={(val)=> setAge(parseInt(val))}style={styler.inputStyle}> </TextInput>
-//     <Button onPress={()=>createNewEmployee(nameText,IDText,emailText,phoneText,ageText)} title='submit'/>
-
-//     <Text>ID of employee you want to update </Text>
-//     <TextInput   onChangeText ={(val)=> setChangeID(parseInt(val))}style={styler.inputStyle}> </TextInput>
-   
-
-//     <Text> Email you want to update with</Text>
-//     <TextInput  onChangeText ={(val)=> setChangeEmail(val)} style={styler.inputStyle}> </TextInput>
-//     <Button onPress={()=>editEmployeeEmail(changeIDText,changeEmailText)} title='submit'/>
-
-
-       
-           
-//     </View>
-
-// );
-
-
-
-    
-
-// }
-
-// const styler = StyleSheet.create({
-//     fullPage:{
-//     flex:1,
-//     backgroundColor:'#cdf',
-//     alignItems:'center',
-//     justifyContent:'center',
-    
-//     },
-//     inputStyle:{
-//     borderWidth:1,
-//     borderColor:'#777',
-//     padding:8,
-//     margin: 0,
-//     width:200,
-    
-
-    
-//     }
-    
-    
-//     });
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

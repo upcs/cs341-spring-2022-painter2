@@ -3,11 +3,14 @@ import { Text, View, StyleSheet, TouchableOpacity, Button, Modal, Alert} from 'r
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import styles from './styles/timesheetStyle.js';
 import { useState, useEffect } from 'react';
-import { getTimesheets, addJobsite, changeRole,removeEmployee,changeClockIn, changeClockOut, removeTimesheet} from './databaseFunctions.js';
+import { getTimesheets, addJobsite, changeRole,removeEmployee,changeClockIn, changeClockOut, removeTimesheet,getEmployeeList} from './databaseFunctions.js';
+import timesheetStyle from './styles/timesheetStyle.js';
+import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 import { useContext } from 'react';
 import AppContext from '../Context.js';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
+import DropDownPicker from 'react-native-dropdown-picker';
+import { Ionicons } from '@expo/vector-icons';
 export default function TimesheetScreen({ navigation }) {
       
       const [timesheetsData, setTimeSheetsData] = useState([])
@@ -19,7 +22,7 @@ export default function TimesheetScreen({ navigation }) {
       const [newTimeOut, setNewTimeOut] = useState("");
 
       const tsContext = useContext(AppContext);
-
+      const [gate,setGate]=useState(false)
       
       //sets the initial data
       useEffect(() => {
@@ -38,22 +41,19 @@ export default function TimesheetScreen({ navigation }) {
         }
         getData()
         return;
-     }, [])
+     }, [gate])
 
-     const filterData = (searchName) => {
-        const copy = timesheetsData.filter(ts => ts.name.toString().toLowerCase().trim().includes(searchName.toString().toLowerCase().trim()));
-
+     const filterData = (searchName,x) => {
+        const copy = timesheetsData.filter(ts => ts.name.toString().toLowerCase().trim().includes(
+          searchName.toString().toLowerCase().trim()) &&ts.date == x.toLocaleDateString());
+        //console.log(ts.date)
+        console.log(x)
         console.log(copy)
         setUseData(copy)
      }
      
      const filterDataByDate = (searchDate) => {
-      const copy = [];
-       if(!sortedByName) {
-        copy = timesheetsData.filter(ts => ts.date == searchDate);
-       } else {
-        copy = useData.filter(ts=> ts.date == searchDate);
-       }
+      const copy = timesheetsData.filter(ts => ts.date == searchDate );
       console.log(copy)
       setUseData(copy)
       }
@@ -81,23 +81,47 @@ export default function TimesheetScreen({ navigation }) {
         </View>
       );
         
-       const renderItem = ({ item }) => (
+       const renderItem = ({ item }) =>
+    (
          //send "item" to a function to get item.employeeID
          //so you can set it to a useStateHook to use for databaseFunction
-        <TouchableOpacity onPress={() => {
-          handleModal();
-          setCurrEdit(item);
-          }}>
-          <Item name={item.name +": " + item.date +"("+item.clockID+")"}/>
-          
+
+    <TouchableOpacity onPress={handleModal}>
+     <View style={{borderBottomWidth:2}}>
+        <View style={{flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    margin: 10,
+                    marginVertical: 5
+                    }}>
+     <Text style={styles.listText}>{item.name}</Text>
+     <Text style={{fontSize:18,fontStyle:'italic', fontWeight: 'bold'}}>{item.date}</Text>
+        </View>
+     <View style={{flexDirection: 'row',
+                 justifyContent: 'space-between',
+                 backgroundColor: '#FFF',
+                 marginHorizontal: 10,
+                 marginBottom: 5
+                 }}>
+     <Text style={styles.timeText1}>IN: <Text style={styles.timeText2}>
+        {item.clockIn}</Text>
+     </Text>
+     <Text style={styles.timeText1}>OUT: <Text style={styles.timeText2}>
+        {item.clockOut}</Text>
+     </Text>
+     <Text style={styles.timeText1}><Text style={styles.timeText2}>
+        {item.hoursWorked}</Text> hours
+     </Text>
+     </View>
+        </View>
         </TouchableOpacity>
       );
       
       const[isModalVisible,setIsModalVisible]=useState(false);
       const handleModal = () => {
         setIsModalVisible(()=> !isModalVisible)
-        
       };
+      
       const [selectedDate, setSelectedDate] = useState(new Date());
 
 
@@ -109,19 +133,26 @@ export default function TimesheetScreen({ navigation }) {
       const jobSite = "University of portland" 
       const [selectedTimeIn,setSelectedTimeIn]=useState(new Date());
       const [selectedTimeOut,setSelectedTimeOut]=useState(new Date());
+      const [test,setTest]=useState("none")
+      const [editedBy, setEditedBy]=useState("");
+
+      //filters the list by selected date
       const onChange = (event, selectedDate) => {
         const currentDate = selectedDate;
         
         setSelectedDate(currentDate);
         console.log(selectedDate)
         filterDataByDate(selectedDate.toLocaleDateString());
+        setTest(selectedDate.toLocaleDateString())
       };
+      //updates the clock in time
       const onChangeClockIn = (event, selectTime) => {
         const currentTime = selectTime;
         setSelectedTimeIn(currentTime);
         setClockInTime(currentTime.toLocaleString().substring(10));
         console.log(currentTime);
       }
+      //updates the clock out time
       const onChangeClockOut = (event, selectTime) => {
         const currentTime = selectTime;
         setSelectedTimeOut(currentTime);
@@ -130,25 +161,34 @@ export default function TimesheetScreen({ navigation }) {
       }
       const showConfirmDialog =()=>{
         return Alert.alert(
-          "Are your sure?",
-          "Are you sure you want to delete this timesheet?",
+          "Delete Timesheet?",
+          "This cannot be undone",
           [
-            // The "Yes" button
+            // The "Cancel" button
             {
-              text: "Yes",
+              text: "Cancel",
+            },
+            
+            {
+              text: "Ok",
               onPress: () => {
                 removeTimesheet("2",1)
               },
             },
-            // The "No" button
-            // Does nothing but dismiss the dialog when tapped
-            {
-              text: "No",
-            },
           ]
         );
       };
-      
+      useEffect(() => {
+        getEmployeeList().then(jbs => setItems(jbs));
+        return;
+      },[])
+      const [open, setOpen] = useState(false);
+      const [value, setValue] = useState("");
+      const [items, setItems] = useState([
+        {label: 'Apple', value: 'apple'},
+        
+      ]);
+
 
           if(tsContext.currentRole == 'Employee') {
             return (
@@ -169,28 +209,55 @@ export default function TimesheetScreen({ navigation }) {
           } else {
             return (
               <View style={styles.container}>
+                {/* red header on top  */}
                 <View style={styles.header}>
-                  <Text style={styles.headerText}>My Timesheets</Text>
-                  
+                  <Text style={styles.headerText}>Timesheets</Text>
                 </View>
-                <DateTimePicker
-                  value={selectedDate}
-                  mode='date'
-                  onChange={onChange}
-                />
-                <Button title="Export" onPress={() => toCsv(timesheetsData)}/>
+                <DropDownPicker
+                    style={{marginTop:10}}
+                      zIndex={1}
+                      open={open}
+                      value={value}
+                      items={items}
+                      setOpen={setOpen}
+                      setValue={setValue}
+                      setItems={setItems}
+                      searchable={true}
+                      searchPlaceholder="Type in a name you want to search for"
+                      onChangeValue={input => {
+                        console.log("input: "+input)
+                        filterData(input,selectedDate)
+                        if(input == "") setSortedByName(false);
+                        else setSortedByName(true);
+                      }}
+                    />
+                    <View style={{padding: 5,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    margin: 0
+                    }}>
+
+                 
+                    <DateTimePicker
+                    style={{flex:1}}
+                      value={selectedDate}
+                      mode='date'
+                      onChange={onChange}
+                    />
+                    
+                    <TouchableOpacity
+                      style={{alignItems:"center", marginLeft: 5}}
+                      onPress={()=> {
+                        setGate(!gate)
+
+                      }}
+                    >
+                    <Ionicons name={'ios-refresh-circle'} size={50} style={{color:'#ab0e0e'}}/>
+                    </TouchableOpacity>
+                </View>
                 
-               
-                <TextInput 
-                  style={styles.searchBackground}
-                  placeholder='Enter Employee Name'
-                  onChangeText={input => {
-                    filterData(input)
-                    if(input == "") setSortedByName(false);
-                    else setSortedByName(true);
-                  }}
-                  />
-                  
+                    <View style={{borderColor:'#ab0e0e', borderWidth: 3}}></View>
                   <FlatList
                 data={useData}
                 renderItem={renderItem}
@@ -205,36 +272,74 @@ export default function TimesheetScreen({ navigation }) {
                         { edit ? 
                      // edit time   
                     <View>
-                        <Text>Time In:</Text>
-                        <DateTimePicker
-                        value={selectedTimeIn}
-                        mode='time' 
-                        onChange={onChangeClockIn}
-                        
-                      />
-                        <Text>Time Out:</Text>
-                        <DateTimePicker
-                        value={selectedTimeOut}
-                        mode='time' 
-                        onChange={onChangeClockOut}
-                      />
+                      <View style ={{flexDirection: "row", justifyContent:"center"}}>
+                        <View>
+                          <Text>Time In:         </Text>
+                          <DateTimePicker
+                          value={selectedTimeIn}
+                          mode='time' 
+                          onChange={onChangeClockIn}
+                          
+                        />
+                        </View>
+
+                        <View>
+                          <Text>Time Out:         </Text>
+                          <DateTimePicker
+                          value={selectedTimeOut}
+                          mode='time' 
+                          onChange={onChangeClockOut}
+                        />
+                        </View>
+                      </View>
+                      <Text></Text>
+                      
+                      <View style ={{flexDirection: "row", justifyContent:"center"}}>
+                      <TextInput style={styles2.input2}
+                        placeholder={jobSite}
+                        placeholderTextColor="grey"
+                        editable={true}
+                      
+                      >
+                      </TextInput>
+                      </View>
+                      
+                      
+                      
                             
                     </View>:
                     //normal time
                     <View>
-                      
-                        <Text>Time In:</Text>
+
+                      <View style = {{flexDirection:"row",justifyContent:"center"}}>
+                      <View>
+                        <Text >Time In:</Text>
                         <TextInput style={styles2.input} 
-                            value = {currEdit.clockIn} 
-                            editable ={false}
-                            onEndEditing ={ti => setNewTimeIn(ti.nativeEvent.text)}/> 
+                          value = {clockIn} 
+                          editable ={false}/> 
+                      </View>
+
+                      <View>      
                         <Text>Time Out:</Text>
                             <TextInput style={styles2.input} 
-                            value = {currEdit.clockOut} 
-                            editable ={false}
-                            onEndEditing={to => setNewTimeIn(to.nativeEvent.text)}/> 
-                    </View>}
+                            value = {clockOut} 
+                            editable ={false}/> 
+                      </View>
+                      </View>
+                      <View style ={{flexDirection: "row", justifyContent:"center"}}>
+                      <TextInput style={styles2.input2}
+                        placeholder={jobSite}
+                        placeholderTextColor="black"
+                        editable={false}
+                      
+                      >
+                      </TextInput>
+                      </View>
 
+                      <View style ={{flexDirection: "row", justifyContent:"center"}}>
+                      <Text>Edited by: {editedBy}</Text>
+                      </View>
+                    </View>}
 
                     <Text>Job Site: {currEdit.jobSite}</Text>
                     <Text>Task: {currEdit.task}</Text>
@@ -294,7 +399,7 @@ const Modalstyles= StyleSheet.create({
 const styles2 = StyleSheet.create({
   container: {
   flex: 1,
-  backgroundColor: "white",
+  //backgroundColor: "white",
   alignItems: "center",
   justifyContent: 'center',
 
@@ -305,6 +410,13 @@ const styles2 = StyleSheet.create({
       padding: 8,
       margin: 10,
       width: 100,
+  },
+  input2: {
+    borderWidth:1,
+    borderColor: '#777',
+    padding: 8,
+    margin: 10,
+    width: 220,
   }
 });
   

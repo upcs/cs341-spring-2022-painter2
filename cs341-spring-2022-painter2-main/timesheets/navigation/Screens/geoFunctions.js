@@ -32,33 +32,21 @@ import * as Location from 'expo-location';
 
     }
 //function gets your distance from given coordinates
-    export async function getDistFromSite(siteLat,siteLong){
+    export  function getDistFromSite(siteLat,siteLong,yourLat,yourLong){
       //gets permission from device to use location services
-      let { status } = await Location.requestForegroundPermissionsAsync();
-if (status !== 'granted') {
-  Alert.alert('Permission to access location was denied');
-  return;
-}
-//checks if location services are enabled
-let locationServiceEnabled = await Location.hasServicesEnabledAsync();
-
-  if (!locationServiceEnabled) {
-
-    Alert.alert("Your Location services are turned off. Turn them on Please");
-    return;
-  }
+    
   
       
   // 3963.0 * arccos[(sin(lat1) * sin(lat2)) + cos(lat1) * cos(lat2) * cos(long2 – long1)]
   //all these constants go into out formula for calculating distance in miles
-      let ourLoc= await getOurCoords();
+     
     //we convert latitude and longitude from units of degrees to units
     //of radians
 
       let xRad1=(siteLat/180)*Math.PI;
-      let xRad2=(ourLoc[0]/180)*Math.PI;
+      let xRad2=(yourLat/180)*Math.PI;
       let yRad1=(siteLong/180)*Math.PI;
-      let yRad2=(ourLoc[1]/180)*Math.PI;
+      let yRad2=(yourLong/180)*Math.PI;
 //plug in values into trigonometric formula for global distance
       let productOfSines=Math.sin(xRad1)*Math.sin(xRad2);
       let productOfCosines=Math.cos(xRad1)*Math.cos(xRad2)*Math.cos(yRad2-yRad1);

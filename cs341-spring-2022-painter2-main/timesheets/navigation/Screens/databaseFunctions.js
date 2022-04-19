@@ -254,7 +254,7 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
 //with the employee name, employee ID, date and 
 //clock in time as the parameter
  export const clockInFunc= async(newName,newEmployeeID,newDate
-,newClockInTime, newJobSite, newTask, ciLatitude, ciLongitude)=>{
+,newClockInTime, newJobSite, newTask, ciLatitude, ciLongitude, editedBy)=>{
     //gets all clock records for a given employee
     var clockRecords= await firebase.firestore()
     .collection('clocking')
@@ -299,7 +299,8 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
         ClockInLatitude:ciLatitude,
         ClockInLongitude:ciLongitude,
         ClockOutLatitude: null,
-        ClockOutLongitude: null
+        ClockOutLongitude: null,
+        editedBy:null
         });
       
     
@@ -448,6 +449,7 @@ export const changeRole = async(id, newRole) => {
 
 
 //finds an employee by ID and changes clock in time
+
 export const changeClockIn = async(newClockIn,id,clockID) => {
   var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).get();
   employee.forEach(emp => {
@@ -457,9 +459,10 @@ export const changeClockIn = async(newClockIn,id,clockID) => {
   })
   var docID = employee.docs[0].id
   console.log(docID)
-  firebase.firestore().collection('clocking').doc(docID).update({clockIn:newClockIn});
+  firebase.firestore().collection('clocking').doc(docID).update({clockIn:newClockIn,editedBy:editName});
 }  
 //finds an employee by ID and changes clock out time
+<
 export const changeClockOut = async(newClockOut,id,clockID) => {
   var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).get();
   employee.forEach(emp => {
@@ -467,11 +470,13 @@ export const changeClockOut = async(newClockOut,id,clockID) => {
       return emp;
     }
   })
+
   var docID = employee.docs[0].id
   console.log(docID)
-  firebase.firestore().collection('clocking').doc(docID).update({clockOut:newClockOut});
+  firebase.firestore().collection('clocking').doc(docID).update({clockOut:newClockOut,editedBy:editName});
 }  
 //finds an employee by ID and changes clock in time
+
 export const changeJobSite = async(newJobSite,id,clockID) => {
   var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).get();
   employee.forEach(emp => {
@@ -481,7 +486,7 @@ export const changeJobSite = async(newJobSite,id,clockID) => {
   })
   var docID = employee.docs[0].id
   console.log(docID)
-  await firebase.firestore().collection('clocking').doc(docID).update({jobSite:newJobSite});
+  await firebase.firestore().collection('clocking').doc(docID).update({jobSite:newJobSite,editedBy:editName});
 }
 
 //finds an employee by id and removes them from database
@@ -525,12 +530,25 @@ export const getOpenJobsites = async() => {
   var jobsiteArr = [];
   for(let i=0;i<(jobsites.docs).length;i++){
     let jobsitesData=(jobsites.docs[i]).data();
-    jobsiteArr.push({"label": jobsitesData.jobName, "value": jobsitesData.jobName});
+
+    jobsiteArr.push({"label": jobsitesData.jobName, "value": jobsitesData.jobNum, "address": jobsitesData.address});
+
 }
+
 console.log(jobsiteArr);
 console.log("Jobsites fetched");
 return jobsiteArr;
 
+}
+export const getEmployeeList = async() => {
+  var employees = await firebase.firestore().collection('employees').get();
+  var employeeList = [];
+  for(let i=0;i<(employees.docs).length;i++){
+    let employeesData=(employees.docs[i]).data();
+    employeeList.push({"label": employeesData.name, "value": employeesData.name});
+}
+return employeeList;
+console.log("Jobsites fetched");
 }
 
 //authentification function that adds employee as firebase user

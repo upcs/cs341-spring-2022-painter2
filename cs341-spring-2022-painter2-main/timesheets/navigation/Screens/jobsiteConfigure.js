@@ -1,8 +1,10 @@
 import React, { useState,useEffect } from "react";
-import { StyleSheet, Text,  View, TextInput,Button,Pressable,  TouchableHighlight, Alert, Linking} from 'react-native';
+import { StyleSheet, Text,  View, TextInput,Button,Pressable,  TouchableHighlight, Alert, Linking, TouchableOpacity} from 'react-native';
 import {Picker} from '@react-native-picker/picker'
+import tstyles from './styles/timesheetStyle.js';
 import {getAllJobsites,addJobsite,closeJobsite, openJobsite} from './databaseFunctions'
 import { FlatList } from 'react-native'
+import { Ionicons } from '@expo/vector-icons';
 
 export default function JobsiteConfigure(){
 const [address,setAddress]=useState("");
@@ -30,7 +32,7 @@ useEffect(() => {
        }
     
        setJobsiteCollection(addressArr);
-       console.log(jobsiteCollection);
+       console.log("Jobsite: jobs-",jobsiteCollection);
 
       
    });
@@ -76,7 +78,6 @@ async function closeJobsiteHandler(inputJobNum){
 
 }
 //calls close jobsite function and re-renders flatlist
-
 async function openJobsiteHandler(inputSiteNum){
    await openJobsite(inputSiteNum);
    await reRender();
@@ -89,9 +90,9 @@ async function openJobsiteHandler(inputSiteNum){
 
     const styles = StyleSheet.create ({
         container: {
-          
+            flex:1,
+            justifyContent: 'flex-start',
            justifyContent: 'center',
-           alignItems: 'center',
            backgroundColor: 'white',
           
         },
@@ -99,7 +100,6 @@ async function openJobsiteHandler(inputSiteNum){
         titleStyle:{
          fontSize: 20,
          fontWeight: "bold",
-         fontFamily: "Times New Roman",
          backgroundColor: "red",
          paddingLeft:10,
          paddingRight:10,
@@ -109,30 +109,22 @@ async function openJobsiteHandler(inputSiteNum){
          borderWidth:5,
          borderColor:"black",
          borderRadius:20
-
-       
-
-
       },
       jobsiteStyle:{
-         fontSize: 10,
+         fontSize: 20,
          fontWeight: "bold",
-         fontFamily: "Verdana",
-         backgroundColor: "rgb(151, 188, 247)",
-        
-         borderWidth:5,
-         borderColor:"black",
-         marginBottom:0,
-        
-
+          textAlign: 'center',
+          margin: 1
       },
       inputStyle:{
-         height: 40,
+         height: 30,
          width:350,
-         margin: 12,
+         margin: 3,
          borderWidth: 1,
-         padding: 10,
-       marginBottom:0
+          borderColor: '#ab0e0e',
+          borderRadius: 5,
+         padding: 5,
+          alignSelf: 'center'
       },
       pickerStyle:{
          flex:1,
@@ -140,51 +132,81 @@ async function openJobsiteHandler(inputSiteNum){
        marginBottom:0,
        width:350,
        height:30
-
-
       },
-      rowStyle:{
-      borderWidth:5,
-      borderColor:"red",
-    
-
+      rowTitleStyle:{
+        color:'#ab0e0e',
+          fontWeight: 'bold',
+          fontSize:25,
+          padding: 2,
+      textShadowRadius: 1,
+      textShadowColor: '#000000',
+      textShadowOffset: {width: 1, height: 1}
       },
+    rowStyle:{
+        fontWeight: 'bold',
+        padding: 4
+    },
       cellStyle:{
-      margin:5
-
+        margin: 0,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+          alignItems: 'center',
       },
-
       buttonStyle:{
       padding:5,
-      borderWidth:5,
-      backgroundColor:"green",
-      borderRadius:10,
-      marginBottom:5
+      backgroundColor:"#ab0e0e",
+          color:'#FFFFFF',
+      borderRadius:5,
+      margin:10,
+          alignSelf: 'center'
+      },
+    listBody: {
+        alignItems: 'flex-end',
+    },
+    header: {
+      backgroundColor: '#ab0e0e',
+      alignItems: 'center',
+      padding: 10,
+    },
+    headerText: {
+      fontWeight: 'bold',
+      fontSize: 22,
+      color: '#fff',
+    },
+})
 
-      }
-
-,
-      listTitle:{
-         padding:5,
-         borderWidth:5,
-         backgroundColor:"pink",
-         fontSize:20
-   
-   
-         },
-         flatStyle:{
-         height: 150,
-   
-         flexGrow: 0
-         }
-
-       
-     })   
-
+    const onClickListener = (siteID, what) => {
+        if (what == "open"){
+            console.log('jobsite: open confirmed');
+            openJobsiteHandler(siteID);
+        } else {
+            console.log('jobsite: close confirmed');
+            closeJobsiteHandler(siteID);
+        }
+        return;
+    }
+    
+    const changeSite = async(siteID, what) => {
+        Alert.alert('Confirm', 'Open/Close this job?', [{
+                text: 'Cancel',
+                onPress: () => reRender(),
+                style: 'cancel',
+        }, { text: 'OK', onPress: () => onClickListener(siteID, what) },]);
+    }
+    
 return(
-   <View style ={styles.container}> 
- 
-   <Text style={styles.jobsiteStyle}> Enter In Address of Jobsite</Text>
+   <View style={styles.container}> 
+       {/* <View style={styles.header}>
+         <Text style={styles.headerText}>Add a Site</Text>
+         
+       </View>
+       <Text style={styles.jobsiteStyle}>Name of Job</Text>
+      <TextInput
+       style={styles.inputStyle}
+       onChangeText={(val)=>{ setJobName(val)}}
+       
+      />
+   <Text style={styles.jobsiteStyle}>Address</Text>
    <TextInput
         style={styles.inputStyle}
       onChangeText={(val)=>{ setAddress(val)}} 
@@ -192,67 +214,47 @@ return(
        
 
    
-      <Text style={styles.jobsiteStyle}> Enter In Customer of Jobsite</Text>
+      <Text style={styles.jobsiteStyle}>Customer</Text>
       <TextInput
         style={styles.inputStyle}
         onChangeText={(val)=>{ setCustomer(val)}} 
       
       />
-       <Text style={styles.jobsiteStyle}> Enter In Jobsite Name</Text>
-      <TextInput
-       style={styles.inputStyle}
-       onChangeText={(val)=>{ setJobName(val)}} 
        
-      /> 
 
 <Pressable onPress={()=>addJobsiteHandler(address,customer,jobName)}style={styles.buttonStyle} >
-      <Text >submit</Text>
-    </Pressable> 
-     <Text style={styles.jobsiteStyle}> Enter in Jobsite Number to Close</Text>
-      <TextInput
-        style={styles.inputStyle}
-        onChangeText={(val)=>{ setJobDelete(val)}}
-      />
-
-<Pressable onPress={()=>closeJobsiteHandler(parseInt(jobDelete))}style={styles.buttonStyle} >
-      <Text >submit</Text>
-    </Pressable> 
-
-
-
-
-    <Text style={styles.jobsiteStyle}> Enter in Jobsite Number to Open</Text>
-      <TextInput
-        style={styles.inputStyle}
-        onChangeText={(val)=>{ setJobOpen(val)}}
-      />
-
-<Pressable onPress={()=>openJobsiteHandler(parseInt(jobOpen))}style={styles.buttonStyle} >
-      <Text >submit</Text>
-    </Pressable> 
-
-
-
-
-
-
-    <Text style={styles.listTitle}>List of Jobsites in Database </Text> 
+       <Text style={{fontSize: 15, color:'white', padding: 3}}>ADD <Ionicons name={'md-add'} size={20}/></Text>
+    </Pressable> */}
+       
+       <View style={styles.header}>
+         <Text style={styles.headerText}>Jobsites</Text>
+       </View>
+       
     <FlatList
-    style={styles.flatStyle}
-    keyExtractor={(item)=>item.jobNum}
+    keyExtractor={(item)=>item.split("|")[3]}
    data={jobsiteCollection.toString().split("?")}
 
-   renderItem={({item})=>(
-  <View style={styles.cellStyle}>
-  <Text style={styles.rowStyle}>Jobsite Address: {item.split("|")[0]}</Text>
-  <Text style={styles.rowStyle}>Jobsite Customer: {item.split("|")[1]}</Text>
-  <Text style={styles.rowStyle}>Jobsite Name:  {item.split("|")[2]}</Text>
-  <Text style={styles.rowStyle}>Jobsite Number: {item.split("|")[3]}</Text>
-  <Text style={styles.rowStyle}>Jobsite Status: {item.split("|")[4]}</Text>
-
-   </View>
-
-
+   renderItem={({item})=>
+       (
+        item.length <= 0? null:(
+        <View style={{borderBottomWidth: 2, padding:3}}>
+        <View style={styles.cellStyle}>
+            <View style={{justifyContent: "flex-start"}}>
+                <Text style={styles.rowTitleStyle}>{item.split("|")[2]}</Text>
+        <Text style={{padding: 4,fontSize:18}}>{item.split("|")[1]}</Text>
+            </View>
+            <View style={styles.listBody}>
+                                {item.split("|")[4] == 'Open'?
+                                    (<Ionicons name={'ios-checkmark-circle'} 
+                                    size={40} style={{color:'#00A000'}}/>):
+                                    (
+                                    <Ionicons name={'ios-close-circle'} 
+                                    size={40} style={{color:'#ab0e0e'}}/>)}
+        <Text style={{padding:4,textAlign:'right'}}>#{item.split("|")[3]}</Text>
+            </View>
+        </View>
+        <Text style={styles.rowStyle}>{item.split("|")[0]}</Text>
+            </View>)
    )}/>
      
   

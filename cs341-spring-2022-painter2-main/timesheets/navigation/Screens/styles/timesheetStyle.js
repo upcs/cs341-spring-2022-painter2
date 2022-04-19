@@ -9,8 +9,7 @@ export default StyleSheet.create({
     header: {
       backgroundColor: '#ab0e0e',
       alignItems: 'center',
-      padding: 20,
-      borderWidth:1,
+      padding: 10,
     },
     headerText: {
       fontWeight: 'bold',
@@ -42,7 +41,7 @@ export default StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold',
         fontSize: 20,
-        color: '#A00000'
+        color: '#ab0e0e'
     },
 listBody: {
     padding: 15,
@@ -57,12 +56,42 @@ conStyle: {
 },
 listText: {
     fontWeight: 'bold',
-  fontSize: 18,
-    color: '#A00000'
+  fontSize: 25,
+    color: '#ab0e0e',
+    textShadowRadius: 1,
+    textShadowColor: '#000000',
+textShadowOffset: {width: 1, height: 1}
 },
 
 inputLineIcon: {
     marginLeft: 15,
-    color:'#A00000',
+    color:'#ab0e0e',
 },
+searchBarContainer: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 5,
+    height:40,
+    flexDirection: 'row',
+    alignItems:'center'
+},
+searchBar: {
+    marginLeft:5,
+    flex:1,
+},
+timeText1: {
+    fontSize:16,
+    fontWeight:'bold',
+    color:'#ab0e0e'
+},
+timeText2: {
+    fontSize:16,
+    fontStyle:'italic',
+    fontWeight:'normal',
+    color:'#000'
+}
+    
   });

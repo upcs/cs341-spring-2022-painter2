@@ -108,13 +108,14 @@ export default function HomeScreen() {
     
     
     return;
-  },[gate])
+  },[gate]) 
 
   useEffect(() => {
           //when they clock in, store their time
           setGate(!gate)
           if(clockIn)
           {
+            
             var hours = new Date().getHours();
             var min = new Date().getMinutes();
             console.log("clock in");
@@ -126,6 +127,7 @@ export default function HomeScreen() {
               setLatitude((await getOurCoords())[0]);
               setLongitude((await getOurCoords())[1]);
               console.log("YOUR LATITIUDE: " + latitude);
+              console.log("david test")
               console.log("YOUR LONGITUDE: " + longitude);
               //setLocation({latitude: yourLat, longitude: yourLong});
 
@@ -192,32 +194,6 @@ export default function HomeScreen() {
                   //let tmp = (hsContext.timecardInfo);
                 }
                 hsContext.setTCInfo(arr);
-                // console.log("TESTTT_________");
-                // console.log("Size: " + hsContext.timecardInfo.length);
-                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length]);
-                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length - 1]);
-                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length - 2]);
-                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length - 3]);
-                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length - 4]);
-                // console.log(hsContext.timecardInfo[hsContext.timecardInfo.length - 5]);
-                
-                // let tsheet = await getTimesheetsByID(2);
-                // console.log(tsheet);
-                // let inputName = tsheet[0].name;
-                // let inputLong = tsheet[0].longitude;
-                // let inputLat = tsheet[0].latitude;
-                // const marker = {name: inputName, lat: inputLat, long:inputLong};
-                // console.log(marker);
-                // setMarkerInfo(marker);
-                // console.log("Testing marker name: " + markerInfo.name);
-                // console.log("Testing marker long: " + markerInfo.long);
-                // console.log("Testing marker lat: " + markerInfo.lat);
-                // hsContext.setTCInfo([markerInfo]);
-                // console.log(hsContext.timecardInfo[0]);
-                // console.log("Name: " + ((hsContext.timecardInfo)[0]).name);
-                // console.log("long: " + ((hsContext.timecardInfo)[0]).long);
-                // console.log("lat: " + ((hsContext.timecardInfo)[0]).lat);
-                //console.log("TEST TEST2: " + hsContext.tcInfo[1]);
               } 
 
             //clockInFunc("David","2",getDay(),timeCheck(hours,min),jobSite)
@@ -247,7 +223,7 @@ export default function HomeScreen() {
                 setLongitude((await getOurCoords())[1]);
                 console.log("YOUR LATITIUDE: " + latitude);
                 console.log("YOUR LONGITUDE: " + longitude);
-              
+                clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours, latitude, longitude)
                 console.log("clocking out")
                  let arr = [];
                  for(let i=1; i<4;i++) {
@@ -437,10 +413,11 @@ return (
         }
       }}
     />
+    
       <View style = {{flexDirection:"row",
                       justifyContent:"space-evenly",
                       alignItems: 'center'}}>
-      <Text style={styles.time}>{new Date().toLocaleString()}</Text>
+      
       <TextInput
         editable={other}
         style={[styles.input, otherText == "" ? 
