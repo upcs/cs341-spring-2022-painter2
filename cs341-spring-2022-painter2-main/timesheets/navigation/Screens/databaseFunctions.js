@@ -455,6 +455,10 @@ export const changeClockIn = async(newClockIn,id,clockID) => {
   firebase.firestore().collection('clocking').doc(docID).update({clockIn:newClockIn});
 }  
 //finds an employee by ID and changes clock out time
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 export const changeClockOut = async(newClockOut,id,clockID) => {
   var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
   var docID = employee.docs[0].id
