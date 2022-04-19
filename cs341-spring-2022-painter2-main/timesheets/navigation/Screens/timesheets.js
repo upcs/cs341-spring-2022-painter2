@@ -16,6 +16,11 @@ export default function TimesheetScreen({ navigation }) {
       const [timesheetsData, setTimeSheetsData] = useState([])
       const [useData, setUseData] = useState ([])
       const [sortedByName, setSortedByName] = useState(false)
+      const [currEdit, setCurrEdit] = useState({});
+
+      const [newTimeIn,setNewTimeIn] = useState("");
+      const [newTimeOut, setNewTimeOut] = useState("");
+
       const tsContext = useContext(AppContext);
       const [gate,setGate]=useState(false)
       
@@ -80,6 +85,7 @@ export default function TimesheetScreen({ navigation }) {
     (
          //send "item" to a function to get item.employeeID
          //so you can set it to a useStateHook to use for databaseFunction
+
     <TouchableOpacity onPress={handleModal}>
      <View style={{borderBottomWidth:2}}>
         <View style={{flexDirection: 'row',
@@ -128,7 +134,7 @@ export default function TimesheetScreen({ navigation }) {
       const [selectedTimeIn,setSelectedTimeIn]=useState(new Date());
       const [selectedTimeOut,setSelectedTimeOut]=useState(new Date());
       const [test,setTest]=useState("none")
-
+      const [editedBy, setEditedBy]=useState("");
 
       //filters the list by selected date
       const onChange = (event, selectedDate) => {
@@ -295,18 +301,19 @@ export default function TimesheetScreen({ navigation }) {
                         editable={true}
                       
                       >
-
-
-
                       </TextInput>
                       </View>
+                      
+                      
+                      
                             
                     </View>:
                     //normal time
                     <View>
+
                       <View style = {{flexDirection:"row",justifyContent:"center"}}>
                       <View>
-                        <Text >    Time In:</Text>
+                        <Text >Time In:</Text>
                         <TextInput style={styles2.input} 
                           value = {clockIn} 
                           editable ={false}/> 
@@ -328,11 +335,17 @@ export default function TimesheetScreen({ navigation }) {
                       >
                       </TextInput>
                       </View>
+
+                      <View style ={{flexDirection: "row", justifyContent:"center"}}>
+                      <Text>Edited by: {editedBy}</Text>
+                      </View>
                     </View>}
 
-                    <View style={{flexDirection:"row",justifyContent:"center"}}>
+                    <Text>Job Site: {currEdit.jobSite}</Text>
+                    <Text>Task: {currEdit.task}</Text>
+                    <View style={{flexDirection:"row"}}>
                     <Button title= "Edit" style={{height:65,marginTop:15,position:"absolute"}}onPress={() => setEdit(!edit)}/>
-                    <Button title ="Submit" onPress={() => {changeClockIn(clockIn,2,1), changeClockOut(clockOut,2,1)}}/>
+                    <Button title ="Submit" onPress={() => {changeClockIn(newTimeIn,currEdit.employeeID,currEdit.clockID), changeClockOut(newTimeOut,currEdit.employeeID,currEdit.clockID)}}/>
                     <Button title = "DELETE" onPress={()=>{showConfirmDialog()}}/>
                     <Button title ="close" onPress={handleModal}/>
                     </View>

@@ -3,18 +3,20 @@ import { Text, View, TouchableOpacity, Button, Alert} from 'react-native';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import styles from './styles/timesheetStyle.js';
 import { useState, useEffect } from 'react';
-import { getAllEmployees, changeRole, removeEmployee} from './databaseFunctions.js';
+import { getAllEmployees, changeRole, removeEmployee, getEmployeeList} from './databaseFunctions.js';
 import { useContext } from 'react';
 import AppContext from '../Context.js';
 import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
 import { Ionicons } from '@expo/vector-icons';
-    
+import DropDownPicker from 'react-native-dropdown-picker';    
 
 export default function AdminScreen({ navigation }) {
         const [refresh, setRefresh] = useState(false)
         const [timesheetsData, setTimeSheetsData] = useState([])
         const [useData, setUseData] = useState ([])
         const tsContext = useContext(AppContext);
+        const [sortedByName, setSortedByName] = useState(false)
+        const [gate,setGate]=useState(false);
         const roleData = [{
             value: 'Admin',
             }, {
@@ -40,7 +42,7 @@ export default function AdminScreen({ navigation }) {
         }
         getData()
         return;
-     }, [])
+     }, [gate])
 
     //FILTERS THE DATA
      const filterData = (searchName) => {
@@ -80,6 +82,16 @@ export default function AdminScreen({ navigation }) {
         setRefresh(!refresh)
         return;
     }
+    useEffect(() => {
+      getEmployeeList().then(jbs => setItems(jbs));
+      return;
+    },[])
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState("");
+    const [items, setItems] = useState([
+      {label: 'Apple', value: 'apple'},
+      
+    ]);
     
     
         
@@ -155,14 +167,50 @@ export default function AdminScreen({ navigation }) {
                   <Text style={styles.headerText}>Profiles</Text>
                 </View>
                     <Button title="Logout">Logout</Button>
+                    {/*  
                     <View style={styles.searchBarContainer}>
                     <Ionicons name={'ios-search'} size={25} style={styles.inputLineIcon}/>
+                
                 <TextInput 
                   style={styles.searchBar}
                   placeholder='Enter Employee Name'
                   onChangeText={(input) => filterData(input)}
                   />
+                    
+
                 </View>
+                */} 
+                
+
+                
+                   <DropDownPicker
+                    style={{marginTop:10}}
+                      zIndex={1}
+                      open={open}
+                      value={value}
+                      items={items}
+                      setOpen={setOpen}
+                      setValue={setValue}
+                      setItems={setItems}
+                      searchable={true}
+                      searchPlaceholder="Type in a name you want to search for"
+                      onChangeValue={input => {
+                        console.log("input: "+input)
+                        filterData(input)
+                        if(input == "") setSortedByName(false);
+                        else setSortedByName(true);
+                      }}
+                    />
+                    <TouchableOpacity
+                      style={{alignItems:"center", marginLeft: 5}}
+                      onPress={()=> {
+                        setGate(!gate)
+
+                      }}
+                    >
+                    <Ionicons name={'ios-refresh-circle'} size={50} style={{color:'#ab0e0e'}}/>
+                    </TouchableOpacity>
+                   
                 <FlatList
                 data={useData}
                 renderItem={renderItem}
