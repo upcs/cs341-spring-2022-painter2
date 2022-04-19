@@ -41,8 +41,7 @@ const [siteLocation,setSiteLocation]=useState("");
 const [siteCoord,setSiteCoord]=useState([0,0]);
 const [yourLocation,setYourLocation]=useState("");
 const [yourCoord,setYourCoord]=useState([0,0]);
-const [openJobsites,setOpenJobsites]=useState(null);
-const [openJobsitesCoords,setOpenJobsitesCoords]=useState(null);
+const [openJobsitesCoords,setOpenJobsitesCoords]=useState([]);
 const [distanceFromSite,setDistanceFromSite]=useState(0);
 const dtsContext = useContext(AppContext);
 
@@ -103,7 +102,7 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
             }
            alert(alertMessage)
 
-            setOpenJobsites(await getOpenJobsites());
+            var jobsites = await getOpenJobsites();
 
             // console.log("The open jobsites are: ");
             // console.log(openJobsites[0]);
@@ -114,8 +113,8 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
 
             var siteCoordArr = [];
             
-            console.log("Number of open Jobsites: " + openJobsites.length)
-            for(let i=0; i < openJobsites.length ; i++) {
+            console.log("Number of open Jobsites: " + jobsites.length)
+            for(let i=0; i < jobsites.length ; i++) {
 
               var latLongNameObject ={
                 name:null,
@@ -124,10 +123,10 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
               }
 
               console.log("The value of i: " + i);
-              let coords = await getCoordFromAddress(openJobsites[i].address);
+              let coords = await getCoordFromAddress(jobsites[i].address);
               latLongNameObject.latitude = coords[0];
               latLongNameObject.longitude = coords[1];
-              latLongNameObject.name = openJobsites[i].label;
+              latLongNameObject.name = jobsites[i].label;
               siteCoordArr.push(latLongNameObject);
             }
 
