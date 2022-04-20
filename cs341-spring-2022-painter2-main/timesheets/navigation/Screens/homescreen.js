@@ -133,15 +133,15 @@ function timeCheck(hours, min)
   }
   if(hours > 0 && hours<=12)
   {
-    return hours + ":" + min + ":" + "am"
+    return hours + ":" + min + ":" +"00 "+ "am"
   }
   else if(hours>12)
   {
-    return hours-12 + ":" + min + ":"+ "pm"
+    return hours-12 + ":" + min + ":"+"00 "+ "pm"
   }
   else if(hours == 0)
   {
-    return  12 + ":" + min + ":" + "am"
+    return  12 + ":" + min + ":" +"00 "+ "am"
   }
 }
 module.exports = timeCheck(13,0)
