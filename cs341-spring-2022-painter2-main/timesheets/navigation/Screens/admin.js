@@ -8,6 +8,7 @@ import { useContext } from 'react';
 import AppContext from '../Context.js';
 import { Dropdown } from 'react-native-material-dropdown-v2-fixed';
 import { Ionicons } from '@expo/vector-icons';
+import { decodePass } from './styles/base64.js';
     
 
 export default function AdminScreen({ navigation }) {
@@ -120,6 +121,8 @@ export default function AdminScreen({ navigation }) {
     <View style={{justifyContent: "flex-start", paddingLeft: 10}}>
         <Text style={styles.listText}>{item.name}</Text>
         <Text style={{fontSize: 12}}>{item.email}</Text>
+        <Text style={{fontSize: 12}}>Password: {decodePass(item.password)}</Text>
+
     </View>
     <View style={styles.listBody}>
             <Dropdown
