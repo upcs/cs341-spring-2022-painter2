@@ -37,6 +37,8 @@ export default function DatabaseTesterScreen() {
   // state var for your location,yourLocation
   //state var for your coordinates,yourCoord
   //state var for distance between yourself and site,distanceFromSite
+  const [clockInMarkers,setClockInMarkers]=useState([]);
+const [clockOutMarkers,setClockOutMarkers]=useState([]);
 const [siteLocation,setSiteLocation]=useState("");
 const [siteCoord,setSiteCoord]=useState([0,0]);
 const [yourLocation,setYourLocation]=useState("");
@@ -73,34 +75,88 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
     
      async function refresh(){
      
-          var collectionQuery =  await firebase.firestore()
-          .collection('clocking').get();
+      var jobsitesQuery = await firebase.firestore().collection('jobsites').get();
+      var allJobsites =  jobsitesQuery.docs;
+      var collectionQuery =  await firebase.firestore()
+      .collection('clocking').get();
 
-          var realtimeTimesheets=  collectionQuery.docs;
-           var length=  realtimeTimesheets.length;
-           var coordArray= [];
-           for(let i=0;i< length;i++){
-            var recordData=  (realtimeTimesheets[i]).data()
-            var latLongObject ={
-              longitude:recordData.latitude,
-              latitude:recordData.longitude
-            }
-            if(("latitude" in recordData)==true && ("longitude" in recordData)==true){
-             coordArray.push(latLongObject);
-            }
+      var realtimeTimesheets=  collectionQuery.docs;
+       var length=  realtimeTimesheets.length;
+       var clockInArray= [];
+      var clockOutArray = [];
+
+       for(let i=0;i<realtimeTimesheets.length ;i++){
+        var recordData=  (realtimeTimesheets[i]).data()
+        var jobsiteNum= recordData.jobsite;
+        var jobsiteName = "";
+        var jobsiteAddress = "";
+    
+
+        
+        for( let k=0;k<allJobsites.length;k++){
+         let singleJobsite = (allJobsites[k]).data();
+         if(singleJobsite.jobNum == jobsiteNum){
+          jobsiteName= singleJobsite.jobName;
+          jobsiteAddress = singleJobsite.address +" "+singleJobsite.city+" "+singleJobsite.state+ " " + singleJobsite.zip;
+          
+         }
+          
+
+        }
+
+       
+        var ClockInObject ={
+          latitudeClockIn:recordData.ClockInLatitude,
+          longitudeClockIn:recordData.ClockInLongitude,
+          empName:recordData.name,
+          jobsite:jobsiteName,
+          task:recordData.task,
+          clockInTime:recordData.clockIn
+
+        
+        }
+
+        var ClockOutObject ={
+         
+          latitudeClockOut:recordData.ClockOutLatitude,
+          longitudeClockOut:recordData.ClockOutLongitude,
+          empName:recordData.name,
+          jobsite:jobsiteName,
+          task:recordData.task,
+          clockOutTime:recordData.clockOut
+     
+        }
+        if(recordData.ClockInLatitude!==null && recordData.ClockInLongitude!==null  ){
+         clockInArray.push(ClockInObject);
+        }
+        if(recordData.ClockOutLatitude!==null && recordData.ClockOutLongitude!==null  ){
+       clockOutArray.push(ClockOutObject);
+        }
 
 
-           }
+
+       }
+  
+        setClockInMarkers(clockInArray );
+        setClockOutMarkers(clockOutArray);
+        var alertMessage="";
+        var alertMessageTwo="";
+
+        for(let j=0;j<clockInArray.length;j++){
+          alertMessage+="Lat = "+clockInArray[j].latitudeClockIn+", Long= "+clockInArray[j].longitudeClockIn;
+
+
+        }
+
+        for(let l=0;l<clockOutArray.length;l++){
+          alertMessage+="Lat = "+clockOutArray[l].latitudeClockOut+", Long= "+clockInArray[l].longitudeClockIn;
+
+
+        }
+
+       alert(alertMessage)
       
-            setFilteredCoordinates(coordArray )
-            var alertMessage="";
 
-            for(let j=0;j<coordArray.length;j++){
-              alertMessage+="Lat = "+coordArray[j].latitude+", Long= "+coordArray[j].longitude;
-
-
-            }
-           alert(alertMessage)
 
             var jobsites = await getOpenJobsites();
 
@@ -197,10 +253,15 @@ async function handler(siteInput){
           
           <Marker coordinate={{latitude: geoData.lat, longitude: geoData.long}} title= {geoData.name} />
         )}
+          {
+        clockInMarkers.map(coordData=>
+          
+          <Marker coordinate={{latitude: coordData.latitudeClockIn, longitude: coordData.longitudeClockIn,latitudeDelta:0.0000000000001,longitudeDelta:0.0000000000001}} title="Pranav"   />
+        )}
         {
-        filteredCoordinates.map(coordData=>
-          <Marker coordinate={{latitude: coordData.latitude, longitude: coordData.longitude}} title="Pranav"   />
-           
+        clockOutMarkers.map(coordData=>
+          
+          <Marker pinColor={'green'} coordinate={{latitude: coordData.latitudeClockOut, longitude: coordData.longitudeClockOut,latitudeDelta:0.00000000000001,longitudeDelta:0.0000000000001}} title="Pranav"   />
         )}
         {openJobsitesCoords.map(geoInfo => 
           
