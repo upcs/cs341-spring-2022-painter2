@@ -13,6 +13,7 @@ import 'firebase/firestore';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
+import DropDownPicker from 'react-native-dropdown-picker';
 import {auth} from './firebaseSettings'
 
 //this config key used to connect to firestore database
@@ -44,6 +45,15 @@ const [yourCoord,setYourCoord]=useState([0,0]);
 const [openJobsitesCoords,setOpenJobsitesCoords]=useState([]);
 const [distanceFromSite,setDistanceFromSite]=useState(0);
 const dtsContext = useContext(AppContext);
+
+const filterData = (searchName,x) => {
+  const copy = timesheetsData.filter(ts => ts.name.toString().toLowerCase().trim().includes(
+    searchName.toString().toLowerCase().trim()) &&ts.date == x.toLocaleDateString());
+  //console.log(ts.date)
+  console.log(x)
+  console.log(copy)
+  setUseData(copy)
+}
 
 // state var for the where the map initially displays (Coordinates for Portland)
 const [mapRegion, setmapRegion] = useState({
@@ -188,7 +198,24 @@ async function handler(siteInput){
       <Text style={styler.line}>_______________________________________________</Text>
       <Button onPress={()=>refresh()}title="refresh"/>
       <Text> </Text>
-      
+      {/* <DropDownPicker
+                    style={{marginTop:10}}
+                      zIndex={1}
+                      open={open}
+                      value={value}
+                      items={items}
+                      setOpen={setOpen}
+                      setValue={setValue}
+                      setItems={setItems}
+                      searchable={true}
+                      searchPlaceholder="Type in a name you want to search for"
+                      onChangeValue={input => {
+                        console.log("input: "+input)
+                        filterData(input,selectedDate)
+                        if(input == "") setSortedByName(false);
+                        else setSortedByName(true);
+                      }}
+                    /> */}
       
 
       {/* Map with marker for current location */}
