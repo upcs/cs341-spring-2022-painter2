@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Button, Modal, Alert} from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity, Button, Modal, Alert, InteractionManager} from 'react-native';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import styles from './styles/timesheetStyle.js';
 import { useState, useEffect } from 'react';
-import { getTimesheets, addJobsite, changeRole,removeEmployee,changeClockIn, changeClockOut, removeTimesheet,getEmployeeList} from './databaseFunctions.js';
+import { getTimesheets, addJobsite, changeRole,removeEmployee,changeClockIn, changeClockOut,changeJobSite,
+  changeHoursWorked, removeTimesheet,getEmployeeList} from './databaseFunctions.js';
 import timesheetStyle from './styles/timesheetStyle.js';
 import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 import { useContext } from 'react';
@@ -16,11 +17,6 @@ export default function TimesheetScreen({ navigation }) {
       const [timesheetsData, setTimeSheetsData] = useState([])
       const [useData, setUseData] = useState ([])
       const [sortedByName, setSortedByName] = useState(false)
-      const [currEdit, setCurrEdit] = useState({});
-
-      const [newTimeIn,setNewTimeIn] = useState("");
-      const [newTimeOut, setNewTimeOut] = useState("");
-
       const tsContext = useContext(AppContext);
       const [gate,setGate]=useState(false)
       
@@ -80,83 +76,155 @@ export default function TimesheetScreen({ navigation }) {
           <Text styles={styles.bodyText}>{name}</Text>
         </View>
       );
+      function timeTo24(hours,am_pm)
+      {
+        //hours=hours.trim()
+        console.log("am_pm: "+am_pm)
+        if(am_pm == 'AM')
+        {
+            if(hours == '12')
+            {
+              return '0'
+            }
+            else
+            {
+              return hours
+            }
+        }
+        else if(am_pm == 'PM')
+        {
+            if(hours == '12')
+            {
+              return "12"
+            }
+            else
+            {
+              return hours - -12
+            }
+        }
+      }
+      function calculateHoursWorked(clockInTime,clockOutTime)
+      {
+        let timeIn = []
+        timeIn = clockInTime.split(":")
+        let am_pm_1 = clockInTime.split(" ")
+        let timeOut=[]
+        timeOut=clockOutTime.split(":")
+        let am_pm_2 = clockOutTime.split(" ")
         
-       const renderItem = ({ item }) =>
-    (
-         //send "item" to a function to get item.employeeID
-         //so you can set it to a useStateHook to use for databaseFunction
+        let hour1 = timeTo24(timeIn[0],am_pm_1[1])*60 - -timeIn[1]
+        let hour2 = timeTo24(timeOut[0],am_pm_2[1])*60 - -timeOut[1]
+        console.log("timeTo24 "+timeTo24(timeOut[0],am_pm_2[1]))
+        let hour3 = hour2-hour1
+        hour3= hour3/60
+        hour3 = Number((hour3).toFixed(2));
+        console.log(timeIn[0]+" "+timeIn[1])
+        
+        console.log(timeOut[0]+" "+timeOut[1])
+        
+        console.log(hour1)
+        console.log(hour2)
+        /console.log("total time "+hour3)
+        return parseFloat(hour3)
+        
+        
+      }
+        
+       const renderItem = ({ item }) =>(
+        <TouchableOpacity onPress={() => {
+          handleModal()
+          setEditedBy(item.editedBy)
+          setClockInTime(item.clockIn)
+          setClockOutTime(item.clockOut)
+          setEmpId(item.employeeID)
+          setClockId(item.clockID)
+          setJobSite(item.jobSite)
+          
+          //calculateHoursWorked(clockIn,clockOut)
+          
 
-    <TouchableOpacity onPress={handleModal}>
-     <View style={{borderBottomWidth:2}}>
+        }}>
+        <View style={{borderBottomWidth:2}}>
+            <View style={{flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        margin: 10,
+                        marginVertical: 5
+                        }}>
+        <Text style={styles.listText}>{item.name}</Text>
+        <Text style={{fontSize:18,fontStyle:'italic', fontWeight: 'bold'}}>{item.date}</Text>
+            </View>
         <View style={{flexDirection: 'row',
                     justifyContent: 'space-between',
-                    alignItems: 'center',
-                    margin: 10,
-                    marginVertical: 5
+                    backgroundColor: '#FFF',
+                    marginHorizontal: 10,
+                    marginBottom: 5
                     }}>
-     <Text style={styles.listText}>{item.name}</Text>
-     <Text style={{fontSize:18,fontStyle:'italic', fontWeight: 'bold'}}>{item.date}</Text>
+        <Text style={styles.timeText1}>IN: <Text style={styles.timeText2}>
+            {item.clockIn}</Text>
+        </Text>
+        <Text style={styles.timeText1}>OUT: <Text style={styles.timeText2}>
+            {item.clockOut}</Text>
+        </Text>
+        <Text style={styles.timeText1}><Text style={styles.timeText2}>
+            {item.hoursWorked}</Text> hours
+        </Text>
         </View>
-     <View style={{flexDirection: 'row',
-                 justifyContent: 'space-between',
-                 backgroundColor: '#FFF',
-                 marginHorizontal: 10,
-                 marginBottom: 5
-                 }}>
-     <Text style={styles.timeText1}>IN: <Text style={styles.timeText2}>
-        {item.clockIn}</Text>
-     </Text>
-     <Text style={styles.timeText1}>OUT: <Text style={styles.timeText2}>
-        {item.clockOut}</Text>
-     </Text>
-     <Text style={styles.timeText1}><Text style={styles.timeText2}>
-        {item.hoursWorked}</Text> hours
-     </Text>
-     </View>
-        </View>
-        </TouchableOpacity>
-      );
+            </View>
+            </TouchableOpacity>
+          );
       
       const[isModalVisible,setIsModalVisible]=useState(false);
       const handleModal = () => {
         setIsModalVisible(()=> !isModalVisible)
       };
-      
       const [selectedDate, setSelectedDate] = useState(new Date());
 
 
-      const name = "david";
-      const date ="3/27/2022"
-      const [clockIn,setClockInTime] = useState("10:00am")
-      const [clockOut,setClockOutTime] = useState("11:00am")
-      const [edit, setEdit] = useState(false);
-      const jobSite = "University of portland" 
+      //const name = "david";
+      //const date ="3/27/2022"
+      const [clockIn,setClockInTime] = useState()
+      const [clockOut,setClockOutTime] = useState()
+      const [clockId,setClockId]=useState()
+      const [empId,setEmpId]=useState()
+      const [edit, setEdit] = useState(false)
+      const [jobSite,setJobSite]=useState();
       const [selectedTimeIn,setSelectedTimeIn]=useState(new Date());
       const [selectedTimeOut,setSelectedTimeOut]=useState(new Date());
-      const [test,setTest]=useState("none")
       const [editedBy, setEditedBy]=useState("");
+      const [hoursWorked,setHoursWorked]=useState();
 
       //filters the list by selected date
       const onChange = (event, selectedDate) => {
         const currentDate = selectedDate;
-        
         setSelectedDate(currentDate);
         console.log(selectedDate)
         filterDataByDate(selectedDate.toLocaleDateString());
-        setTest(selectedDate.toLocaleDateString())
+        
       };
       //updates the clock in time
       const onChangeClockIn = (event, selectTime) => {
         const currentTime = selectTime;
         setSelectedTimeIn(currentTime);
-        setClockInTime(currentTime.toLocaleString().substring(10));
+        //console.log("clock in current time: "+currentTime.toLocaleString())
+        let x= currentTime.toLocaleString()
+        
+        let y = []
+        y=x.split(",")
+        setClockInTime(y[1].substring(1));
         console.log(currentTime);
       }
       //updates the clock out time
       const onChangeClockOut = (event, selectTime) => {
-        const currentTime = selectTime;
+        let currentTime = selectTime;
         setSelectedTimeOut(currentTime);
-        setClockOutTime(currentTime.toLocaleString().substring(10));
+        //console.log("clock out current time: "+currentTime.toLocaleString())
+        let x= currentTime.toLocaleString()
+        
+        let y = []
+        y=x.split(",")
+        console.log(y[1].substring(1))
+        setClockOutTime(y[1].substring(1));
         console.log(currentTime);
       }
       const showConfirmDialog =()=>{
@@ -293,11 +361,12 @@ export default function TimesheetScreen({ navigation }) {
                         </View>
                       </View>
                       <Text></Text>
-                      
+                      <Text></Text>
                       <View style ={{flexDirection: "row", justifyContent:"center"}}>
                       <TextInput style={styles2.input2}
                         placeholder={jobSite}
                         placeholderTextColor="grey"
+                        onChangeText={text =>{setJobSite(text)}}
                         editable={true}
                       
                       >
@@ -310,10 +379,9 @@ export default function TimesheetScreen({ navigation }) {
                     </View>:
                     //normal time
                     <View>
-
                       <View style = {{flexDirection:"row",justifyContent:"center"}}>
                       <View>
-                        <Text >Time In:</Text>
+                        <Text >    Time In:</Text>
                         <TextInput style={styles2.input} 
                           value = {clockIn} 
                           editable ={false}/> 
@@ -339,13 +407,20 @@ export default function TimesheetScreen({ navigation }) {
                       <View style ={{flexDirection: "row", justifyContent:"center"}}>
                       <Text>Edited by: {editedBy}</Text>
                       </View>
+
                     </View>}
 
-                    <Text>Job Site: {currEdit.jobSite}</Text>
-                    <Text>Task: {currEdit.task}</Text>
-                    <View style={{flexDirection:"row"}}>
+                    <View style={{flexDirection:"row",justifyContent:"center"}}>
                     <Button title= "Edit" style={{height:65,marginTop:15,position:"absolute"}}onPress={() => setEdit(!edit)}/>
-                    <Button title ="Submit" onPress={() => {changeClockIn(newTimeIn,currEdit.employeeID,currEdit.clockID), changeClockOut(newTimeOut,currEdit.employeeID,currEdit.clockID)}}/>
+                    <Button title ="Submit" onPress={() => {
+                      changeClockIn(clockIn,empId,clockId,tsContext.currentName)
+                      changeClockOut(clockOut,empId,clockId,tsContext.currentName)
+                      changeJobSite(jobSite,empId,clockId,tsContext.currentName)
+                      changeHoursWorked(calculateHoursWorked(clockIn,clockOut),empId,clockId)
+                      
+                      
+                      
+                      }}/>
                     <Button title = "DELETE" onPress={()=>{showConfirmDialog()}}/>
                     <Button title ="close" onPress={handleModal}/>
                     </View>
