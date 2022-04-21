@@ -18,6 +18,8 @@ export default function DetailScreen({ route, navigation }) {
     const {name, date, clockIn, clockOut, id, jobSite } = route.params;
     const tsContext = useContext(AppContext);
 
+    
+
     if(tsContext.currentRole == 'Employee') {
         return (
             <View>                

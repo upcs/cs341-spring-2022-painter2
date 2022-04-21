@@ -7,3 +7,9 @@ Implemented Features
 - Logging In
 - Forgot Password
 
+__________________________________________-
+Non-Functional Requirements
+- Encoded Passwords
+- Consistent Aesthetics
+- Easy to navigate
+- 
