@@ -13,6 +13,7 @@ import 'firebase/firestore';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
+import DropDownPicker from 'react-native-dropdown-picker';
 import {auth} from './firebaseSettings'
 
 //this config key used to connect to firestore database
@@ -46,6 +47,17 @@ const [yourCoord,setYourCoord]=useState([0,0]);
 const [openJobsitesCoords,setOpenJobsitesCoords]=useState([]);
 const [distanceFromSite,setDistanceFromSite]=useState(0);
 const dtsContext = useContext(AppContext);
+const [cinDistance,setCinDistance]=useState(0);
+const [coutDistance,setCoutDistance]=useState(0);
+
+const filterData = (searchName,x) => {
+  const copy = timesheetsData.filter(ts => ts.name.toString().toLowerCase().trim().includes(
+    searchName.toString().toLowerCase().trim()) &&ts.date == x.toLocaleDateString());
+  //console.log(ts.date)
+  console.log(x)
+  console.log(copy)
+  setUseData(copy)
+}
 
 // state var for the where the map initially displays (Coordinates for Portland)
 const [mapRegion, setmapRegion] = useState({
@@ -81,13 +93,13 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
       .collection('clocking').get();
 
       var realtimeTimesheets=  collectionQuery.docs;
-       var length=  realtimeTimesheets.length;
+       var length = realtimeTimesheets.length;
        var clockInArray= [];
       var clockOutArray = [];
 
        for(let i=0;i<realtimeTimesheets.length ;i++){
-        var recordData=  (realtimeTimesheets[i]).data()
-        var jobsiteNum= recordData.jobsite;
+        var recordData = (realtimeTimesheets[i]).data()
+        var jobsiteNum= recordData.jobSite;
         var jobsiteName = "";
         var jobsiteAddress = "";
     
@@ -95,15 +107,25 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
         
         for( let k=0;k<allJobsites.length;k++){
          let singleJobsite = (allJobsites[k]).data();
+         // if jobsite numbers match up set jobsite name and number
          if(singleJobsite.jobNum == jobsiteNum){
           jobsiteName= singleJobsite.jobName;
           jobsiteAddress = singleJobsite.address +" "+singleJobsite.city+" "+singleJobsite.state+ " " + singleJobsite.zip;
           
-         }
+        }
           
 
         }
 
+        let jobsiteCoords = await getCoordFromAddress(jobsiteAddress);
+          //console.log("THE LATITUDE: " + jobsiteCoords[0]);
+          //console.log("THE LONGITUDE: " + jobsiteCoords[1]);
+          let cinDistFromSite = await getDistFromSite(jobsiteCoords[0], jobsiteCoords[1], recordData.ClockInLatitude, recordData.ClockInLongitude)
+          let coutDistFromSite = await getDistFromSite(jobsiteCoords[0], jobsiteCoords[1], recordData.ClockOutLatitude, recordData.ClockOutLongitude)
+          console.log("CIN DISTANCE: " + cinDistFromSite);
+          console.log("COUT DISTANCE: " + coutDistFromSite);
+          setCinDistance(cinDistFromSite);
+          setCoutDistance(coutDistFromSite);
        
         var ClockInObject ={
           latitudeClockIn:recordData.ClockInLatitude,
@@ -111,7 +133,8 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
           empName:recordData.name,
           jobsite:jobsiteName,
           task:recordData.task,
-          clockInTime:recordData.clockIn
+          clockInTime:recordData.clockIn,
+          distJobsite:cinDistFromSite.toFixed(2)
 
         
         }
@@ -123,14 +146,15 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
           empName:recordData.name,
           jobsite:jobsiteName,
           task:recordData.task,
-          clockOutTime:recordData.clockOut
+          clockOutTime:recordData.clockOut,
+          distJobsite:coutDistFromSite.toFixed(2)
      
         }
         if(recordData.ClockInLatitude!==null && recordData.ClockInLongitude!==null  ){
-         clockInArray.push(ClockInObject);
+          clockInArray.push(ClockInObject);
         }
         if(recordData.ClockOutLatitude!==null && recordData.ClockOutLongitude!==null  ){
-       clockOutArray.push(ClockOutObject);
+          clockOutArray.push(ClockOutObject);
         }
 
 
@@ -234,18 +258,9 @@ async function handler(siteInput){
  
   return (
     <View style={styler.fullPage}>
-      <View
-        style={{flexDirection: "row", height: 30 }}>
-        <Text style={styler.headerText}> Enter Site Address: </Text>
-        <TextInput onChangeText={(val)=>{setSiteLocation(val)}}style={styler.inputStyle}> </TextInput>
-      </View>
-      <Button onPress={()=>handler(siteLocation)}title="Get Info About Site"/>
-
-      <Text style={styler.line}>_______________________________________________</Text>
+    
       <Button onPress={()=>refresh()}title="refresh"/>
       <Text> </Text>
-      
-      
 
       {/* Map with marker for current location */}
       <MapView style={styler.map} region={mapRegion} > 
@@ -255,48 +270,48 @@ async function handler(siteInput){
         )}
           {
         clockInMarkers.map(coordData=>
-          
-          <Marker coordinate={{latitude: coordData.latitudeClockIn, longitude: coordData.longitudeClockIn,latitudeDelta:0.0000000000001,longitudeDelta:0.0000000000001}} title="Pranav"   />
+          <MapView.Marker 
+          pinColor={'green'}
+          coordinate={{latitude: coordData.latitudeClockIn, longitude: coordData.longitudeClockIn }}>
+          <MapView.Callout>
+            <View style={{height: 100, width: 200}}>
+              <Text>Employee: {coordData.empName} </Text>
+              <Text>Jobsite: {coordData.jobsite}</Text>
+              <Text>Task: {coordData.task}</Text>
+              <Text>Clock in time: {coordData.clockInTime} </Text>
+              <Text>Distance from jobsite: {coordData.distJobsite} miles</Text>
+            </View>
+          </MapView.Callout>
+        </MapView.Marker>
+          // <MapView.Marker pinColor={'green'} coordinate={{latitude: coordData.latitudeClockIn, longitude: coordData.longitudeClockIn,latitudeDelta:0.0000000000001,longitudeDelta:0.0000000000001}} title={coordData.empName} />
         )}
         {
         clockOutMarkers.map(coordData=>
-          
-          <Marker pinColor={'green'} coordinate={{latitude: coordData.latitudeClockOut, longitude: coordData.longitudeClockOut,latitudeDelta:0.00000000000001,longitudeDelta:0.0000000000001}} title="Pranav"   />
+          <MapView.Marker 
+          coordinate={{latitude: coordData.latitudeClockOut, longitude: coordData.longitudeClockOut }}>
+          <MapView.Callout>
+            <View style={{height: 100, width: 200}}>
+              <Text>Employee: {coordData.empName} </Text>
+              <Text>Jobsite: {coordData.jobsite}</Text>
+              <Text>Task: {coordData.task}</Text>
+              <Text>Clock out time: {coordData.clockOutTime} </Text>
+              <Text>Distance from jobsite: {coordData.distJobsite} miles</Text>
+            </View>
+          </MapView.Callout>
+        </MapView.Marker>
+          // <Marker coordinate={{latitude: coordData.latitudeClockOut, longitude: coordData.longitudeClockOut,latitudeDelta:0.00000000000001,longitudeDelta:0.0000000000001}} title="Pranav"   />
         )}
         {openJobsitesCoords.map(geoInfo => 
           
           <Marker pinColor={'blue'} coordinate={{latitude: geoInfo.latitude, longitude: geoInfo.longitude}} title= {geoInfo.name} />
         )}
+        
 
         <Marker coordinate={locationTest} title='yourMarker' />
         <Marker coordinate={siteMarker} title='SiteMarker'>
           <FontAwesome name="map-marker" size={40} color="#1F1BEA" />
         </Marker>
       </MapView>
-
-      <Text> </Text>
-
-      <Text style={styler.labelText}> Current Location:</Text>
-      <Text style={styler.boldText}> {yourLocation} </Text>
-      {/* <Text style={styler.text}> ({yourCoord[0]},{yourCoord[1]}) </Text> */}
-
-      <Text> </Text>
-      {/* <Text> </Text> */}
-
-      {/* <Text style={styler.labelText}> Coordinates of Job site:</Text>
-      <Text style={styler.text}> ({siteCoord[0]},{siteCoord[1]}) </Text> */}
-
-      <Text> </Text>
-
-      <Text style={styler.labelText}> Distance from job site:</Text>
-      <Text style={styler.text}> {distanceFromSite.toFixed(2)} miles</Text>
-
-
-      {/* <Text style={styler.labelText}>Coordinates of Job site are : ({siteCoord[0]},{siteCoord[1]})</Text> */}
-    
-      {/* <Text style={styler.labelText}>Your Current Location is  : {yourLocation}</Text>
-      <Text style={styler.labelText}>Your Current Coordinates Are  : ({yourCoord[0]},{yourCoord[1]}) </Text> */}
-      {/* <Text style={styler.labelText}>Your Distance From The Job site is  : {distanceFromSite} miles</Text> */}
 
     </View>
 
@@ -346,7 +361,7 @@ const styler = StyleSheet.create({
         },
         map: {
           width: Dimensions.get('window').width,
-          height: Dimensions.get('window').height/2.5,
+          height: Dimensions.get('window').height/1.4,
         },
 
         });
