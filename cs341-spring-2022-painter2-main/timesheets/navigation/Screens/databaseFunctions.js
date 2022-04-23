@@ -207,7 +207,7 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
 
      }
      //console.log(employeeArray);
-     Alert.alert(alertEmployeeInfo);
+    //  Alert.alert(alertEmployeeInfo);
      return employeeArray;
        }
 

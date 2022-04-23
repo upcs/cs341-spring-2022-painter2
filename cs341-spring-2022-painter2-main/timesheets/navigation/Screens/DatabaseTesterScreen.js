@@ -5,7 +5,7 @@ import {Platform,StyleSheet,Text,View,TextInput,Button, Alert, Dimensions} from 
 import MapView, { Marker } from 'react-native-maps';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons'; 
-import { getTimesheetsByID, getOpenJobsites } from './databaseFunctions';
+import { getTimesheetsByID, getOpenJobsites, displayAllEmployees } from './databaseFunctions';
 import { useContext } from 'react';
 import AppContext from '../Context.js';
 import {getCoordFromAddress,getStreetAddress,getDistFromSite,getOurCoords} from '../Screens/geoFunctions'
@@ -89,21 +89,53 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
      
       var jobsitesQuery = await firebase.firestore().collection('jobsites').get();
       var allJobsites =  jobsitesQuery.docs;
-      var collectionQuery =  await firebase.firestore()
-      .collection('clocking').get();
+      var realtimeTimesheets= [];
+      var allEmployees =  await displayAllEmployees();
 
-      var realtimeTimesheets=  collectionQuery.docs;
+
+
+      var employeeIDArray=[];
+      for(let  looper =0;looper<allEmployees.length;looper++){
+        
+        employeeIDArray.push((allEmployees[looper]).employeeID);
+
+      }
+
+      for(let iterator =0 ;iterator<employeeIDArray.length;iterator++){
+         let latestTimesheet = await getTimesheetsByID(employeeIDArray[iterator]);
+         for(let employeeTimesheetIterator=0;employeeTimesheetIterator<latestTimesheet.length;employeeTimesheetIterator++){
+         realtimeTimesheets.push(latestTimesheet[employeeTimesheetIterator]);
+         }
+         
+
+      }
+
+
+
+      
        var length = realtimeTimesheets.length;
+
        var clockInArray= [];
       var clockOutArray = [];
+      for(let iter=0;iter<realtimeTimesheets.length;iter++){
+        // alert("Iterating Trough Timesheets "+iter+realtimeTimesheets[iter]);
+        
+                }
+                // alert(JSON.stringify(realtimeTimesheets));
+            
 
        for(let i=0;i<realtimeTimesheets.length ;i++){
-        var recordData = (realtimeTimesheets[i]).data()
+
+        var recordData = (realtimeTimesheets[i]);
+        // alert("recordData clockIn lat"+ recordData.ClockInLatitude );
         var jobsiteNum= recordData.jobSite;
+        // alert("JobsiteNum"+ jobsiteNum );
+
+
+
         var jobsiteName = "";
         var jobsiteAddress = "";
-    
-
+      
         
         for( let k=0;k<allJobsites.length;k++){
          let singleJobsite = (allJobsites[k]).data();
@@ -117,6 +149,7 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
 
         }
 
+
         let jobsiteCoords = await getCoordFromAddress(jobsiteAddress);
           //console.log("THE LATITUDE: " + jobsiteCoords[0]);
           //console.log("THE LONGITUDE: " + jobsiteCoords[1]);
@@ -126,7 +159,8 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
           console.log("COUT DISTANCE: " + coutDistFromSite);
           setCinDistance(cinDistFromSite);
           setCoutDistance(coutDistFromSite);
-       
+          
+
         var ClockInObject ={
           latitudeClockIn:recordData.ClockInLatitude,
           longitudeClockIn:recordData.ClockInLongitude,
@@ -138,6 +172,7 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
 
         
         }
+        // alert("clock In object"+ JSON.stringify(ClockInObject));
 
         var ClockOutObject ={
          
@@ -150,6 +185,8 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
           distJobsite:coutDistFromSite.toFixed(2)
      
         }
+        // alert("clock out object"+ JSON.stringify(ClockOutObject));
+
         if(recordData.ClockInLatitude!==null && recordData.ClockInLongitude!==null  ){
           clockInArray.push(ClockInObject);
         }
@@ -160,7 +197,9 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
 
 
        }
-  
+
+ 
+
         setClockInMarkers(clockInArray );
         setClockOutMarkers(clockOutArray);
         var alertMessage="";
@@ -178,7 +217,7 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
 
         }
 
-       alert(alertMessage)
+      //  alert(alertMessage)
       
 
 
