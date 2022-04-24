@@ -576,7 +576,7 @@ console.log("Firebase Email: " +userDetails.user.email+" Firebase Password: " +u
 .catch(err=>console.log(err.message));
 }
 
-export const updateCoords = async(newEmployeeID,
+export const coutUpdateCoords = async(newEmployeeID,
  newLatitude, newLongitude)=>{
 //gets all clock records for a given employee
 var clockRecords= await firebase.firestore()
@@ -635,3 +635,63 @@ if(coutLatitude===0 && coutLongitude===0){
 }
 
 }      
+
+export const cinUpdateCoords = async(newEmployeeID,
+  newLatitude, newLongitude)=>{
+ //gets all clock records for a given employee
+ var clockRecords= await firebase.firestore()
+ .collection('clocking')
+ .where('employeeID','==',newEmployeeID)
+ .get()
+ 
+ console.log((clockRecords.docs).length);
+ //if amount of clock records for an employee is zero a then we cant update coordinates
+ //otherwise, if there are clock in records, then a updating clock out coordinates is possible
+ if((clockRecords.docs).length!=0){
+ var maxClockID=-100;
+ var index=-100;
+ //records for a given date are filtered out from all records of a certain employee
+ for(let i=0;i<(clockRecords.docs).length;i++){
+ var data= (clockRecords.docs[i]).data();
+ if(data.clockID>maxClockID){
+   maxClockID= data.clockID;
+   index=i;
+ }
+ 
+ }
+ 
+ //console.log(maxClockID);
+ //console.log(index);
+ 
+ var cinLatitude=((clockRecords.docs[index]).data()).ClockInLatitude;
+ var cinLongitude=((clockRecords.docs[index]).data()).ClockInLongitude;
+ //document id of most recent clock in record is fetched
+ //so that clock out time of the corresponding record
+ //can be modified 
+ var clockDocumentID=(clockRecords.docs[index]).id;
+ //if both latitude and longitude is 0
+ //that means that the coordinates have not ben updated yet
+ //so update the coordinates
+ //otherwise, the coordinates wont be updated
+ if(cinLatitude===0 && cinLongitude===0){
+   firebase.firestore()
+   .collection('clocking')
+   .doc(clockDocumentID)
+   .update({
+       ClockInLatitude:newLatitude,
+       ClockInLongitude:newLongitude
+   })
+    .then(() => {
+   console.log('coords updated!');
+   });   
+ 
+ 
+ 
+ 
+ }
+ 
+ 
+ 
+ }
+ 
+ }      
