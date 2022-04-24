@@ -3,9 +3,6 @@ import { useState, useEffect } from 'react';
 import { StyleSheet, Text,  View, TextInput, Button,  TouchableHighlight, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from './styles/loginStyle.js';
-import { sendEmail } from '../email.js';
-import { findUserByEmail } from './databaseFunctions.js';
-import { decodePass } from './styles/base64.js';
 
 export default function ForgotScreen({ navigation }) {
     const [email, setEmail] = useState("");
@@ -18,8 +15,6 @@ const onClickListener = (viewID) => {
 
 const forgotPassword = (forgotEmail) => {
   console.log(forgotEmail);
-  message = ""
-  findUserByEmail(forgotEmail).then(us => sendEmail(us[0].email,us[0].email,decodePass(us[0].password)));
 }
 
 return(
@@ -31,7 +26,7 @@ return(
                        placeholder={ "Email" }
                        keyboardType="email-address"
                        underlineColorAndroid='transparent'
-                       onEndEditing={() => alert("Please contact alex@districtpaintingco.com")}
+                       onEndEditing={em => forgotPassword(em.nativeEvent.text)}
                  />
                  </View>
                  <TouchableHighlight onPress={() => onClickListener("submit")} >
