@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import  {Picker}  from '@react-native-picker/picker';
-import { clockInFunc, clockOutFunc,returnDailyClockRecords, getTimesheetsByID, getOpenJobsites } from './databaseFunctions'
+import { clockInFunc, clockOutFunc,returnDailyClockRecords, getTimesheetsByID, getOpenJobsites, updateCoords } from './databaseFunctions'
 import { getOurCoords  } from './geoFunctions'
 import { useContext } from 'react';
 import AppContext from '../Context.js';
@@ -205,13 +205,14 @@ module.exports = timeCheck(13,0)
       //rounds hours to 2 decimal places
       dbhours = Number((dbhours).toFixed(2));
       //console.log("clocking out")
-      //clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours,latitude,longitude)
+      clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours, latitude, longitude);
       (async () =>{
         setLatitude((await getOurCoords())[0]);
         setLongitude((await getOurCoords())[1]);
         console.log("YOUR LATITIUDE: " + latitude);
         console.log("YOUR LONGITUDE: " + longitude);
-        clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours, latitude, longitude)
+        //clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours, latitude, longitude)
+        updateCoords(tsContext.currentId, latitude, longitude);
         console.log("clocking out")
          let arr = [];
          for(let i=1; i<4;i++) {
