@@ -26,6 +26,14 @@ function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItem
+        label="English"
+        onPress={() => props.navigation.closeDrawer()}
+      />
+      <DrawerItem
+        label="Español"
+        onPress={() => props.navigation.closeDrawer()}
+      />
+      <DrawerItem
         label="Logout"
         onPress={() => props.navigation.closeDrawer()}
       />
