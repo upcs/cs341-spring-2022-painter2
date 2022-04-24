@@ -230,7 +230,12 @@ test("adding jobsite functions correctly", () => {
         expect(js.address).toBe("testAddress")
         expect(js.customer).toBe("testCustomer")
         expect(js.jobName).toBe("testJobsite")
+
+        var jobsite = await firebase.firestore().collection("jobsites").where('jobNum','==',js.jobNum).get()
+        var docID = jobsite.docs[0].id;
+        firebase.firestore().collection('jobsites').doc(docID).delete();
     })
+    
 })
 test("closing and opening jobsite functions correctly", () =>  {
     addJobsite("testAddress,testCustomer,testJobsite").then(js=> {
@@ -240,6 +245,9 @@ test("closing and opening jobsite functions correctly", () =>  {
         openJobsite(js.jobNum).then(site => {
             expect(site.status).toBe("Open")
         })
+        var jobsite = await firebase.firestore().collection("jobsites").where('jobNum','==',js.jobNum).get()
+        var docID = jobsite.docs[0].id;
+        firebase.firestore().collection('jobsites').doc(docID).delete();
     })
 })
 
@@ -273,8 +281,8 @@ test("Clocking-in and clocking-out functions correctly",() => {
             expect(ts2.latitude).toBe(0)
             expect(ts2.hoursWorked).toBe(0)
             expect(ts2.timeOut).toBe(0)
-
         })
+        removeTimesheet(ts.employeeID,ts.clockID);
     })
 }) 
 
@@ -306,6 +314,7 @@ test("change clockin and clockout functions correctly", () => {
                 expect(chagne2.clockOut).toBe(10)
             })
         })
+        removeTimesheet(ts.employeeID,ts.clockID);
     })
 })
 
@@ -333,6 +342,7 @@ test("createNewEmployee functions correctly",() => {
         expect(acc.password).toBe(!null)
         expect(acc.role).toBe("Employee")
         expect(acc.employeeID).toBe(!null)
+        removeEmployee(acc.employeeID)
     })
 })
 
@@ -345,6 +355,7 @@ test("changeRole functions correctly",() => {
             expect(acc2.role).toBe("Admin")
             expect(acc2.employeeID).toBe(!null)
         })
+        removeEmployee(acc.employeeID);
     })
 })
 

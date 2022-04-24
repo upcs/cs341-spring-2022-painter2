@@ -7,9 +7,14 @@ import styles from './styles/loginStyle.js';
 export default function ForgotScreen({ navigation }) {
     const [email, setEmail] = useState("");
 
+
 const onClickListener = (viewID) => {
     //Alert.alert("Forgot")
     navigation.navigate("Login");
+}
+
+const forgotPassword = (forgotEmail) => {
+  console.log(forgotEmail);
 }
 
 return(
@@ -21,7 +26,7 @@ return(
                        placeholder={ "Email" }
                        keyboardType="email-address"
                        underlineColorAndroid='transparent'
-                       onEndEditing={em => alert(em.nativeEvent.text)}
+                       onEndEditing={em => forgotPassword(em.nativeEvent.text)}
                  />
                  </View>
                  <TouchableHighlight onPress={() => onClickListener("submit")} >

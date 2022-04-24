@@ -207,7 +207,7 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
 
      }
      //console.log(employeeArray);
-     Alert.alert(alertEmployeeInfo);
+    //  Alert.alert(alertEmployeeInfo);
      return employeeArray;
        }
 
@@ -449,25 +449,57 @@ export const changeRole = async(id, newRole) => {
 
 
 //finds an employee by ID and changes clock in time
+
 export const changeClockIn = async(newClockIn,id,clockID,editName) => {
   var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
+  employee.forEach(emp => {
+    if(emp.clockID == clockID) {
+      return emp;
+    }
+  })
   var docID = employee.docs[0].id
   console.log(docID)
   firebase.firestore().collection('clocking').doc(docID).update({clockIn:newClockIn,editedBy:editName});
 }  
 //finds an employee by ID and changes clock out time
+
+
 export const changeClockOut = async(newClockOut,id,clockID,editName) => {
   var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
+
+  employee.forEach(emp => {
+    if(emp.clockID == clockID) {
+      return emp;
+    }
+  })
+
   var docID = employee.docs[0].id
   console.log(docID)
   firebase.firestore().collection('clocking').doc(docID).update({clockOut:newClockOut,editedBy:editName});
 }  
 //finds an employee by ID and changes clock in time
+
 export const changeJobSite = async(newJobSite,id,clockID,editName) => {
   var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
+  employee.forEach(emp => {
+    if(emp.clockID == clockID) {
+      return emp;
+    }
+  })
   var docID = employee.docs[0].id
   console.log(docID)
   await firebase.firestore().collection('clocking').doc(docID).update({jobSite:newJobSite,editedBy:editName});
+}
+export const changeHoursWorked = async(newHoursWorked,id,clockID,editName) => {
+  var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
+  employee.forEach(emp => {
+    if(emp.clockID == clockID) {
+      return emp;
+    }
+  })
+  var docID = employee.docs[0].id
+  console.log(docID)
+  await firebase.firestore().collection('clocking').doc(docID).update({hoursWorked:newHoursWorked});
 }
 
 //finds an employee by id and removes them from database
@@ -479,7 +511,12 @@ export const removeEmployee = async(id) => {
 
 //finds a timesheet by id and removes it from database
 export const removeTimesheet = async(id,clockID) => {
-  var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
+  var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).get();
+  employee.forEach(emp => {
+    if(emp.clockID == clockID) {
+      return emp;
+    }
+  })
   var docID = employee.docs[0].id;
   firebase.firestore().collection('clocking').doc(docID).delete();
 }
@@ -551,3 +588,123 @@ export const signInUser=async(emailInput,passInput)=>{
 export const signOutUser = async() => {
   auth.signOut();
 }
+
+export const coutUpdateCoords = async(newEmployeeID,
+ newLatitude, newLongitude)=>{
+//gets all clock records for a given employee
+var clockRecords= await firebase.firestore()
+.collection('clocking')
+.where('employeeID','==',newEmployeeID)
+.get()
+
+console.log((clockRecords.docs).length);
+//if amount of clock records for an employee is zero a then we cant update coordinates
+//otherwise, if there are clock in records, then a updating clock out coordinates is possible
+if((clockRecords.docs).length!=0){
+var maxClockID=-100;
+var index=-100;
+//records for a given date are filtered out from all records of a certain employee
+for(let i=0;i<(clockRecords.docs).length;i++){
+var data= (clockRecords.docs[i]).data();
+if(data.clockID>maxClockID){
+  maxClockID= data.clockID;
+  index=i;
+}
+
+}
+
+//console.log(maxClockID);
+//console.log(index);
+
+var coutLatitude=((clockRecords.docs[index]).data()).ClockOutLatitude;
+var coutLongitude=((clockRecords.docs[index]).data()).ClockOutLongitude;
+//document id of most recent clock in record is fetched
+//so that clock out time of the corresponding record
+//can be modified 
+var clockDocumentID=(clockRecords.docs[index]).id;
+//if both latitude and longitude is 0
+//that means that the coordinates have not ben updated yet
+//so update the coordinates
+//otherwise, the coordinates wont be updated
+if(coutLatitude===0 && coutLongitude===0){
+  firebase.firestore()
+  .collection('clocking')
+  .doc(clockDocumentID)
+  .update({
+      ClockOutLatitude:newLatitude,
+      ClockOutLongitude:newLongitude
+  })
+   .then(() => {
+  console.log('coords updated!');
+  });   
+
+
+
+
+}
+
+
+
+}
+
+}      
+
+export const cinUpdateCoords = async(newEmployeeID,
+  newLatitude, newLongitude)=>{
+ //gets all clock records for a given employee
+ var clockRecords= await firebase.firestore()
+ .collection('clocking')
+ .where('employeeID','==',newEmployeeID)
+ .get()
+ 
+ console.log((clockRecords.docs).length);
+ //if amount of clock records for an employee is zero a then we cant update coordinates
+ //otherwise, if there are clock in records, then a updating clock out coordinates is possible
+ if((clockRecords.docs).length!=0){
+ var maxClockID=-100;
+ var index=-100;
+ //records for a given date are filtered out from all records of a certain employee
+ for(let i=0;i<(clockRecords.docs).length;i++){
+ var data= (clockRecords.docs[i]).data();
+ if(data.clockID>maxClockID){
+   maxClockID= data.clockID;
+   index=i;
+ }
+ 
+ }
+ 
+ //console.log(maxClockID);
+ //console.log(index);
+ 
+ var cinLatitude=((clockRecords.docs[index]).data()).ClockInLatitude;
+ var cinLongitude=((clockRecords.docs[index]).data()).ClockInLongitude;
+ //document id of most recent clock in record is fetched
+ //so that clock out time of the corresponding record
+ //can be modified 
+ var clockDocumentID=(clockRecords.docs[index]).id;
+ //if both latitude and longitude is 0
+ //that means that the coordinates have not ben updated yet
+ //so update the coordinates
+ //otherwise, the coordinates wont be updated
+ if(cinLatitude===0 && cinLongitude===0){
+   firebase.firestore()
+   .collection('clocking')
+   .doc(clockDocumentID)
+   .update({
+       ClockInLatitude:newLatitude,
+       ClockInLongitude:newLongitude
+   })
+    .then(() => {
+   console.log('coords updated!');
+   });   
+ 
+ 
+ 
+ 
+ }
+ 
+ 
+ 
+ }
+ 
+ }      
