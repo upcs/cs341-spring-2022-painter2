@@ -6,6 +6,12 @@ Implemented Features
 - Creating An Account
 - Logging In
 - Forgot Password
+- Filtering Timesheets by date range and name
+- Editing Employees
+- Account Heirarchy
+- Different Color Map Pins
+- Filtering Map Pins
+- Map View
 
 __________________________________________-
 Non-Functional Requirements
