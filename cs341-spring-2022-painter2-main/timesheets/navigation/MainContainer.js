@@ -18,6 +18,9 @@ import StackNav from './Screens/Stack'
 import DatabaseTesterScreen from './Screens/DatabaseTesterScreen';
 import AppContext from './Context.js';
 import JobsiteConfigure from './Screens/jobsiteConfigure';
+import LoginScreen from './Screens/login';
+import ForgotScreen from './Screens/forgot';
+import RegisterScreen from './Screens/register';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,16 +29,8 @@ function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItem
-        label="English"
-        onPress={() => props.navigation.closeDrawer()}
-      />
-      <DrawerItem
-        label="Español"
-        onPress={() => props.navigation.closeDrawer()}
-      />
-      <DrawerItem
         label="Logout"
-        onPress={() => props.navigation.closeDrawer()}
+        onPress={() => props.navigation.navigate("Login")}
       />
     </DrawerContentScrollView>
   );
@@ -126,9 +121,12 @@ export default function MainContainer() {
     return (
   <NavigationContainer>
     <Drawer.Navigator
-          drawerContent={(props) => <CustomDrawerContent {...props} />}
+          drawerContent={(props) => <CustomDrawerContent {...props} initialRouteName={"Login"}/>}
         >
-        <Drawer.Screen name="Timesheet" component={BottomTabs} />
+        <Drawer.Screen name="Login" component={LoginScreen} options={{headerShown: false}} />
+        <Drawer.Screen name="Register" component={RegisterScreen} options={{headerShown: false}} />
+        <Drawer.Screen name="Forgot" component={ForgotScreen} options={{headerShown: false}} />
+        <Drawer.Screen name="Timesheet" component={BottomTabs}/>
       </Drawer.Navigator>
   </NavigationContainer>
   );

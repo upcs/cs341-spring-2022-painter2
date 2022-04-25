@@ -12,7 +12,7 @@ import { useContext } from 'react';
 export default function LoginScreen({ navigation }) {
     const tsContext = useContext(AppContext);
     const [creds, setCreds] = useState({
-        email: "a@a.com",password: "a"
+        email: "",password: ""
     });
     
 
@@ -56,7 +56,7 @@ export default function LoginScreen({ navigation }) {
                           Alert.alert('Error', error)
                           return false;
                         }
-                    navigation.navigate("Main", creds);
+                    navigation.navigate("Timesheet");
                     return true;
                 }
             }

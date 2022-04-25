@@ -1,7 +1,7 @@
 import * as React from 'react';
-import LoginContainer from './navigation/LoginContainer';
 import AppContext from './navigation/Context';
 import { useState } from 'react';
+import MainContainer from './navigation/MainContainer';
 
 export default function App(){
     const [currName, setCurrName] = useState('');
@@ -29,7 +29,7 @@ export default function App(){
 
     return (
         <AppContext.Provider value={userSetting}>
-                <LoginContainer/>
+                <MainContainer/>
         </AppContext.Provider>
     );
 }

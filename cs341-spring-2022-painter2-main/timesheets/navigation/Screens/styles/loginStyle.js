@@ -5,7 +5,8 @@ export default StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems:'center',
-        backgroundColor:'#ab0e0e'
+        backgroundColor:'#ab0e0e',
+        paddingBottom: 80
     },
     forgot: {
         flex: 1,
@@ -15,7 +16,7 @@ export default StyleSheet.create({
         backgroundColor:'#ab0e0e'
     },
     reg: {
-        //paddingTop: 50,
+        paddingTop: 40,
         flex: 1,
         justifyContent: 'flex-start',
         alignItems:'center',
