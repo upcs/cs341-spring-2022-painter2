@@ -56,6 +56,9 @@ function BottomTabs() {
               else if (route.name === 'Timesheets') {
                 iconName = focused ? 'ios-document-text':'ios-document-text-outline';
               }
+              else if (route.name === 'Jobsites') {
+                iconName = focused ? 'business':'business-outline';
+              }
               return <Ionicons name={iconName} size={size} color={color} />;
             },
             headerShown: false,
@@ -65,8 +68,9 @@ function BottomTabs() {
             tabBarInactiveTintColor: '#000', // red
           })}>
             {/*adding the pages to the navigation bar*/ }
+            <Tab.Screen name="Timesheets" component={StackNav} />
             <Tab.Screen name="Home" component={HomeScreen} />
-          <Tab.Screen name="Timesheets" component={StackNav} />
+            <Tab.Screen name="Jobsites" component={JobsiteConfigure} />
       </Tab.Navigator>
     );
   } else {
