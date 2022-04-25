@@ -12,6 +12,9 @@ import AppContext from '../Context.js';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { Ionicons } from '@expo/vector-icons';
+import Calendar from "react-native-calendar-range-picker";
+import moment from 'moment';
+import { extendMoment } from 'moment-range';
 export default function TimesheetScreen({ navigation }) {
       
       const [timesheetsData, setTimeSheetsData] = useState([])
@@ -19,6 +22,9 @@ export default function TimesheetScreen({ navigation }) {
       const [sortedByName, setSortedByName] = useState(false)
       const tsContext = useContext(AppContext);
       const [gate,setGate]=useState(false)
+      const Moment = require('moment');
+      const MomentRange= require('moment-range');
+      const moment = MomentRange.extendMoment(Moment);
       
       //sets the initial data
       useEffect(() => {
@@ -39,18 +45,23 @@ export default function TimesheetScreen({ navigation }) {
         return;
      }, [gate])
 
-     const filterData = (searchName,x) => {
-        const copy = timesheetsData.filter(ts => ts.name.toString().toLowerCase().trim().includes(
-          searchName.toString().toLowerCase().trim()) &&ts.date == x.toLocaleDateString());
-        //console.log(ts.date)
-        console.log(x)
-        console.log(copy)
-        setUseData(copy)
+     const filterData = (searchName) => {
+       //console.log("hello  le")
+        //const copy = timesheetsData.filter(ts => ts.name.toString().toLowerCase().trim().includes(
+          //searchName.toString().toLowerCase().trim()) &&searchDate.includes(ts.date));
+          
+          const copy = timesheetsData.filter(ts => ts.name === searchName)
+          setUseData(copy)
      }
      
-     const filterDataByDate = (searchDate) => {
-      const copy = timesheetsData.filter(ts => ts.date == searchDate );
-      console.log(copy)
+     const filterDataByDate = (searchDate,searchName) => {
+      //console.log("filterDateByDate :"+searchDate[0]+" : "+searchDate[1])
+      //console.log(searchName)
+      
+      
+      const copy = timesheetsData.filter(ts => searchDate.includes(ts.date) && ts.name ===searchName);
+      
+      //console.log(copy)
       setUseData(copy)
       }
       
@@ -67,7 +78,7 @@ export default function TimesheetScreen({ navigation }) {
       const rowString = rowArr.join('')
       const csvString = headerString + "\n" + rowString
 
-      console.log(csvString)
+      //console.log(csvString)
      }
 
   
@@ -78,6 +89,7 @@ export default function TimesheetScreen({ navigation }) {
       );
       function timeTo24(hours,am_pm)
       {
+        am_pm=am_pm.toUpperCase()
         //hours=hours.trim()
         console.log("am_pm: "+am_pm)
         if(am_pm == 'AM')
@@ -114,8 +126,11 @@ export default function TimesheetScreen({ navigation }) {
         
         let hour1 = timeTo24(timeIn[0],am_pm_1[1])*60 - -timeIn[1]
         let hour2 = timeTo24(timeOut[0],am_pm_2[1])*60 - -timeOut[1]
-        console.log("timeTo24 "+timeTo24(timeOut[0],am_pm_2[1]))
+        console.log("hour1: "+hour1)
+        console.log("hour2: "+hour2)
+        console.log("timeTo24: "+timeOut[0]+": "+timeTo24(timeOut[0],am_pm_2[1]))
         let hour3 = hour2-hour1
+        console.log(hour2+"-"+hour1+"="+hour3)
         hour3= hour3/60
         hour3 = Number((hour3).toFixed(2));
         console.log(timeIn[0]+" "+timeIn[1])
@@ -124,7 +139,7 @@ export default function TimesheetScreen({ navigation }) {
         
         console.log(hour1)
         console.log(hour2)
-        /console.log("total time "+hour3)
+        console.log("total time "+hour3)
         return parseFloat(hour3)
         
         
@@ -139,7 +154,9 @@ export default function TimesheetScreen({ navigation }) {
           setEmpId(item.employeeID)
           setClockId(item.clockID)
           setJobSite(item.jobSite)
-          
+          setName(item.name)
+          setTask(item.task)
+          setModalDate(item.date)
           //calculateHoursWorked(clockIn,clockOut)
           
 
@@ -178,11 +195,17 @@ export default function TimesheetScreen({ navigation }) {
       const handleModal = () => {
         setIsModalVisible(()=> !isModalVisible)
       };
+      const[isCalendarVisible,setIsCalendarVisible]=useState(false);
+      const calendarModal=()=>{
+        setIsCalendarVisible(()=> !isCalendarVisible)
+      };
+
       const [selectedDate, setSelectedDate] = useState(new Date());
 
 
-      //const name = "david";
-      //const date ="3/27/2022"
+      const [name,setName]=useState()
+      const [modalDate,setModalDate]=useState()
+      const [task,setTask]=useState()
       const [clockIn,setClockInTime] = useState()
       const [clockOut,setClockOutTime] = useState()
       const [clockId,setClockId]=useState()
@@ -193,14 +216,40 @@ export default function TimesheetScreen({ navigation }) {
       const [selectedTimeOut,setSelectedTimeOut]=useState(new Date());
       const [editedBy, setEditedBy]=useState("");
       const [hoursWorked,setHoursWorked]=useState();
+      
+      const [start,setStart]=useState();
+      const [end, setEnd]=useState();
+      const [filter,setFilter]=useState(" Off");
 
+      //const [searchName,setSearchName]=useState();
       //filters the list by selected date
-      const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate;
-        setSelectedDate(currentDate);
-        console.log(selectedDate)
-        filterDataByDate(selectedDate.toLocaleDateString());
+      
+      const onChange2 = (startDate, endDate,search) =>
+      {
+        //console.log(startDate,endDate)
+        let start = moment(startDate);
+        let end = moment(endDate);
+        let date = [];
         
+
+        for (var m = moment(start); m.isSameOrBefore(end); m.add(1, 'days')) {
+            date.push(m.format('M/DD/YYYY'));
+        }
+        if(date.length ===0)
+        {
+          filterData(search)
+          return;
+        }
+        setFilter("On")
+        //setDateRange(date)
+        
+          //console.log("x")
+          filterDataByDate(date,search);
+          
+        
+        
+
+        //console.log(date)
       };
       //updates the clock in time
       const onChangeClockIn = (event, selectTime) => {
@@ -262,17 +311,163 @@ export default function TimesheetScreen({ navigation }) {
             return (
               <View style={styles.container}>
                 <View style={styles.header}>
-                  <Text style={styles.headerText}>My Timesheets</Text>
-                  
+                  <Text style={styles.headerText}>My Timesheets</Text>  
                 </View>
+               
+                <TouchableOpacity
+                  style={{padding:10,
+                    backgroundColor:'white',
+                    alignItems:"center", 
+                    borderWidth:1, 
+                    borderRadius:8,
+                    //alignSelf:'center',
+                    paddingHorizontal: 20,
+                    marginBottom:5}}
+                    onPress={calendarModal}
+                  
+                >
+                  <Text style ={{fontSize:20, color:'green'}}>Calendar Filter:{filter}</Text>
+                </TouchableOpacity>
+
+
+                <View>
+                    <Modal visible={isCalendarVisible} animationType="slide">
+                    <View>
+                      <TouchableOpacity
+                        style={{padding:10,
+                          backgroundColor:'white',
+                          alignItems:"center", 
+                          borderWidth:1, 
+                          borderRadius:8,
+                          //alignSelf:'center',
+                          paddingHorizontal: 20,
+                          marginBottom:5}}
+                          onPress={() => {
+                            calendarModal()
+                            onChange2(start,end,tsContext.currentName)
+                          }}
+                      >
+                        <Text style ={{fontSize:20, color:'green'}}>Close</Text>
+                      </TouchableOpacity>
+                      <View style={{ height: 600 }}>
+                        <Calendar
+                          initialNumToRender={12}
+                          pastYearRange={0}
+                          futureYearRange={1}
+                          onChange={({ startDate, endDate }) =>{
+                            //onChange2(startDate,endDate)
+                            setStart(startDate)
+                            setEnd(endDate)
+                          }  }
+                        />
+                      </View>
+                      
+                    </View>
+                    </Modal>
+                </View>
+
+
+                <View style={{padding: 5,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    margin: 0
+                    }}>
+
+                 
+                    
+                    <Text style={styles.timeText1}>Start: <Text style={styles.timeText2}>{start}</Text></Text>
+                    <Text style={styles.timeText1}>End: <Text style={styles.timeText2}>{end}</Text></Text>
+                    <TouchableOpacity
+                      style={{alignItems:"center", marginLeft: 5}}
+                      onPress={()=> {
+                        setGate(!gate)
+                        console.log("refresh")
+                        setStart("")
+                        setEnd("")
+                        setFilter("Off")
+                        
+                       
+                        console.log(start)
+
+                      }}
+                    >
+                    <Ionicons name={'ios-refresh-circle'} size={50} style={{color:'#ab0e0e'}}/>
+                    </TouchableOpacity>
+                  </View>
+
+
                 
                 <FlatList
                 data={useData}
                 renderItem={renderItem}
                 keyExtractor={item => item.clockID}
-
                 />
+                <View style={Modalstyles.centeredView}>
+                    <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+                      <View style={Modalstyles.modalView}>
+                      
+                        
+                      
+                      
+                            
+                    
+                    
+                    <View>
+                      <View style = {{flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
+                      
+                      <Text style={styles.listText}>{name}</Text>
+                      <Text style={styles.timeText1}>Task: <Text style={styles.timeText2}> {task}</Text> </Text>
+                      <Text style={styles.timeText2}>{modalDate}</Text>
+
+                      
+                      <Text>   </Text>
+                      </View>
+                      <View style = {{flexDirection:"row",justifyContent:"center"}}>
+                        
+                      <View>
+                        <Text style={styles.timeText1} >    Time In:</Text>
+                        <TextInput style={styles2.input} 
+                          value = {clockIn} 
+                          editable ={false}/> 
+                      </View>
+
+                      <View>      
+                        <Text style={styles.timeText1}>Time Out:</Text>
+                            <TextInput style={styles2.input} 
+                            value = {clockOut} 
+                            editable ={false}/> 
+                      </View>
+                      </View>
+                      <View style ={{flexDirection: "row", justifyContent:"center"}}>
+                      <TextInput style={styles2.input2}
+                        placeholder={jobSite}
+                        placeholderTextColor="black"
+                        editable={false}
+                      
+                      >
+                      </TextInput>
+                      </View>
+
+                      <View style ={{flexDirection: "row", justifyContent:"center"}}>
+                      <Text style={styles.timeText1}>Edited by: <Text style={styles.timeText2}>{editedBy}</Text>
+                      </Text>
+                      
+                      </View>
+                      <Text>  </Text>
+                    </View>
+                    <Button title ="close" onPress={handleModal}/>
+                
+                
               </View>
+              </Modal>
+              </View>
+              </View>
+              
+              
+
+
+
             );
           } else {
             return (
@@ -281,6 +476,56 @@ export default function TimesheetScreen({ navigation }) {
                 <View style={styles.header}>
                   <Text style={styles.headerText}>Timesheets</Text>
                 </View>
+                
+                
+                <TouchableOpacity
+                  style={{padding:10,
+                    backgroundColor:'white',
+                    alignItems:"center", 
+                    borderWidth:1, 
+                    borderRadius:8,
+                    //alignSelf:'center',
+                    paddingHorizontal: 20,
+                    marginBottom:5}}
+                    onPress={calendarModal}
+                  
+                >
+                  <Text style ={{fontSize:20, color:'green'}}>Calendar Filter:{filter}</Text>
+                </TouchableOpacity>
+                <View>
+                    <Modal visible={isCalendarVisible} animationType="slide">
+                      <View>
+                      <TouchableOpacity
+                        style={{padding:10,
+                          backgroundColor:'white',
+                          alignItems:"center", 
+                          borderWidth:1, 
+                          borderRadius:8,
+                          //alignSelf:'center',
+                          paddingHorizontal: 20,
+                          marginBottom:5}}
+                          onPress={calendarModal}
+                        
+                      >
+                        <Text style ={{fontSize:20, color:'green'}}>Close</Text>
+                      </TouchableOpacity>
+                      <View style={{ height: 600 }}>
+                        <Calendar
+                          initialNumToRender={12}
+                          pastYearRange={0}
+                          futureYearRange={1}
+                          onChange={({ startDate, endDate }) =>{
+                            //onChange2(startDate,endDate)
+                            setStart(startDate)
+                            setEnd(endDate)
+                          }  }
+                        />
+                        </View>
+                      
+                      </View>
+                    </Modal>
+                </View>
+
                 <DropDownPicker
                     style={{marginTop:10}}
                       zIndex={1}
@@ -294,7 +539,9 @@ export default function TimesheetScreen({ navigation }) {
                       searchPlaceholder="Type in a name you want to search for"
                       onChangeValue={input => {
                         console.log("input: "+input)
-                        filterData(input,selectedDate)
+                        //filterData(input)
+                        //setSearchName(input)
+                        onChange2(start,end,input)
                         if(input == "") setSortedByName(false);
                         else setSortedByName(true);
                       }}
@@ -307,17 +554,21 @@ export default function TimesheetScreen({ navigation }) {
                     }}>
 
                  
-                    <DateTimePicker
-                    style={{flex:1}}
-                      value={selectedDate}
-                      mode='date'
-                      onChange={onChange}
-                    />
+                    
+                    <Text style={styles.timeText1}>Start: <Text style={styles.timeText2}>{start}</Text></Text>
+                    <Text style={styles.timeText1}>End: <Text style={styles.timeText2}>{end}</Text></Text>
                     
                     <TouchableOpacity
                       style={{alignItems:"center", marginLeft: 5}}
                       onPress={()=> {
                         setGate(!gate)
+                        console.log("refresh")
+                        setStart("")
+                        setEnd("")
+                        setFilter("Off")
+                        
+                       
+                        console.log(start)
 
                       }}
                     >
@@ -340,9 +591,18 @@ export default function TimesheetScreen({ navigation }) {
                         { edit ? 
                      // edit time   
                     <View>
+                      <View style = {{flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
+                      
+                      <Text style={styles.listText}>{name}</Text>
+                      <Text style={styles.timeText1}>Task: <Text style={styles.timeText2}> {task}</Text> </Text>
+                      <Text style={styles.timeText2}>{modalDate}</Text>
+
+                      
+                      <Text>   </Text>
+                      </View>
                       <View style ={{flexDirection: "row", justifyContent:"center"}}>
                         <View>
-                          <Text>Time In:         </Text>
+                        <Text style={styles.timeText1}>Time In:      </Text>
                           <DateTimePicker
                           value={selectedTimeIn}
                           mode='time' 
@@ -352,7 +612,7 @@ export default function TimesheetScreen({ navigation }) {
                         </View>
 
                         <View>
-                          <Text>Time Out:         </Text>
+                        <Text style={styles.timeText1}>     Time Out:    </Text>
                           <DateTimePicker
                           value={selectedTimeOut}
                           mode='time' 
@@ -379,16 +639,26 @@ export default function TimesheetScreen({ navigation }) {
                     </View>:
                     //normal time
                     <View>
+                      <View style = {{flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
+                      
+                      <Text style={styles.listText}>{name}</Text>
+                      <Text style={styles.timeText1}>Task: <Text style={styles.timeText2}> {task}</Text> </Text>
+                      <Text style={styles.timeText2}>{modalDate}</Text>
+
+                      
+                      <Text>   </Text>
+                      </View>
                       <View style = {{flexDirection:"row",justifyContent:"center"}}>
+                        
                       <View>
-                        <Text >    Time In:</Text>
+                        <Text style={styles.timeText1} >    Time In:</Text>
                         <TextInput style={styles2.input} 
                           value = {clockIn} 
                           editable ={false}/> 
                       </View>
 
                       <View>      
-                        <Text>Time Out:</Text>
+                        <Text style={styles.timeText1}>Time Out:</Text>
                             <TextInput style={styles2.input} 
                             value = {clockOut} 
                             editable ={false}/> 
@@ -405,9 +675,11 @@ export default function TimesheetScreen({ navigation }) {
                       </View>
 
                       <View style ={{flexDirection: "row", justifyContent:"center"}}>
-                      <Text>Edited by: {editedBy}</Text>
+                      <Text style={styles.timeText1}>Edited by: <Text style={styles.timeText2}>{editedBy}</Text>
+                      </Text>
+                      
                       </View>
-
+                      <Text>  </Text>
                     </View>}
 
                     <View style={{flexDirection:"row",justifyContent:"center"}}>
@@ -484,14 +756,14 @@ const styles2 = StyleSheet.create({
       borderColor: '#777',
       padding: 8,
       margin: 10,
-      width: 100,
+      width: 110,
   },
   input2: {
     borderWidth:1,
     borderColor: '#777',
     padding: 8,
     margin: 10,
-    width: 220,
+    width: 240,
   }
 });
   
