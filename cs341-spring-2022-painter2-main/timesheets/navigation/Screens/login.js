@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Text, View, TextInput, StyleSheet, Alert, TouchableHighlight} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import styles from './styles/loginStyle.js';
-import {findUserByEmail} from './databaseFunctions';
+import {findUserByEmail, signInUser} from './databaseFunctions';
 import {encodePass, decodePass} from './styles/base64';
 import AppContext from '../Context.js';
 import { useContext } from 'react';
@@ -12,7 +12,7 @@ import { useContext } from 'react';
 export default function LoginScreen({ navigation }) {
     const tsContext = useContext(AppContext);
     const [creds, setCreds] = useState({
-        email: "a@a.com",password: "a"
+        email: "",password: ""
     });
     
 
@@ -50,7 +50,13 @@ export default function LoginScreen({ navigation }) {
                     tsContext.setCurrEmail(user[0].email);
                     tsContext.setCurrRole(user[0].role);
                     tsContext.setCurrId(user[0].employeeID);
-                    navigation.navigate("Main", creds);
+                    try {
+                        await signInUser(creds.email, creds.password);
+                      } catch (error) {
+                          Alert.alert('Error', error)
+                          return false;
+                        }
+                    navigation.navigate("Timesheet");
                     return true;
                 }
             }
