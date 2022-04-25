@@ -311,17 +311,163 @@ export default function TimesheetScreen({ navigation }) {
             return (
               <View style={styles.container}>
                 <View style={styles.header}>
-                  <Text style={styles.headerText}>My Timesheets</Text>
-                  
+                  <Text style={styles.headerText}>My Timesheets</Text>  
                 </View>
+               
+                <TouchableOpacity
+                  style={{padding:10,
+                    backgroundColor:'white',
+                    alignItems:"center", 
+                    borderWidth:1, 
+                    borderRadius:8,
+                    //alignSelf:'center',
+                    paddingHorizontal: 20,
+                    marginBottom:5}}
+                    onPress={calendarModal}
+                  
+                >
+                  <Text style ={{fontSize:20, color:'green'}}>Calendar Filter:{filter}</Text>
+                </TouchableOpacity>
+
+
+                <View>
+                    <Modal visible={isCalendarVisible} animationType="slide">
+                    <View>
+                      <TouchableOpacity
+                        style={{padding:10,
+                          backgroundColor:'white',
+                          alignItems:"center", 
+                          borderWidth:1, 
+                          borderRadius:8,
+                          //alignSelf:'center',
+                          paddingHorizontal: 20,
+                          marginBottom:5}}
+                          onPress={() => {
+                            calendarModal()
+                            onChange2(start,end,tsContext.currentName)
+                          }}
+                      >
+                        <Text style ={{fontSize:20, color:'green'}}>Close</Text>
+                      </TouchableOpacity>
+                      <View style={{ height: 600 }}>
+                        <Calendar
+                          initialNumToRender={12}
+                          pastYearRange={0}
+                          futureYearRange={1}
+                          onChange={({ startDate, endDate }) =>{
+                            //onChange2(startDate,endDate)
+                            setStart(startDate)
+                            setEnd(endDate)
+                          }  }
+                        />
+                      </View>
+                      
+                    </View>
+                    </Modal>
+                </View>
+
+
+                <View style={{padding: 5,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    margin: 0
+                    }}>
+
+                 
+                    
+                    <Text style={styles.timeText1}>Start: <Text style={styles.timeText2}>{start}</Text></Text>
+                    <Text style={styles.timeText1}>End: <Text style={styles.timeText2}>{end}</Text></Text>
+                    <TouchableOpacity
+                      style={{alignItems:"center", marginLeft: 5}}
+                      onPress={()=> {
+                        setGate(!gate)
+                        console.log("refresh")
+                        setStart("")
+                        setEnd("")
+                        setFilter("Off")
+                        
+                       
+                        console.log(start)
+
+                      }}
+                    >
+                    <Ionicons name={'ios-refresh-circle'} size={50} style={{color:'#ab0e0e'}}/>
+                    </TouchableOpacity>
+                  </View>
+
+
                 
                 <FlatList
                 data={useData}
                 renderItem={renderItem}
                 keyExtractor={item => item.clockID}
-
                 />
+                <View style={Modalstyles.centeredView}>
+                    <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+                      <View style={Modalstyles.modalView}>
+                      
+                        
+                      
+                      
+                            
+                    
+                    
+                    <View>
+                      <View style = {{flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
+                      
+                      <Text style={styles.listText}>{name}</Text>
+                      <Text style={styles.timeText1}>Task: <Text style={styles.timeText2}> {task}</Text> </Text>
+                      <Text style={styles.timeText2}>{modalDate}</Text>
+
+                      
+                      <Text>   </Text>
+                      </View>
+                      <View style = {{flexDirection:"row",justifyContent:"center"}}>
+                        
+                      <View>
+                        <Text style={styles.timeText1} >    Time In:</Text>
+                        <TextInput style={styles2.input} 
+                          value = {clockIn} 
+                          editable ={false}/> 
+                      </View>
+
+                      <View>      
+                        <Text style={styles.timeText1}>Time Out:</Text>
+                            <TextInput style={styles2.input} 
+                            value = {clockOut} 
+                            editable ={false}/> 
+                      </View>
+                      </View>
+                      <View style ={{flexDirection: "row", justifyContent:"center"}}>
+                      <TextInput style={styles2.input2}
+                        placeholder={jobSite}
+                        placeholderTextColor="black"
+                        editable={false}
+                      
+                      >
+                      </TextInput>
+                      </View>
+
+                      <View style ={{flexDirection: "row", justifyContent:"center"}}>
+                      <Text style={styles.timeText1}>Edited by: <Text style={styles.timeText2}>{editedBy}</Text>
+                      </Text>
+                      
+                      </View>
+                      <Text>  </Text>
+                    </View>
+                    <Button title ="close" onPress={handleModal}/>
+                
+                
               </View>
+              </Modal>
+              </View>
+              </View>
+              
+              
+
+
+
             );
           } else {
             return (
