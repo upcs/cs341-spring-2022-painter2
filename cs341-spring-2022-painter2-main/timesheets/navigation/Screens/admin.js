@@ -104,8 +104,8 @@ export default function AdminScreen({ navigation }) {
        else {
            return (
       <View style={{
-          padding: 0,
-          borderWidth: 1,
+          padding: 8,
+          borderBottomWidth: 2,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'space-between'}}>
@@ -125,7 +125,7 @@ export default function AdminScreen({ navigation }) {
          return (
     <View style={{
         padding: 0,
-        borderWidth: 1,
+        borderBottomWidth: 2,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between'}}>
@@ -156,7 +156,6 @@ export default function AdminScreen({ navigation }) {
                       <Text style={styles.headerText}>Profile</Text>
                     </View>
                     <View style={{alignItems: 'center'}}>
-                        <Button title="Logout">Logout</Button>
                     </View>
               </View>
             );
@@ -166,7 +165,6 @@ export default function AdminScreen({ navigation }) {
                 <View style={styles.header}>
                   <Text style={styles.headerText}>Profiles</Text>
                 </View>
-                    <Button title="Logout">Logout</Button>
                     {/*  
                     <View style={styles.searchBarContainer}>
                     <Ionicons name={'ios-search'} size={25} style={styles.inputLineIcon}/>
@@ -202,7 +200,7 @@ export default function AdminScreen({ navigation }) {
                       }}
                     />
                     <TouchableOpacity
-                      style={{alignItems:"center", marginLeft: 5}}
+                      style={{alignItems:"center", borderBottomColor: '#ab0e0e', borderBottomWidth: 6}}
                       onPress={()=> {
                         setGate(!gate)
 
