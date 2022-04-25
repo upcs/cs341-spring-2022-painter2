@@ -222,11 +222,7 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
         let data =(fetchedEmployee.docs[i].data());
         emailEmployeeArray.push(data);
       }
-<<<<<<< Updated upstream
-      console.log(emailEmployeeArray);
-=======
       //console.log('db: userfound-', emailEmployeeArray);
->>>>>>> Stashed changes
       return emailEmployeeArray;
   }
   
@@ -564,11 +560,7 @@ export const getEmployeeList = async() => {
     employeeList.push({"label": employeesData.name, "value": employeesData.name});
 }
 return employeeList;
-<<<<<<< Updated upstream
-console.log("Jobsites fetched");
-=======
 ////console.log("Jobsites fetched");
->>>>>>> Stashed changes
 }
 
 //authentification function that adds employee as firebase user

@@ -161,10 +161,7 @@ module.exports = timeCheck(13,0)
       //stores the total minutes work for later
       hours = (hours)*60 + min;
       setTime(hours);
-<<<<<<< Updated upstream
-=======
       //console.log(timeCheck(hours,min))
->>>>>>> Stashed changes
 
       clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite,task,0,0);
       (async () =>{

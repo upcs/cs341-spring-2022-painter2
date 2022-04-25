@@ -36,15 +36,9 @@ export default function LoginScreen({ navigation }) {
     //Helper function that does all the validating for the login
     const validateLogin = async() => {
         if(creds.email.length != 0 && creds.password.length != 0){
-<<<<<<< Updated upstream
-            console.log("login.js: input email - ", creds.email);
-            var user = await findUserByEmail(creds.email); //<-----
-            console.log("login.js: userFound - ", user);
-=======
             //console.log("login: input email - ", creds.email);
             var user = await findUserByEmail(creds.email); //<-----
             //console.log("login: userFound - ", user);
->>>>>>> Stashed changes
             //var user = await firebase.firestore().collection('clocking').where('employeeID','==',id)
             //console.log(user);
             if (Object.keys(user).length > 0){

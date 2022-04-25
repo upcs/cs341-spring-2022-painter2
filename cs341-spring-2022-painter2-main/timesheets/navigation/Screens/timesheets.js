@@ -39,20 +39,6 @@ export default function TimesheetScreen({ navigation }) {
         return;
      }, [gate])
 
-<<<<<<< Updated upstream
-     const filterData = (searchName,x) => {
-        const copy = timesheetsData.filter(ts => ts.name.toString().toLowerCase().trim().includes(
-          searchName.toString().toLowerCase().trim()) &&ts.date == x.toLocaleDateString());
-        //console.log(ts.date)
-        console.log(x)
-        console.log(copy)
-        setUseData(copy)
-     }
-     
-     const filterDataByDate = (searchDate) => {
-      const copy = timesheetsData.filter(ts => ts.date == searchDate );
-      console.log(copy)
-=======
      const filterData = (searchName) => {
        ////console.log("hello  le")
         //const copy = timesheetsData.filter(ts => ts.name.toString().toLowerCase().trim().includes(
@@ -70,7 +56,6 @@ export default function TimesheetScreen({ navigation }) {
       const copy = timesheetsData.filter(ts => searchDate.includes(ts.date) && ts.name ===searchName);
       
       ////console.log(copy)
->>>>>>> Stashed changes
       setUseData(copy)
       }
       
@@ -87,11 +72,7 @@ export default function TimesheetScreen({ navigation }) {
       const rowString = rowArr.join('')
       const csvString = headerString + "\n" + rowString
 
-<<<<<<< Updated upstream
-      console.log(csvString)
-=======
       ////console.log(csvString)
->>>>>>> Stashed changes
      }
 
   
@@ -138,31 +119,20 @@ export default function TimesheetScreen({ navigation }) {
         
         let hour1 = timeTo24(timeIn[0],am_pm_1[1])*60 - -timeIn[1]
         let hour2 = timeTo24(timeOut[0],am_pm_2[1])*60 - -timeOut[1]
-<<<<<<< Updated upstream
-        console.log("timeTo24 "+timeTo24(timeOut[0],am_pm_2[1]))
-        let hour3 = hour2-hour1
-=======
         //console.log("hour1: "+hour1)
         //console.log("hour2: "+hour2)
         //console.log("timeTo24: "+timeOut[0]+": "+timeTo24(timeOut[0],am_pm_2[1]))
         let hour3 = hour2-hour1
         //console.log(hour2+"-"+hour1+"="+hour3)
->>>>>>> Stashed changes
         hour3= hour3/60
         hour3 = Number((hour3).toFixed(2));
         //console.log(timeIn[0]+" "+timeIn[1])
         
         //console.log(timeOut[0]+" "+timeOut[1])
         
-<<<<<<< Updated upstream
-        console.log(hour1)
-        console.log(hour2)
-        /console.log("total time "+hour3)
-=======
         //console.log(hour1)
         //console.log(hour2)
         //console.log("total time "+hour3)
->>>>>>> Stashed changes
         return parseFloat(hour3)
         
         
@@ -233,14 +203,6 @@ export default function TimesheetScreen({ navigation }) {
       const [hoursWorked,setHoursWorked]=useState();
 
       //filters the list by selected date
-<<<<<<< Updated upstream
-      const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate;
-        setSelectedDate(currentDate);
-        console.log(selectedDate)
-        filterDataByDate(selectedDate.toLocaleDateString());
-        
-=======
       
       const onChange2 = (startDate, endDate,search) =>
       {
@@ -268,7 +230,6 @@ export default function TimesheetScreen({ navigation }) {
         
 
         ////console.log(date)
->>>>>>> Stashed changes
       };
       //updates the clock in time
       const onChangeClockIn = (event, selectTime) => {
@@ -333,8 +294,6 @@ export default function TimesheetScreen({ navigation }) {
                   <Text style={styles.headerText}>My Timesheets</Text>
                   
                 </View>
-<<<<<<< Updated upstream
-=======
 
 
                 <View style={{padding: 5,
@@ -367,7 +326,6 @@ export default function TimesheetScreen({ navigation }) {
                   </View>
 
 
->>>>>>> Stashed changes
                 
                 <FlatList
                 data={useData}
@@ -396,15 +354,10 @@ export default function TimesheetScreen({ navigation }) {
                       searchable={true}
                       searchPlaceholder="Type in a name you want to search for"
                       onChangeValue={input => {
-<<<<<<< Updated upstream
-                        console.log("input: "+input)
-                        filterData(input,selectedDate)
-=======
                         //console.log("input: "+input)
                         //filterData(input)
                         //setSearchName(input)
                         onChange2(start,end,input)
->>>>>>> Stashed changes
                         if(input == "") setSortedByName(false);
                         else setSortedByName(true);
                       }}
@@ -428,8 +381,6 @@ export default function TimesheetScreen({ navigation }) {
                       style={{alignItems:"center", marginLeft: 5}}
                       onPress={()=> {
                         setGate(!gate)
-<<<<<<< Updated upstream
-=======
                         //console.log("refresh")
                         setStart("")
                         setEnd("")
@@ -437,7 +388,6 @@ export default function TimesheetScreen({ navigation }) {
                         
                        
                         //console.log(start)
->>>>>>> Stashed changes
 
                       }}
                     >
