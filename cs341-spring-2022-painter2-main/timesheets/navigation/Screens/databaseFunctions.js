@@ -53,7 +53,7 @@ const firebaseConfig = {
 
      }
   
-
+     Alert.alert("User Created")
     }
 
     //gets all the timesheets
@@ -217,12 +217,12 @@ export const editEmployeeEmailHelper = async (docIDInput,emailInput)=>{
       .collection('employees')
       .where('email','==',emailInput)
       .get();
-      emailEmployeeArray = [];
+      var emailEmployeeArray = [];
       for(let i = 0; i <(fetchedEmployee.docs).length;i++) {
         let data =(fetchedEmployee.docs[i].data());
         emailEmployeeArray.push(data);
       }
-      console.log(emailEmployeeArray);
+      console.log('db: userfound-', emailEmployeeArray);
       return emailEmployeeArray;
   }
   
@@ -463,7 +463,6 @@ export const changeClockIn = async(newClockIn,id,clockID,editName) => {
 }  
 //finds an employee by ID and changes clock out time
 
-
 export const changeClockOut = async(newClockOut,id,clockID,editName) => {
   var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
 
@@ -561,19 +560,32 @@ export const getEmployeeList = async() => {
     employeeList.push({"label": employeesData.name, "value": employeesData.name});
 }
 return employeeList;
-console.log("Jobsites fetched");
+//console.log("Jobsites fetched");
 }
 
 //authentification function that adds employee as firebase user
 //used to send out timesheet emails
-export const addFireBaseUser=async(emailInput,passInput)=>{
-auth
-.createUserWithEmailAndPassword(emailInput,passInput)
-.then(userDetails=>{
-console.log("Firebase Email: " +userDetails.user.email+" Firebase Password: " +userDetails.user.password )
+export const addFireBaseUser = async(emailInput, passInput, name, en)=>{
+  try {
+    await auth.createUserWithEmailAndPassword(emailInput,passInput)
+  } catch (err){
+    return Error(err);
+  }
+  await createNewEmployee(name, emailInput, en, "Employee");
+  return true;
+}
 
-})
-.catch(err=>console.log(err.message));
+export const signInUser=async(emailInput,passInput)=>{
+  try {
+    await auth.signInWithEmailAndPassword(emailInput,passInput)
+  } catch (err){
+    return Error(err);
+  }
+  return true;
+}
+
+export const signOutUser = async() => {
+  auth.signOut();
 }
 
 export const coutUpdateCoords = async(newEmployeeID,
