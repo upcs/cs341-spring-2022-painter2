@@ -159,8 +159,9 @@ module.exports = timeCheck(13,0)
       var min = new Date().getMinutes()
       //console.log("clock in")
       //stores the total minutes work for later
-      hours = (hours)*60 + min;
+      //hours = (hours)*60 + min;
       setTime(hours);
+      console.log(timeCheck(hours,min))
 
       clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite,task,0,0);
       (async () =>{

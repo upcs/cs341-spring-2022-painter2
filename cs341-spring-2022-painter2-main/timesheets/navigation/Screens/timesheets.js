@@ -408,10 +408,7 @@ export default function TimesheetScreen({ navigation }) {
                       <View style={Modalstyles.modalView}>
                       
                         
-                      
-                      
-                            
-                    
+              
                     
                     <View>
                       <View style = {{flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
