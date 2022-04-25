@@ -14,7 +14,7 @@ const onClickListener = (viewID) => {
 }
 
 const forgotPassword = (forgotEmail) => {
-  console.log(forgotEmail);
+  //console.log(forgotEmail);
 }
 
 return(

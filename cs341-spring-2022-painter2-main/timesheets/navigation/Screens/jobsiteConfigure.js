@@ -32,7 +32,7 @@ useEffect(() => {
        }
     
        setJobsiteCollection(addressArr);
-       console.log("Jobsite: jobs-",jobsiteCollection);
+       //console.log("Jobsite: jobs-",jobsiteCollection);
 
       
    });
@@ -54,7 +54,7 @@ useEffect(() => {
           
        }
        setJobsiteCollection(addressArr);
-       console.log(jobsiteCollection);
+       //console.log(jobsiteCollection);
       
 
       
@@ -177,10 +177,10 @@ async function openJobsiteHandler(inputSiteNum){
 
     const onClickListener = (siteID, what) => {
         if (what == "open"){
-            console.log('jobsite: open confirmed');
+            //console.log('jobsite: open confirmed');
             openJobsiteHandler(siteID);
         } else {
-            console.log('jobsite: close confirmed');
+            //console.log('jobsite: close confirmed');
             closeJobsiteHandler(siteID);
         }
         return;

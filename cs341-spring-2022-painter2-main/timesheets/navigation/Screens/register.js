@@ -22,7 +22,7 @@ export default function RegisterScreen({ navigation }) {
 
     //Helper function that does all the validating for the login
     const validateReg = async() => {
-        //console.log("Email: ", validateEmail(creds.email))
+        ////console.log("Email: ", validateEmail(creds.email))
         if (creds.p1.includes(' ') || creds.p2.includes(' ')){
            Alert.alert("Error", "Passwords should not contain spaces")
         }
@@ -34,19 +34,19 @@ export default function RegisterScreen({ navigation }) {
             creds.p1.length != 0 &&
             creds.p2.length != 0 &&
             validateEmail(creds.email) == true){
-//            console.log("P1: ", creds.p1);
+//            //console.log("P1: ", creds.p1);
             var log = encodePass(creds.p1);
-//            console.log("P1-en: ", log);
-//            console.log("P1-de: ", creds.p2);
-//            console.log("Email: ", creds.email )
+//            //console.log("P1-en: ", log);
+//            //console.log("P1-de: ", creds.p2);
+//            //console.log("Email: ", creds.email )
 //              *******************************************
             var value = await findUserByEmail(creds.email)
             if (Object.keys(value).length > 0){
-                console.log("Result: ", "Account exists")
+                //console.log("Result: ", "Account exists")
                 Alert.alert("Error", "Email already exists")
             }
             else {
-                console.log("P1-set: ", log);
+                //console.log("P1-set: ", log);
 //              *******************************************
                 await createNewEmployee(creds.name,creds.email,log,"Employee")
                 await addFireBaseUser(creds.email,creds.p1);

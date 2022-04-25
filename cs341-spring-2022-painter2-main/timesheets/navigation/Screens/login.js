@@ -36,15 +36,21 @@ export default function LoginScreen({ navigation }) {
     //Helper function that does all the validating for the login
     const validateLogin = async() => {
         if(creds.email.length != 0 && creds.password.length != 0){
+<<<<<<< Updated upstream
             console.log("login.js: input email - ", creds.email);
             var user = await findUserByEmail(creds.email); //<-----
             console.log("login.js: userFound - ", user);
+=======
+            //console.log("login: input email - ", creds.email);
+            var user = await findUserByEmail(creds.email); //<-----
+            //console.log("login: userFound - ", user);
+>>>>>>> Stashed changes
             //var user = await firebase.firestore().collection('clocking').where('employeeID','==',id)
-            console.log(user);
+            //console.log(user);
             if (Object.keys(user).length > 0){
-                //console.log("Password: ", user.map(a => a.password)[0])
+                ////console.log("Password: ", user.map(a => a.password)[0])
                 var pass = user.map(a => a.password)[0];
-                //console.log(decodePass(pass))
+                ////console.log(decodePass(pass))
                 if(creds.password == decodePass(pass)){
                     tsContext.setCurrName(user[0].name);
                     tsContext.setCurrEmail(user[0].email);

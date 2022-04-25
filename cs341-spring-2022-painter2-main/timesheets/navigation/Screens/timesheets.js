@@ -39,6 +39,7 @@ export default function TimesheetScreen({ navigation }) {
         return;
      }, [gate])
 
+<<<<<<< Updated upstream
      const filterData = (searchName,x) => {
         const copy = timesheetsData.filter(ts => ts.name.toString().toLowerCase().trim().includes(
           searchName.toString().toLowerCase().trim()) &&ts.date == x.toLocaleDateString());
@@ -51,6 +52,25 @@ export default function TimesheetScreen({ navigation }) {
      const filterDataByDate = (searchDate) => {
       const copy = timesheetsData.filter(ts => ts.date == searchDate );
       console.log(copy)
+=======
+     const filterData = (searchName) => {
+       ////console.log("hello  le")
+        //const copy = timesheetsData.filter(ts => ts.name.toString().toLowerCase().trim().includes(
+          //searchName.toString().toLowerCase().trim()) &&searchDate.includes(ts.date));
+          
+          const copy = timesheetsData.filter(ts => ts.name === searchName)
+          setUseData(copy)
+     }
+     
+     const filterDataByDate = (searchDate,searchName) => {
+      ////console.log("filterDateByDate :"+searchDate[0]+" : "+searchDate[1])
+      ////console.log(searchName)
+      
+      
+      const copy = timesheetsData.filter(ts => searchDate.includes(ts.date) && ts.name ===searchName);
+      
+      ////console.log(copy)
+>>>>>>> Stashed changes
       setUseData(copy)
       }
       
@@ -67,7 +87,11 @@ export default function TimesheetScreen({ navigation }) {
       const rowString = rowArr.join('')
       const csvString = headerString + "\n" + rowString
 
+<<<<<<< Updated upstream
       console.log(csvString)
+=======
+      ////console.log(csvString)
+>>>>>>> Stashed changes
      }
 
   
@@ -79,7 +103,7 @@ export default function TimesheetScreen({ navigation }) {
       function timeTo24(hours,am_pm)
       {
         //hours=hours.trim()
-        console.log("am_pm: "+am_pm)
+        //console.log("am_pm: "+am_pm)
         if(am_pm == 'AM')
         {
             if(hours == '12')
@@ -114,17 +138,31 @@ export default function TimesheetScreen({ navigation }) {
         
         let hour1 = timeTo24(timeIn[0],am_pm_1[1])*60 - -timeIn[1]
         let hour2 = timeTo24(timeOut[0],am_pm_2[1])*60 - -timeOut[1]
+<<<<<<< Updated upstream
         console.log("timeTo24 "+timeTo24(timeOut[0],am_pm_2[1]))
         let hour3 = hour2-hour1
+=======
+        //console.log("hour1: "+hour1)
+        //console.log("hour2: "+hour2)
+        //console.log("timeTo24: "+timeOut[0]+": "+timeTo24(timeOut[0],am_pm_2[1]))
+        let hour3 = hour2-hour1
+        //console.log(hour2+"-"+hour1+"="+hour3)
+>>>>>>> Stashed changes
         hour3= hour3/60
         hour3 = Number((hour3).toFixed(2));
-        console.log(timeIn[0]+" "+timeIn[1])
+        //console.log(timeIn[0]+" "+timeIn[1])
         
-        console.log(timeOut[0]+" "+timeOut[1])
+        //console.log(timeOut[0]+" "+timeOut[1])
         
+<<<<<<< Updated upstream
         console.log(hour1)
         console.log(hour2)
         /console.log("total time "+hour3)
+=======
+        //console.log(hour1)
+        //console.log(hour2)
+        //console.log("total time "+hour3)
+>>>>>>> Stashed changes
         return parseFloat(hour3)
         
         
@@ -195,37 +233,67 @@ export default function TimesheetScreen({ navigation }) {
       const [hoursWorked,setHoursWorked]=useState();
 
       //filters the list by selected date
+<<<<<<< Updated upstream
       const onChange = (event, selectedDate) => {
         const currentDate = selectedDate;
         setSelectedDate(currentDate);
         console.log(selectedDate)
         filterDataByDate(selectedDate.toLocaleDateString());
         
+=======
+      
+      const onChange2 = (startDate, endDate,search) =>
+      {
+        ////console.log(startDate,endDate)
+        let start = moment(startDate);
+        let end = moment(endDate);
+        let date = [];
+        
+
+        for (var m = moment(start); m.isSameOrBefore(end); m.add(1, 'days')) {
+            date.push(m.format('M/DD/YYYY'));
+        }
+        if(date.length ===0)
+        {
+          filterData(search)
+          return;
+        }
+        setFilter("On")
+        //setDateRange(date)
+        
+          ////console.log("x")
+          filterDataByDate(date,search);
+          
+        
+        
+
+        ////console.log(date)
+>>>>>>> Stashed changes
       };
       //updates the clock in time
       const onChangeClockIn = (event, selectTime) => {
         const currentTime = selectTime;
         setSelectedTimeIn(currentTime);
-        //console.log("clock in current time: "+currentTime.toLocaleString())
+        ////console.log("clock in current time: "+currentTime.toLocaleString())
         let x= currentTime.toLocaleString()
         
         let y = []
         y=x.split(",")
         setClockInTime(y[1].substring(1));
-        console.log(currentTime);
+        //console.log(currentTime);
       }
       //updates the clock out time
       const onChangeClockOut = (event, selectTime) => {
         let currentTime = selectTime;
         setSelectedTimeOut(currentTime);
-        //console.log("clock out current time: "+currentTime.toLocaleString())
+        ////console.log("clock out current time: "+currentTime.toLocaleString())
         let x= currentTime.toLocaleString()
         
         let y = []
         y=x.split(",")
-        console.log(y[1].substring(1))
+        //console.log(y[1].substring(1))
         setClockOutTime(y[1].substring(1));
-        console.log(currentTime);
+        //console.log(currentTime);
       }
       const showConfirmDialog =()=>{
         return Alert.alert(
@@ -265,6 +333,41 @@ export default function TimesheetScreen({ navigation }) {
                   <Text style={styles.headerText}>My Timesheets</Text>
                   
                 </View>
+<<<<<<< Updated upstream
+=======
+
+
+                <View style={{padding: 5,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    margin: 0
+                    }}>
+
+                 
+                    
+                    <Text style={styles.timeText1}>Start: <Text style={styles.timeText2}>{start}</Text></Text>
+                    <Text style={styles.timeText1}>End: <Text style={styles.timeText2}>{end}</Text></Text>
+                    <TouchableOpacity
+                      style={{alignItems:"center", marginLeft: 5}}
+                      onPress={()=> {
+                        setGate(!gate)
+                        //console.log("refresh")
+                        setStart("")
+                        setEnd("")
+                        setFilter("Off")
+                        
+                       
+                        //console.log(start)
+
+                      }}
+                    >
+                    <Ionicons name={'ios-refresh-circle'} size={50} style={{color:'#ab0e0e'}}/>
+                    </TouchableOpacity>
+                  </View>
+
+
+>>>>>>> Stashed changes
                 
                 <FlatList
                 data={useData}
@@ -293,8 +396,15 @@ export default function TimesheetScreen({ navigation }) {
                       searchable={true}
                       searchPlaceholder="Type in a name you want to search for"
                       onChangeValue={input => {
+<<<<<<< Updated upstream
                         console.log("input: "+input)
                         filterData(input,selectedDate)
+=======
+                        //console.log("input: "+input)
+                        //filterData(input)
+                        //setSearchName(input)
+                        onChange2(start,end,input)
+>>>>>>> Stashed changes
                         if(input == "") setSortedByName(false);
                         else setSortedByName(true);
                       }}
@@ -318,6 +428,16 @@ export default function TimesheetScreen({ navigation }) {
                       style={{alignItems:"center", marginLeft: 5}}
                       onPress={()=> {
                         setGate(!gate)
+<<<<<<< Updated upstream
+=======
+                        //console.log("refresh")
+                        setStart("")
+                        setEnd("")
+                        setFilter("Off")
+                        
+                       
+                        //console.log(start)
+>>>>>>> Stashed changes
 
                       }}
                     >

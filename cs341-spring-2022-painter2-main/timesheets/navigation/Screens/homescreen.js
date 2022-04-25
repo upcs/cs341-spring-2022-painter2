@@ -96,7 +96,7 @@ export default function HomeScreen() {
   useEffect(()=>{
     const getData = async() => {
       var data = await returnDailyClockRecords(tsContext.currentId,getDay())
-      //console.log("Grabbing data")
+      ////console.log("Grabbing data")
       var totalHours = 0.0; 
       data.forEach(ts => {
         if (ts.hoursWorked != 'NaN'){
@@ -157,47 +157,51 @@ module.exports = timeCheck(13,0)
       setButtonText("Clock out")
       var hours = new Date().getHours()
       var min = new Date().getMinutes()
-      //console.log("clock in")
+      ////console.log("clock in")
       //stores the total minutes work for later
       hours = (hours)*60 + min;
       setTime(hours);
+<<<<<<< Updated upstream
+=======
+      //console.log(timeCheck(hours,min))
+>>>>>>> Stashed changes
 
       clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite,task,0,0);
       (async () =>{
         let lat=((await getOurCoords())[0]);
         let long=((await getOurCoords())[1]);
-        console.log("THIS IS LAT WTF: " + lat);
-        console.log("THIS IS LONG WTF: " + long);
+        //console.log("THIS IS LAT WTF: " + lat);
+        //console.log("THIS IS LONG WTF: " + long);
         //setCinLatitude(lat);
         //setCinLongitude(long);
-        //console.log("YOUR CIN LATITIUDE: " + cinLatitude);
-        //console.log("YOUR CIN LONGITUDE: " + cinLongitude);
+        ////console.log("YOUR CIN LATITIUDE: " + cinLatitude);
+        ////console.log("YOUR CIN LONGITUDE: " + cinLongitude);
         cinUpdateCoords(tsContext.currentId, lat, long);
         //setLocation({latitude: yourLat, longitude: yourLong});
 
         if(selectedValue == "Other") {                
           let arr = [];
           for(let i=1; i<4;i++) {
-            console.log("i is: " + i);
+            //console.log("i is: " + i);
             let tsheet = await getTimesheetsByID(i);
-            console.log(tsheet);
+            //console.log(tsheet);
             let inputName = tsheet[0].name;
             let inputLong = tsheet[0].longitude;
             let inputLat = tsheet[0].latitude;
             const marker = {name: inputName, lat: inputLat, long:inputLong};
-            console.log("THIS IS MARKER");
-            console.log(marker);
+            //console.log("THIS IS MARKER");
+            //console.log(marker);
             setMarkerInfo(marker);
             arr.push(marker);
             //hsContext.setTCInfo([markerInfo]);
-            console.log("timecard info: ");
-            //console.log( hsContext.timecardInfo);
+            //console.log("timecard info: ");
+            ////console.log( hsContext.timecardInfo);
             //hsContext.setTCInfo([markerInfo]);
             //let tmp = (hsContext.timecardInfo);
           }
           hsContext.setTCInfo(arr);
           // let tsheet = await getTimesheetsByID(2);
-          // console.log(tsheet);
+          // //console.log(tsheet);
       }})()
     }
     else
@@ -209,32 +213,32 @@ module.exports = timeCheck(13,0)
       dbhours =(dbhours-time)/60
       //rounds hours to 2 decimal places
       dbhours = Number((dbhours).toFixed(2));
-      //console.log("clocking out")
+      ////console.log("clocking out")
       clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours, 0, 0);
       (async () =>{
         let coutLat = ((await getOurCoords())[0]);
         let coutLong = ((await getOurCoords())[1]);
-        //console.log("YOUR COUT LATITIUDE: " + coutLatitude);
-        //console.log("YOUR COUT LONGITUDE: " + coutLongitude);
+        ////console.log("YOUR COUT LATITIUDE: " + coutLatitude);
+        ////console.log("YOUR COUT LONGITUDE: " + coutLongitude);
         //clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours, latitude, longitude)
         coutUpdateCoords(tsContext.currentId, coutLat, coutLong);
-        console.log("clocking out")
+        //console.log("clocking out")
          let arr = [];
          for(let i=1; i<4;i++) {
-           console.log("i is: " + i);
+           //console.log("i is: " + i);
            let tsheet = await getTimesheetsByID(i);
-           console.log(tsheet);
+           //console.log(tsheet);
            let inputName = tsheet[0].name;
            let inputLong = tsheet[0].longitude;
            let inputLat = tsheet[0].latitude;
            const marker = {name: inputName, lat: inputLat, long:inputLong};
-           console.log("THIS IS MARKER");
-           console.log(marker);
+           //console.log("THIS IS MARKER");
+           //console.log(marker);
            setMarkerInfo(marker);
            arr.push(marker);
            //hsContext.setTCInfo([markerInfo]);
-           console.log("timecard info: ");
-           //console.log( hsContext.timecardInfo);
+           //console.log("timecard info: ");
+           ////console.log( hsContext.timecardInfo);
            //hsContext.setTCInfo([markerInfo]);
            //let tmp = (hsContext.timecardInfo);
          }
@@ -285,7 +289,7 @@ const onClock = () =>{
     clocking(clockIn)
   }
   else{
-  //console.log("no")
+  ////console.log("no")
   }
 
 };

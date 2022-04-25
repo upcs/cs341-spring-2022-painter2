@@ -53,9 +53,9 @@ const [coutDistance,setCoutDistance]=useState(0);
 const filterData = (searchName,x) => {
   const copy = timesheetsData.filter(ts => ts.name.toString().toLowerCase().trim().includes(
     searchName.toString().toLowerCase().trim()) &&ts.date == x.toLocaleDateString());
-  //console.log(ts.date)
-  console.log(x)
-  console.log(copy)
+  ////console.log(ts.date)
+  //console.log(x)
+  //console.log(copy)
   setUseData(copy)
 }
 
@@ -151,12 +151,12 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
 
 
         let jobsiteCoords = await getCoordFromAddress(jobsiteAddress);
-          //console.log("THE LATITUDE: " + jobsiteCoords[0]);
-          //console.log("THE LONGITUDE: " + jobsiteCoords[1]);
+          ////console.log("THE LATITUDE: " + jobsiteCoords[0]);
+          ////console.log("THE LONGITUDE: " + jobsiteCoords[1]);
           let cinDistFromSite = await getDistFromSite(jobsiteCoords[0], jobsiteCoords[1], recordData.ClockInLatitude, recordData.ClockInLongitude)
           let coutDistFromSite = await getDistFromSite(jobsiteCoords[0], jobsiteCoords[1], recordData.ClockOutLatitude, recordData.ClockOutLongitude)
-          console.log("CIN DISTANCE: " + cinDistFromSite);
-          console.log("COUT DISTANCE: " + coutDistFromSite);
+          //console.log("CIN DISTANCE: " + cinDistFromSite);
+          //console.log("COUT DISTANCE: " + coutDistFromSite);
           setCinDistance(cinDistFromSite);
           setCoutDistance(coutDistFromSite);
           
@@ -223,16 +223,16 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
 
             var jobsites = await getOpenJobsites();
 
-            // console.log("The open jobsites are: ");
-            // console.log(openJobsites[0]);
-            // console.log(openJobsites[1]);
-            // console.log(openJobsites[2]);
-            // console.log(openJobsites[3]);
-            // console.log(openJobsites[4]);
+            // //console.log("The open jobsites are: ");
+            // //console.log(openJobsites[0]);
+            // //console.log(openJobsites[1]);
+            // //console.log(openJobsites[2]);
+            // //console.log(openJobsites[3]);
+            // //console.log(openJobsites[4]);
 
             var siteCoordArr = [];
             
-            console.log("Number of open Jobsites: " + jobsites.length)
+            //console.log("Number of open Jobsites: " + jobsites.length)
             for(let i=0; i < jobsites.length ; i++) {
 
               var latLongNameObject ={
@@ -241,7 +241,7 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
                 latitude:null
               }
 
-              console.log("The value of i: " + i);
+              //console.log("The value of i: " + i);
               let coords = await getCoordFromAddress(jobsites[i].address);
               latLongNameObject.latitude = coords[0];
               latLongNameObject.longitude = coords[1];
@@ -249,12 +249,12 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
               siteCoordArr.push(latLongNameObject);
             }
 
-            // console.log("The open jobsite coords are: ");
-            // console.log(siteCoordArr[0]);
-            // console.log(siteCoordArr[1]);
-            // console.log(siteCoordArr[2]);
-            // console.log(siteCoordArr[3]);
-            // console.log(siteCoordArr[4]);
+            // //console.log("The open jobsite coords are: ");
+            // //console.log(siteCoordArr[0]);
+            // //console.log(siteCoordArr[1]);
+            // //console.log(siteCoordArr[2]);
+            // //console.log(siteCoordArr[3]);
+            // //console.log(siteCoordArr[4]);
            
             setOpenJobsitesCoords(siteCoordArr);
 
@@ -287,8 +287,8 @@ async function handler(siteInput){
   //let siteCoord = (await getOurCoords())
   setSiteMarker({latitude: siteCoord[0], longitude: siteCoord[1]})
   setLocationTest({latitude: yourLat, longitude: yourLong})
-  console.log(siteMarker)
   //console.log(siteMarker)
+  ////console.log(siteMarker)
   
 }
 
