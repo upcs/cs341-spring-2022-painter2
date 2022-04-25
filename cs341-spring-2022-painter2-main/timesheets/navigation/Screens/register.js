@@ -15,6 +15,10 @@ export default function RegisterScreen({ navigation }) {
 
     const onClickListener = (viewID) => {
         //Alert.alert("Register")
+        if(viewID == "back"){
+            navigation.navigate("Login")
+            return;
+        }
         validateReg()
 
         //navigation.navigate("Login");
@@ -48,10 +52,14 @@ export default function RegisterScreen({ navigation }) {
             else {
                 console.log("P1-set: ", log);
 //              *******************************************
-                await createNewEmployee(creds.name,creds.email,log,"Employee")
-                await addFireBaseUser(creds.email,creds.p1);
-                Alert.alert("User Created")
-                navigation.pop()
+                try {
+                    await addFireBaseUser(creds.email, creds.p1, creds.name, log);
+                } catch (error) {
+                    Alert.alert('Error', error)
+                    return false;
+                }
+                navigation.pop();
+                return true;
             }
         } else {
             Alert.alert("Error", "Please input valid credentials")
@@ -77,6 +85,9 @@ export default function RegisterScreen({ navigation }) {
     
     return (
         <View style={styles.reg}>
+             <TouchableHighlight style={{alignSelf: 'flex-start'}} onPress={() => onClickListener("back")}>
+          <Ionicons name={'ios-arrow-back'} size={40} style={{color:'#FFFFFF', marginLeft: 10}} />
+        </TouchableHighlight>
               <Text style={styles.title}>Register</Text>
               <View style={styles.inputContainer}>
               <Ionicons name={'person-outline'} size={30} style={styles.inputLineIcon}/>

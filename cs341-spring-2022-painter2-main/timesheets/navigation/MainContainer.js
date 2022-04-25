@@ -18,6 +18,9 @@ import StackNav from './Screens/Stack'
 import DatabaseTesterScreen from './Screens/DatabaseTesterScreen';
 import AppContext from './Context.js';
 import JobsiteConfigure from './Screens/jobsiteConfigure';
+import LoginScreen from './Screens/login';
+import ForgotScreen from './Screens/forgot';
+import RegisterScreen from './Screens/register';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,16 +29,8 @@ function CustomDrawerContent(props) {
   return (
     <DrawerContentScrollView {...props}>
       <DrawerItem
-        label="English"
-        onPress={() => props.navigation.closeDrawer()}
-      />
-      <DrawerItem
-        label="Español"
-        onPress={() => props.navigation.closeDrawer()}
-      />
-      <DrawerItem
         label="Logout"
-        onPress={() => props.navigation.closeDrawer()}
+        onPress={() => props.navigation.navigate("Login")}
       />
     </DrawerContentScrollView>
   );
@@ -61,6 +56,9 @@ function BottomTabs() {
               else if (route.name === 'Timesheets') {
                 iconName = focused ? 'ios-document-text':'ios-document-text-outline';
               }
+              else if (route.name === 'Jobsites') {
+                iconName = focused ? 'business':'business-outline';
+              }
               return <Ionicons name={iconName} size={size} color={color} />;
             },
             headerShown: false,
@@ -70,8 +68,9 @@ function BottomTabs() {
             tabBarInactiveTintColor: '#000', // red
           })}>
             {/*adding the pages to the navigation bar*/ }
+            <Tab.Screen name="Timesheets" component={StackNav} />
             <Tab.Screen name="Home" component={HomeScreen} />
-          <Tab.Screen name="Timesheets" component={StackNav} />
+            <Tab.Screen name="Jobsites" component={JobsiteConfigure} />
       </Tab.Navigator>
     );
   } else {
@@ -126,9 +125,12 @@ export default function MainContainer() {
     return (
   <NavigationContainer>
     <Drawer.Navigator
-          drawerContent={(props) => <CustomDrawerContent {...props} />}
+          drawerContent={(props) => <CustomDrawerContent {...props} initialRouteName={"Login"}/>}
         >
-        <Drawer.Screen name="Timesheet" component={BottomTabs} />
+        <Drawer.Screen name="Login" component={LoginScreen} options={{headerShown: false}} />
+        <Drawer.Screen name="Register" component={RegisterScreen} options={{headerShown: false}} />
+        <Drawer.Screen name="Forgot" component={ForgotScreen} options={{headerShown: false}} />
+        <Drawer.Screen name="Timesheet" component={BottomTabs}/>
       </Drawer.Navigator>
   </NavigationContainer>
   );
