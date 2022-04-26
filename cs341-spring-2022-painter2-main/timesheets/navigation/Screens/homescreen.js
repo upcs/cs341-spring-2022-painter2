@@ -146,6 +146,7 @@ function timeCheck(hours, min)
     return  12 + ":" + min + ":" +"00 "+ "am"
   }
 }
+
 module.exports = timeCheck(13,0)
   
   function clocking(value)
@@ -159,8 +160,8 @@ module.exports = timeCheck(13,0)
       var min = new Date().getMinutes()
       //console.log("clock in")
       //stores the total minutes work for later
-      //hours = (hours)*60 + min;
-      setTime(hours);
+      let dbHours = (hours)*60 + min;
+      setTime(dbHours);
       console.log(timeCheck(hours,min))
 
       clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite,task,0,0);
@@ -204,9 +205,12 @@ module.exports = timeCheck(13,0)
     else
     {
       setButtonText("Clock in")
-      var hours = new Date().getHours()
-      var min = new Date().getMinutes()
-      var dbhours = hours*60 + min
+      let hours = new Date().getHours()
+      let min = new Date().getMinutes()
+      
+      console.log("out hours:"+hours)
+      console.log("Out min: "+min)
+      let dbhours = hours*60 + min
       dbhours =(dbhours-time)/60
       //rounds hours to 2 decimal places
       dbhours = Number((dbhours).toFixed(2));
