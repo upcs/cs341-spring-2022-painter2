@@ -44,7 +44,7 @@ export default function HomeScreen() {
   
   const tsContext = useContext(AppContext);
   
-  //useEffect to get the jobsite data?
+  //gets the current day
   function getDay()
   {
     var month = new Date().getMonth()
@@ -78,12 +78,7 @@ export default function HomeScreen() {
   },[gate]) 
 
   
- function clockInClockOut()
-{
-  setClock(!clockIn)
-  return clockIn ? setButtonText("Clock in")  : setButtonText("Clock out")
-
-}
+ 
 //formats the time
 
   useEffect(() => {
@@ -112,7 +107,7 @@ function timeCheck(hours, min)
   }
 }
 
-module.exports = timeCheck(13,0)
+
   
   function clocking(value)
   {
@@ -161,12 +156,7 @@ module.exports = timeCheck(13,0)
           
   }
  
-function clockInClockOut()
-{
-  setClock(!clockIn);
-  return clockIn ? setButtonText("Clock in")  : setButtonText("Clock out")
-}
-
+//a function to make sure the user fulfills all the require
 function inputCheck()
 {
   if(jobSite != null && requiredText2!=null)
@@ -194,16 +184,15 @@ function inputCheck()
       return false;
     }
 }
+//activates the clocking in stuff when the clock button is pressed
 const onClock = () =>{
   if(inputCheck())
   {
-    setGate(!gate)
-    setClock(!clockIn)
-    clocking(clockIn)
+    setGate(!gate)//update flatlist
+    setClock(!clockIn)//current clock in or clock out states
+    clocking(clockIn)//does the actual clocking in/ clocking out function
   }
-  else{
-  //console.log("no")
-  }
+  
 
 };
 
@@ -235,13 +224,17 @@ return (
       setValue={setValueTask}
       setItems={setItemsTask}
       onChangeValue={tsk => {
+
+        //checks to see if the user satisfied the select task requirement
         if(tsk === "") {
           setRequiredText2(null);
         }
+        //activates the textfield so users can manually input a task that doesnt appear on the select menu
         if(tsk === "Other") {
           setRequiredText2(null);
           setOther(true);
           setOtherText("Please Enter Work");
+
         } else {
           setTask(tsk);
           setOther(false);
@@ -251,9 +244,7 @@ return (
       }}
     />
     
-      <View style = {{flexDirection:"row",
-                      justifyContent:"space-evenly",
-                      alignItems: 'center'}}>
+      <View style = {{flexDirection:"row", justifyContent:"space-evenly", alignItems: 'center'}}>
       
       <TextInput
         editable={other}
@@ -290,6 +281,8 @@ return (
       <Text style ={{fontSize:20, color:'green'}}>{buttonText}</Text>
     </TouchableOpacity>
     
+
+    {/* the flat list column banners */}
     <View>
     <View style={{flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -301,19 +294,20 @@ return (
      <Text style={styles.timeText}>OUT</Text>
      <View style={{flexDirection: 'row', alignItems: 'center'}}>
      <Text style={styles.timeText}>TIME</Text>
+     {/*refresh buttop*/}
      <TouchableOpacity
-                      style={{alignItems:"center", marginLeft: 10}}
-                      onPress={()=> {
-                        setGate(!gate)
+        style={{alignItems:"center", marginLeft: 10}}
+        onPress={()=> {
+          setGate(!gate)
 
-                      }}
-                    >
-                    <Ionicons name={'ios-refresh-circle'} size={40} style={{color:'#FFF'}}/>
-                    </TouchableOpacity>
-                    </View>
+        }}
+      >
+    <Ionicons name={'ios-refresh-circle'} size={40} style={{color:'#FFF'}}/>
+    </TouchableOpacity>
+    </View>
      </View>
      </View>
-
+      {/* the flatlist itself */}
     <FlatList
       data={dbData}
       
