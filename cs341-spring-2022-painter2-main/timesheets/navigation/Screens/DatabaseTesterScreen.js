@@ -1,9 +1,6 @@
 import React, { useState, useEffect, Component } from 'react';
-import Constants from 'expo-constants';
-import * as Location from 'expo-location';
 import {Platform,StyleSheet,Text,View,TextInput,Button, Alert, Dimensions} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { getTimesheetsByID, getOpenJobsites, displayAllEmployees } from './databaseFunctions';
 import { useContext } from 'react';
@@ -13,8 +10,6 @@ import 'firebase/firestore';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
-import DropDownPicker from 'react-native-dropdown-picker';
-import {auth} from './firebaseSettings'
 
 //this config key used to connect to firestore database
 const firebaseConfig = {
@@ -33,32 +28,12 @@ const firebaseConfig = {
   }
 
 export default function DatabaseTesterScreen() {
-  //state variable for text field of site location, siteLocation
-  //state var for coordinates of site location, siteCoord
-  // state var for your location,yourLocation
-  //state var for your coordinates,yourCoord
-  //state var for distance between yourself and site,distanceFromSite
-  const [clockInMarkers,setClockInMarkers]=useState([]);
+// state variable array that holds all objects for the clock in markers 
+const [clockInMarkers,setClockInMarkers]=useState([]);
+// state variable array that holds all objects for the clock out markers 
 const [clockOutMarkers,setClockOutMarkers]=useState([]);
-const [siteLocation,setSiteLocation]=useState("");
-const [siteCoord,setSiteCoord]=useState([0,0]);
-const [yourLocation,setYourLocation]=useState("");
-const [yourCoord,setYourCoord]=useState([0,0]);
+// state variable array that holds all jobsite coordinates
 const [openJobsitesCoords,setOpenJobsitesCoords]=useState([]);
-const [distanceFromSite,setDistanceFromSite]=useState(0);
-const dtsContext = useContext(AppContext);
-const [cinDistance,setCinDistance]=useState(0);
-const [coutDistance,setCoutDistance]=useState(0);
-
-const filterData = (searchName,x) => {
-  const copy = timesheetsData.filter(ts => ts.name.toString().toLowerCase().trim().includes(
-    searchName.toString().toLowerCase().trim()) &&ts.date == x.toLocaleDateString());
-  ////console.log(ts.date)
-  //console.log(x)
-  //console.log(copy)
-  setUseData(copy)
-}
-
 // state var for the where the map initially displays (Coordinates for Portland)
 const [mapRegion, setmapRegion] = useState({
     latitude: 45.523064,
@@ -67,75 +42,46 @@ const [mapRegion, setmapRegion] = useState({
     longitudeDelta: 0.1421,
 });
 
-// State var for users current location
-const [location, setLocation] = useState({
-  latitude: 0,
-  longitude: 0,
-});
-const [error, setError] = React.useState(null)
-const [siteMarker, setSiteMarker] = useState({
-  latitude: 0,
-  longitude: 0,
-});
-const [locationTest, setLocationTest] = useState({
-  latitude: 0,
-  longitude: 0,
-});
-
-const [filteredCoordinates,setFilteredCoordinates]=useState([])
-
-    
+    // refresh button to update map
      async function refresh(){
-     
+      // get all open jobsites
       var jobsitesQuery = await firebase.firestore().collection('jobsites').get();
       var allJobsites =  jobsitesQuery.docs;
+      // empty array for all employees last timesheet
       var realtimeTimesheets= [];
+      // get all employees in database
       var allEmployees =  await displayAllEmployees();
-
-
-
+      // empty array for all employee ID's 
       var employeeIDArray=[];
+
+      // gets all employee numbers and stores it into employeeIDArray
       for(let  looper =0;looper<allEmployees.length;looper++){
         
         employeeIDArray.push((allEmployees[looper]).employeeID);
 
       }
 
-      for(let iterator =0 ;iterator<employeeIDArray.length;iterator++){
+      // gets the last timesheet for all employees
+      for(let iterator = 0 ;iterator < employeeIDArray.length; iterator++){
          let latestTimesheet = await getTimesheetsByID(employeeIDArray[iterator]);
          for(let employeeTimesheetIterator=0;employeeTimesheetIterator<latestTimesheet.length;employeeTimesheetIterator++){
-         realtimeTimesheets.push(latestTimesheet[employeeTimesheetIterator]);
+          realtimeTimesheets.push(latestTimesheet[employeeTimesheetIterator]);
          }
-         
-
       }
-
-
-
-      
-       var length = realtimeTimesheets.length;
-
-       var clockInArray= [];
+      // array for clock in objects
+      var clockInArray= [];
+      // array for clock in objects
       var clockOutArray = [];
-      for(let iter=0;iter<realtimeTimesheets.length;iter++){
-        // alert("Iterating Trough Timesheets "+iter+realtimeTimesheets[iter]);
-        
-                }
-                // alert(JSON.stringify(realtimeTimesheets));
-            
-
+      // gets the jobsite name and address if they match
        for(let i=0;i<realtimeTimesheets.length ;i++){
-
+        // stores timesheet
         var recordData = (realtimeTimesheets[i]);
-        // alert("recordData clockIn lat"+ recordData.ClockInLatitude );
+        // gets jobsite number for that timesheet
         var jobsiteNum= recordData.jobSite;
-        // alert("JobsiteNum"+ jobsiteNum );
-
-
-
+        // variable for the Jobsite name
         var jobsiteName = "";
+        // variable for the Jobsite address
         var jobsiteAddress = "";
-      
         
         for( let k=0;k<allJobsites.length;k++){
          let singleJobsite = (allJobsites[k]).data();
@@ -146,21 +92,16 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
           
         }
           
-
         }
 
-
+        // get jobsite coords from the address
         let jobsiteCoords = await getCoordFromAddress(jobsiteAddress);
-          ////console.log("THE LATITUDE: " + jobsiteCoords[0]);
-          ////console.log("THE LONGITUDE: " + jobsiteCoords[1]);
-          let cinDistFromSite = await getDistFromSite(jobsiteCoords[0], jobsiteCoords[1], recordData.ClockInLatitude, recordData.ClockInLongitude)
-          let coutDistFromSite = await getDistFromSite(jobsiteCoords[0], jobsiteCoords[1], recordData.ClockOutLatitude, recordData.ClockOutLongitude)
-          //console.log("CIN DISTANCE: " + cinDistFromSite);
-          //console.log("COUT DISTANCE: " + coutDistFromSite);
-          setCinDistance(cinDistFromSite);
-          setCoutDistance(coutDistFromSite);
-          
+        // get the clock in distance from jobsite 
+        let cinDistFromSite = await getDistFromSite(jobsiteCoords[0], jobsiteCoords[1], recordData.ClockInLatitude, recordData.ClockInLongitude)
+        // get the clock out distance from jobsite 
+        let coutDistFromSite = await getDistFromSite(jobsiteCoords[0], jobsiteCoords[1], recordData.ClockOutLatitude, recordData.ClockOutLongitude)
 
+        // clock in object for marker
         var ClockInObject ={
           latitudeClockIn:recordData.ClockInLatitude,
           longitudeClockIn:recordData.ClockInLongitude,
@@ -169,13 +110,10 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
           task:recordData.task,
           clockInTime:recordData.clockIn,
           distJobsite:cinDistFromSite.toFixed(2)
-
-        
         }
-        // alert("clock In object"+ JSON.stringify(ClockInObject));
 
+        // clock out object for marker
         var ClockOutObject ={
-         
           latitudeClockOut:recordData.ClockOutLatitude,
           longitudeClockOut:recordData.ClockOutLongitude,
           empName:recordData.name,
@@ -183,10 +121,9 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
           task:recordData.task,
           clockOutTime:recordData.clockOut,
           distJobsite:coutDistFromSite.toFixed(2)
-     
         }
-        // alert("clock out object"+ JSON.stringify(ClockOutObject));
-
+        
+        // makes sure object has coordinates before pushing to array
         if(recordData.ClockInLatitude!==null && recordData.ClockInLongitude!==null  ){
           clockInArray.push(ClockInObject);
         }
@@ -194,121 +131,50 @@ const [filteredCoordinates,setFilteredCoordinates]=useState([])
           clockOutArray.push(ClockOutObject);
         }
 
-
-
        }
 
- 
+       // set state variable with the clock in objects
+       setClockInMarkers(clockInArray);
+       // set state variable with the clock in objects
+       setClockOutMarkers(clockOutArray);
 
-        setClockInMarkers(clockInArray );
-        setClockOutMarkers(clockOutArray);
-        var alertMessage="";
-        var alertMessageTwo="";
-
-        for(let j=0;j<clockInArray.length;j++){
-          alertMessage+="Lat = "+clockInArray[j].latitudeClockIn+", Long= "+clockInArray[j].longitudeClockIn;
-
-
-        }
-
-        for(let l=0;l<clockOutArray.length;l++){
-          alertMessage+="Lat = "+clockOutArray[l].latitudeClockOut+", Long= "+clockInArray[l].longitudeClockIn;
-
-
-        }
-
-      //  alert(alertMessage)
-      
-
-
+            // gets all open jobsites
             var jobsites = await getOpenJobsites();
-
-            // //console.log("The open jobsites are: ");
-            // //console.log(openJobsites[0]);
-            // //console.log(openJobsites[1]);
-            // //console.log(openJobsites[2]);
-            // //console.log(openJobsites[3]);
-            // //console.log(openJobsites[4]);
-
+            // array that stores all open jobsite coordiantes
             var siteCoordArr = [];
             
-            //console.log("Number of open Jobsites: " + jobsites.length)
-            for(let i=0; i < jobsites.length ; i++) {
 
+            for(let i=0; i < jobsites.length ; i++) {
+              // object that stores name, longitude, and latitude for jobsite
               var latLongNameObject ={
                 name:null,
                 longitude:null,
                 latitude:null
               }
-
-              //console.log("The value of i: " + i);
+              // gets jobsite coordinates from address
               let coords = await getCoordFromAddress(jobsites[i].address);
+              // sets name, longitude, and latitude for jobsite
               latLongNameObject.latitude = coords[0];
               latLongNameObject.longitude = coords[1];
               latLongNameObject.name = jobsites[i].label;
+              // add jobsite object to array
               siteCoordArr.push(latLongNameObject);
             }
-
-            // //console.log("The open jobsite coords are: ");
-            // //console.log(siteCoordArr[0]);
-            // //console.log(siteCoordArr[1]);
-            // //console.log(siteCoordArr[2]);
-            // //console.log(siteCoordArr[3]);
-            // //console.log(siteCoordArr[4]);
-           
+            
+            // stores open jobsite coordinates
             setOpenJobsitesCoords(siteCoordArr);
-
-
-        
-
       }
-       
-
-
-     
-  
-     
-async function handler(siteInput){
-  let yourLat=(await getOurCoords())[0];
-    let yourLong=(await getOurCoords())[1];
-    setYourLocation(await getStreetAddress(yourLat,yourLong));
-    setYourCoord([yourLat,yourLong]);
-  if(siteInput===""){
-    return;
-
-  }
-  
-  
- let siteCoordinates= await getCoordFromAddress(siteInput);
-
- setSiteCoord(siteCoordinates);
-  
-  setDistanceFromSite(await getDistFromSite(siteCoordinates[0],siteCoordinates[1]))
-  //let siteCoord = (await getOurCoords())
-  setSiteMarker({latitude: siteCoord[0], longitude: siteCoord[1]})
-  setLocationTest({latitude: yourLat, longitude: yourLong})
-  //console.log(siteMarker)
-  ////console.log(siteMarker)
-  
-}
-
-
-
  
   return (
     <View style={styler.fullPage}>
-    
+      {/* refresh button to update map */}
       <Button onPress={()=>refresh()}title="refresh"/>
       <Text> </Text>
 
       {/* Map with marker for current location */}
       <MapView style={styler.map} region={mapRegion} > 
-        {dtsContext.timecardInfo.map(geoData => 
-          
-          <Marker coordinate={{latitude: geoData.lat, longitude: geoData.long}} title= {geoData.name} />
-        )}
-          {
-        clockInMarkers.map(coordData=>
+        {/* draws all clock in markers */}
+        {clockInMarkers.map(coordData=>
           <MapView.Marker 
           pinColor={'green'}
           coordinate={{latitude: coordData.latitudeClockIn, longitude: coordData.longitudeClockIn }}>
@@ -322,10 +188,9 @@ async function handler(siteInput){
             </View>
           </MapView.Callout>
         </MapView.Marker>
-          // <MapView.Marker pinColor={'green'} coordinate={{latitude: coordData.latitudeClockIn, longitude: coordData.longitudeClockIn,latitudeDelta:0.0000000000001,longitudeDelta:0.0000000000001}} title={coordData.empName} />
         )}
-        {
-        clockOutMarkers.map(coordData=>
+        {/* draws all clock out markers */}
+        {clockOutMarkers.map(coordData=>
           <MapView.Marker 
           coordinate={{latitude: coordData.latitudeClockOut, longitude: coordData.longitudeClockOut }}>
           <MapView.Callout>
@@ -338,18 +203,11 @@ async function handler(siteInput){
             </View>
           </MapView.Callout>
         </MapView.Marker>
-          // <Marker coordinate={{latitude: coordData.latitudeClockOut, longitude: coordData.longitudeClockOut,latitudeDelta:0.00000000000001,longitudeDelta:0.0000000000001}} title="Pranav"   />
         )}
+        {/* draws all jobsite markers */}
         {openJobsitesCoords.map(geoInfo => 
-          
           <Marker pinColor={'blue'} coordinate={{latitude: geoInfo.latitude, longitude: geoInfo.longitude}} title= {geoInfo.name} />
         )}
-        
-
-        <Marker coordinate={locationTest} title='yourMarker' />
-        <Marker coordinate={siteMarker} title='SiteMarker'>
-          <FontAwesome name="map-marker" size={40} color="#1F1BEA" />
-        </Marker>
       </MapView>
 
     </View>
