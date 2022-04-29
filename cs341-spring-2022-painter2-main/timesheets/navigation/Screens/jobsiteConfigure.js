@@ -194,6 +194,12 @@ async function openJobsiteHandler(inputSiteNum){
                 style: 'cancel',
         }, { text: 'OK', onPress: () => onClickListener(siteID, what) },]);
     }
+// refreshes page
+    async function refreshFunction(){
+      await reRender();
+
+
+    }
     
 return(
    <View style={styles.container}> 
@@ -226,7 +232,30 @@ return(
 <Pressable onPress={()=>addJobsiteHandler(address,customer,jobName)}style={styles.buttonStyle} >
        <Text style={{fontSize: 15, color:'white', padding: 3}}>ADD <Ionicons name={'md-add'} size={20}/></Text>
     </Pressable> */}
-       
+           
+          {/* refresh button */}
+            <View style={{padding: 5,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                margin: 0
+                }}>
+             
+                <TouchableOpacity
+                  style={{alignItems:"center", marginLeft: 5}}
+                  onPress={()=> {
+                   refreshFunction();
+                  }}
+                >
+                <Ionicons name={'ios-refresh-circle'} size={50} style={{color:'#ab0e0e'}}/>
+                </TouchableOpacity>
+              </View>
+
+
+
+
+           
+
        <View style={styles.header}>
          <Text style={styles.headerText}>Jobsites</Text>
        </View>
