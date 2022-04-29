@@ -61,7 +61,7 @@ export default function HomeScreen() {
   useEffect(()=>{
     const getData = async() => {
       var data = await returnDailyClockRecords(tsContext.currentId,getDay())
-      //console.log("Grabbing data")
+      ////console.log("Grabbing data")
       var totalHours = 0.0; 
       data.forEach(ts => {
         if (ts.hoursWorked != 'NaN'){

@@ -26,6 +26,8 @@ export default function TimesheetScreen({ navigation }) {
       const Moment = require('moment');
       const MomentRange= require('moment-range');
       const moment = MomentRange.extendMoment(Moment);
+      const [selectedDate, setSelectedDate] = useState(new Date());
+      
       
       //sets the initial data for the flatlists to use
       useEffect(() => {
@@ -56,24 +58,7 @@ export default function TimesheetScreen({ navigation }) {
       const copy = timesheetsData.filter(ts => searchDate.includes(ts.date) && ts.name ===searchName);
       setUseData(copy)
       }
-      
-
-     const toCsv = async () => {
-      const headerString = "Name,Clock-In Time,Clock-Out Time,Date";
-      const rowArr = [];
-      //converts each entry into a string and stores it into an array
-      timesheetsData.forEach(ts => {
-        rowArr.push(ts.name + "," + ts.clockIn + "," + ts.clockOut + "," + ts.date + "\n");
-      })
-
-      //joins the array into one string
-      const rowString = rowArr.join('')
-      const csvString = headerString + "\n" + rowString
-
-      //console.log(csvString)
-     }
-
-  
+        
       const Item = ({ name }) => (
         <View style={styles.body}>
           <Text styles={styles.bodyText}>{name}</Text>
@@ -141,7 +126,6 @@ export default function TimesheetScreen({ navigation }) {
           setName(item.name)
           setTask(item.task)
           setModalDate(item.date)
-          //calculateHoursWorked(clockIn,clockOut)
           
 
         }}>
@@ -206,7 +190,6 @@ export default function TimesheetScreen({ navigation }) {
       
       const onCalendarRangeChange = (startDate, endDate,search) =>
       {
-        //console.log(startDate,endDate)
         let start = moment(startDate);
         let end = moment(endDate);
         let date = [];
@@ -230,13 +213,11 @@ export default function TimesheetScreen({ navigation }) {
       const onChangeClockIn = (event, selectTime) => {
         const currentTime = selectTime;
         setSelectedTimeIn(currentTime);
-        //console.log("clock in current time: "+currentTime.toLocaleString())
         let x= currentTime.toLocaleString()
         
         let y = []
         y=x.split(",")
         setClockInTime(y[1].substring(1));
-        console.log(currentTime);
       }
       //updates the clock out time in the database
       const onChangeClockOut = (event, selectTime) => {
@@ -246,9 +227,7 @@ export default function TimesheetScreen({ navigation }) {
         let x= currentTime.toLocaleString()
         let y = []
         y=x.split(",")
-        console.log(y[1].substring(1))
         setClockOutTime(y[1].substring(1));
-        console.log(currentTime);
       }
 
       //delete button confirmation

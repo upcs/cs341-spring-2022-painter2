@@ -20,8 +20,8 @@ import * as Location from 'expo-location';
           }
         //gets current coordinates as JSON object
       let coords = await Location.getCurrentPositionAsync({});
-      console.log("Latitude is: "+coords.coords.latitude)
-      console.log("Longitude is: "+coords.coords.longitude)
+      //console.log("Latitude is: "+coords.coords.latitude)
+      //console.log("Longitude is: "+coords.coords.longitude)
      // 45.41567513430611, -122.74994738832297 
      let arrCoord=[];
      //pushes latitude and longitude extracted from JSON object into an array
@@ -51,7 +51,7 @@ import * as Location from 'expo-location';
       let productOfSines=Math.sin(xRad1)*Math.sin(xRad2);
       let productOfCosines=Math.cos(xRad1)*Math.cos(xRad2)*Math.cos(yRad2-yRad1);
       let distance=3963.00*Math.acos(productOfSines+productOfCosines);
-       console.log("Your distance from the site is: "+distance+" miles");
+       //console.log("Your distance from the site is: "+distance+" miles");
        //function returns distance
        return distance;
       
@@ -93,7 +93,7 @@ coordCollection.forEach(record=>{
   zipCode=record.postalCode;
 });
 let streetAddress=streetInfo+" "+cityName+" "+stateName+" "+zipCode;
-console.log("The street Address is :" +streetAddress);
+//console.log("The street Address is :" +streetAddress);
 //string containing address is returned
 return streetAddress;
   }
@@ -128,7 +128,7 @@ let locationServiceEnabled = await Location.hasServicesEnabledAsync();
 
     let extractedCoordArray=[extractedLatitude,extractedLongitude];
     //array of latitude and longitude are returned 
-    console.log("lat : "+extractedLatitude+" long: "+extractedLongitude);
+    //console.log("lat : "+extractedLatitude+" long: "+extractedLongitude);
     return extractedCoordArray;
   
 

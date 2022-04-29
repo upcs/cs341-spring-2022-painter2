@@ -48,7 +48,7 @@ export default function AdminScreen({ navigation }) {
      const filterData = (searchName) => {
         const copy = timesheetsData.filter(ts => ts.name.toString().toLowerCase().includes(searchName.toString().toLowerCase()));
 
-        console.log("admin: filtering - " + copy)
+        //console.log("admin: filtering - " + copy)
         setUseData(copy)
      }
     
@@ -73,10 +73,10 @@ export default function AdminScreen({ navigation }) {
     //LISTENER FOR ALL THE CLICKKKKKKS
     const onClickListener = (empID, buttonID) => {
         if (buttonID == "del"){
-            console.log('admin: delete confirmed');
+            //console.log('admin: delete confirmed');
             removeEmployee(empID);
         } else {
-            console.log('admin: role change confirmed - ' + empID + '-' + buttonID);
+            //console.log('admin: role change confirmed - ' + empID + '-' + buttonID);
             changeRole(empID, buttonID);
         }
         setRefresh(!refresh)
@@ -98,7 +98,7 @@ export default function AdminScreen({ navigation }) {
     function renderItem ({ item }) {
       if(tsContext.currentRole == 'Bookkeep'){
         if( item.employeeID === tsContext.currentId ){
-          console.log("admin: found myself");
+          //console.log("admin: found myself");
           return;
       }
        else {
@@ -116,9 +116,9 @@ export default function AdminScreen({ navigation }) {
        </View>
        );}
       }
-        //console.log("admin: " + item.employeeID + "-" + tsContext.currentId)
+        ////console.log("admin: " + item.employeeID + "-" + tsContext.currentId)
     if( item.employeeID === tsContext.currentId ){
-        console.log("admin: found myself");
+        //console.log("admin: found myself");
         return;
     }
      else {
@@ -193,7 +193,7 @@ export default function AdminScreen({ navigation }) {
                       searchable={true}
                       searchPlaceholder="Type in a name you want to search for"
                       onChangeValue={input => {
-                        console.log("input: "+input)
+                        //console.log("input: "+input)
                         filterData(input)
                         if(input == "") setSortedByName(false);
                         else setSortedByName(true);

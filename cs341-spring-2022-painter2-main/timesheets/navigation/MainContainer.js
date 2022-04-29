@@ -48,7 +48,7 @@ function BottomTabs() {
             tabBarStyle: styles.navigator,
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
-                //console.log("Main Container: role - ", ts.currentRole);
+                ////console.log("Main Container: role - ", ts.currentRole);
               //setting the icons of the navigation bar
               if (route.name === 'Home') {
                 iconName = focused ? 'ios-time': 'ios-time-outline';
@@ -81,7 +81,7 @@ function BottomTabs() {
             tabBarStyle: styles.navigator,
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
-                //console.log("Main Container: role - ", ts.currentRole);
+                ////console.log("Main Container: role - ", ts.currentRole);
               //setting the icons of the navigation bar
               if (route.name === 'Home') {
                 iconName = focused ? 'ios-time': 'ios-time-outline';
