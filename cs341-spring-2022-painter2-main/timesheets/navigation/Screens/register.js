@@ -14,19 +14,16 @@ export default function RegisterScreen({ navigation }) {
     });
 
     const onClickListener = (viewID) => {
-        //Alert.alert("Register")
         if(viewID == "back"){
             navigation.navigate("Login")
             return;
         }
         validateReg()
 
-        //navigation.navigate("Login");
     }
 
-    //Helper function that does all the validating for the login
+    //Helper function that does all the validating for the registration
     const validateReg = async() => {
-        ////console.log("Email: ", validateEmail(creds.email))
         if (creds.p1.includes(' ') || creds.p2.includes(' ')){
            Alert.alert("Error", "Passwords should not contain spaces")
         }
@@ -38,21 +35,15 @@ export default function RegisterScreen({ navigation }) {
             creds.p1.length != 0 &&
             creds.p2.length != 0 &&
             validateEmail(creds.email) == true){
-//            //console.log("P1: ", creds.p1);
+            //hashes password before storing it into database
             var log = encodePass(creds.p1);
-//            //console.log("P1-en: ", log);
-//            //console.log("P1-de: ", creds.p2);
-//            //console.log("Email: ", creds.email )
-//              *******************************************
             var value = await findUserByEmail(creds.email)
             if (Object.keys(value).length > 0){
-                //console.log("Result: ", "Account exists")
                 Alert.alert("Error", "Email already exists")
             }
             else {
-                //console.log("P1-set: ", log);
-//              *******************************************
                 try {
+                    //creates employee
                     await addFireBaseUser(creds.email, creds.p1, creds.name, log);
                 } catch (error) {
                     Alert.alert('Error', error)
@@ -66,7 +57,9 @@ export default function RegisterScreen({ navigation }) {
         }
     }
     
+    //function to check if email is in the correct format
     const validateEmail = (input) => {
+        //format of email
         const re =
           /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
         setCreds({

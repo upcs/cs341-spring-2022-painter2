@@ -11,7 +11,7 @@ export default function App(){
     const [tcInfo,setTCInfo]=useState([]);
     const [currLang, setCurrLang] = useState("EN");
 
-
+    //Global Variables that are available to entire application
     const userSetting = {
         currentName: currName,
         currentEmail: currEmail,

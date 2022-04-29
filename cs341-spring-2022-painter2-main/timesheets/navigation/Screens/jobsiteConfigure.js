@@ -177,10 +177,8 @@ async function openJobsiteHandler(inputSiteNum){
 
     const onClickListener = (siteID, what) => {
         if (what == "open"){
-            //console.log('jobsite: open confirmed');
             openJobsiteHandler(siteID);
         } else {
-            //console.log('jobsite: close confirmed');
             closeJobsiteHandler(siteID);
         }
         return;
@@ -196,35 +194,6 @@ async function openJobsiteHandler(inputSiteNum){
     
 return(
    <View style={styles.container}> 
-       {/* <View style={styles.header}>
-         <Text style={styles.headerText}>Add a Site</Text>
-         
-       </View>
-       <Text style={styles.jobsiteStyle}>Name of Job</Text>
-      <TextInput
-       style={styles.inputStyle}
-       onChangeText={(val)=>{ setJobName(val)}}
-       
-      />
-   <Text style={styles.jobsiteStyle}>Address</Text>
-   <TextInput
-        style={styles.inputStyle}
-      onChangeText={(val)=>{ setAddress(val)}} 
-      />
-       
-
-   
-      <Text style={styles.jobsiteStyle}>Customer</Text>
-      <TextInput
-        style={styles.inputStyle}
-        onChangeText={(val)=>{ setCustomer(val)}} 
-      
-      />
-       
-
-<Pressable onPress={()=>addJobsiteHandler(address,customer,jobName)}style={styles.buttonStyle} >
-       <Text style={{fontSize: 15, color:'white', padding: 3}}>ADD <Ionicons name={'md-add'} size={20}/></Text>
-    </Pressable> */}
        
        <View style={styles.header}>
          <Text style={styles.headerText}>Jobsites</Text>
@@ -264,10 +233,6 @@ return(
 
 );
 
-
-// {this.state.people.map((person, index) => (
-//    <p>Hello, {person.name} from {person.country}!</p>
-// ))}
 
 
 
