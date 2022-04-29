@@ -192,10 +192,41 @@ async function openJobsiteHandler(inputSiteNum){
                 style: 'cancel',
         }, { text: 'OK', onPress: () => onClickListener(siteID, what) },]);
     }
+// refreshes page
+    async function refreshFunction(){
+      await reRender();
+
+
+    }
     
 return(
    <View style={styles.container}> 
-       
+
+           
+          {/* refresh button */}
+            <View style={{padding: 5,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                margin: 0
+                }}>
+             
+                <TouchableOpacity
+                  style={{alignItems:"center", marginLeft: 5}}
+                  onPress={()=> {
+                   refreshFunction();
+                  }}
+                >
+                <Ionicons name={'ios-refresh-circle'} size={50} style={{color:'#ab0e0e'}}/>
+                </TouchableOpacity>
+              </View>
+
+
+
+
+           
+
+
        <View style={styles.header}>
          <Text style={styles.headerText}>Jobsites</Text>
        </View>
