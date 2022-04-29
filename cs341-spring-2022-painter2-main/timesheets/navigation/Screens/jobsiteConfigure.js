@@ -174,7 +174,8 @@ async function openJobsiteHandler(inputSiteNum){
       color: '#fff',
     },
 })
-
+//this onclick listener calls the open jobsite functions and alerts 
+//the user to confirm the opening and closing action
     const onClickListener = (siteID, what) => {
         if (what == "open"){
             console.log('jobsite: open confirmed');
@@ -185,7 +186,7 @@ async function openJobsiteHandler(inputSiteNum){
         }
         return;
     }
-    
+    //opens or closes this jobsite and calls the onclick listener to do this
     const changeSite = async(siteID, what) => {
         Alert.alert('Confirm', 'Open/Close this job?', [{
                 text: 'Cancel',
@@ -229,7 +230,8 @@ return(
        <View style={styles.header}>
          <Text style={styles.headerText}>Jobsites</Text>
        </View>
-       
+       {/* this flatlist renders an interactive menu
+        of all jobsites from which you can edit and delete */}
     <FlatList
     keyExtractor={(item)=>item.split("|")[3]}
    data={jobsiteCollection.toString().split("?")}

@@ -490,6 +490,7 @@ export const changeJobSite = async(newJobSite,id,clockID,editName) => {
   console.log(docID)
   await firebase.firestore().collection('clocking').doc(docID).update({jobSite:newJobSite,editedBy:editName});
 }
+  //updates the hours worked for a given employee with the input parameter of hours worked
 export const changeHoursWorked = async(newHoursWorked,id,clockID,editName) => {
   var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
   employee.forEach(emp => {
@@ -537,7 +538,7 @@ export const getAllJobsites = async() => {
   var allJobsites = await firebase.firestore().collection('jobsites').get();
 return allJobsites;
 }
-
+//peruses database and returns an array of objects corresponding to all open jobsites
 export const getOpenJobsites = async() => {
   var jobsites = await firebase.firestore().collection('jobsites').where("status",'==',"Open").get();
   var jobsiteArr = [];
@@ -553,6 +554,9 @@ console.log("Jobsites fetched");
 return jobsiteArr;
 
 }
+//gets the javascript objects for all employees in database
+//parses these javascript objects extracting the employee name attribute and assigning it to the label field
+//and then also assigning it to the value field as well
 export const getEmployeeList = async() => {
   var employees = await firebase.firestore().collection('employees').get();
   var employeeList = [];
@@ -566,6 +570,7 @@ console.log("Jobsites fetched");
 
 //authentification function that adds employee as firebase user
 //used to send out timesheet emails
+<<<<<<< Updated upstream
 export const addFireBaseUser=async(emailInput,passInput)=>{
 auth
 .createUserWithEmailAndPassword(emailInput,passInput)
@@ -574,4 +579,84 @@ console.log("Firebase Email: " +userDetails.user.email+" Firebase Password: " +u
 
 })
 .catch(err=>console.log(err.message));
+=======
+export const addFireBaseUser = async(emailInput, passInput, name, en)=>{
+  try {
+    await auth.createUserWithEmailAndPassword(emailInput,passInput)
+  } catch (err){
+    return Error(err);
+  }
+  await createNewEmployee(name, emailInput, en, "Employee");
+  return true;
+}
+
+export const signInUser=async(emailInput,passInput)=>{
+  try {
+    //signs in user with given credentials
+    await auth.signInWithEmailAndPassword(emailInput,passInput)
+  } catch (err){
+    //if sign in fails catches corresponding error
+    return Error(err);
+  }
+  return true;
+}
+
+export const signOutUser = async() => {
+  //signs out currently logged in user
+  auth.signOut();
+}
+
+export const coutUpdateCoords = async(newEmployeeID,
+ newLatitude, newLongitude)=>{
+//gets all clock records for a given employee
+var clockRecords= await firebase.firestore()
+.collection('clocking')
+.where('employeeID','==',newEmployeeID)
+.get()
+
+console.log((clockRecords.docs).length);
+//if amount of clock records for an employee is zero a then we cant update coordinates
+//otherwise, if there are clock in records, then a updating clock out coordinates is possible
+if((clockRecords.docs).length!=0){
+var maxClockID=-100;
+var index=-100;
+//records for a given date are filtered out from all records of a certain employee
+for(let i=0;i<(clockRecords.docs).length;i++){
+var data= (clockRecords.docs[i]).data();
+if(data.clockID>maxClockID){
+  maxClockID= data.clockID;
+  index=i;
+}
+
+}
+
+//console.log(maxClockID);
+//console.log(index);
+
+var coutLatitude=((clockRecords.docs[index]).data()).ClockOutLatitude;
+var coutLongitude=((clockRecords.docs[index]).data()).ClockOutLongitude;
+//document id of most recent clock in record is fetched
+//so that clock out time of the corresponding record
+//can be modified 
+var clockDocumentID=(clockRecords.docs[index]).id;
+//if both latitude and longitude is 0
+//that means that the coordinates have not ben updated yet
+//so update the coordinates
+//otherwise, the coordinates wont be updated
+if(coutLatitude===0 && coutLongitude===0){
+  firebase.firestore()
+  .collection('clocking')
+  .doc(clockDocumentID)
+  .update({
+      ClockOutLatitude:newLatitude,
+      ClockOutLongitude:newLongitude
+  })
+   .then(() => {
+  console.log('coords updated!');
+  });   
+
+
+
+
+>>>>>>> Stashed changes
 }
