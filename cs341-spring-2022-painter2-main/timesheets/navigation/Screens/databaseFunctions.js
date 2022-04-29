@@ -1,6 +1,6 @@
 import React, {Component, useState} from 'react';
 import {StyleSheet,Text,View,TextInput,Button, Alert} from 'react-native';
-//import * as firebase from 'firebase';
+//import * as firebase from 'firebase';https://github.com/upcs/cs341-spring-2022-painter2/pull/106
 
 import 'firebase/firestore';
 import firebase from 'firebase/compat/app';
@@ -489,6 +489,7 @@ export const changeJobSite = async(newJobSite,id,clockID,editName) => {
   //console.log(docID)
   await firebase.firestore().collection('clocking').doc(docID).update({jobSite:newJobSite,editedBy:editName});
 }
+  //updates the hours worked for a given employee with the input parameter of hours worked
 export const changeHoursWorked = async(newHoursWorked,id,clockID,editName) => {
   var employee = await firebase.firestore().collection('clocking').where('employeeID','==',id).where('clockID','==',clockID).get();
   employee.forEach(emp => {
@@ -536,7 +537,7 @@ export const getAllJobsites = async() => {
   var allJobsites = await firebase.firestore().collection('jobsites').get();
 return allJobsites;
 }
-
+//peruses database and returns an array of objects corresponding to all open jobsites
 export const getOpenJobsites = async() => {
   var jobsites = await firebase.firestore().collection('jobsites').where("status",'==',"Open").get();
   var jobsiteArr = [];
@@ -552,6 +553,9 @@ export const getOpenJobsites = async() => {
 return jobsiteArr;
 
 }
+//gets the javascript objects for all employees in database
+//parses these javascript objects extracting the employee name attribute and assigning it to the label field
+//and then also assigning it to the value field as well
 export const getEmployeeList = async() => {
   var employees = await firebase.firestore().collection('employees').get();
   var employeeList = [];
@@ -565,6 +569,7 @@ return employeeList;
 
 //authentification function that adds employee as firebase user
 //used to send out timesheet emails
+
 export const addFireBaseUser = async(emailInput, passInput, name, en)=>{
   try {
     await auth.createUserWithEmailAndPassword(emailInput,passInput)
@@ -577,14 +582,21 @@ export const addFireBaseUser = async(emailInput, passInput, name, en)=>{
 
 export const signInUser=async(emailInput,passInput)=>{
   try {
+
+    //signs in user with given credentials
     await auth.signInWithEmailAndPassword(emailInput,passInput)
   } catch (err){
+    //if sign in fails catches corresponding error
+
     return Error(err);
   }
   return true;
 }
 
 export const signOutUser = async() => {
+
+  //signs out currently logged in user
+
   auth.signOut();
 }
 
@@ -636,6 +648,7 @@ if(coutLatitude===0 && coutLongitude===0){
    .then(() => {
   //console.log('coords updated!');
   });   
+
 
 
 
