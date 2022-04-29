@@ -1,55 +1,26 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { Text, View, TextInput, StyleSheet, Button, Alert, FlatList} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-import  {Picker}  from '@react-native-picker/picker';
-import { clockInFunc, clockOutFunc,returnDailyClockRecords, getTimesheetsByID, getOpenJobsites } from './databaseFunctions'
+import { clockInFunc, clockOutFunc,returnDailyClockRecords, getTimesheetsByID, getOpenJobsites, coutUpdateCoords, cinUpdateCoords } from './databaseFunctions'
 import { getOurCoords  } from './geoFunctions'
 import { useContext } from 'react';
 import AppContext from '../Context.js';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {Component} from 'react'
-import { number } from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 //The Home Screen
-
-
-
 export default function HomeScreen() {
-  const day = new Date()
   const [jobSite, setJobSite] = useState(' ');
-  const[totalTime,setTotalTime]=useState(0);
-  const[otherTextVal,setOtherTextVal] =useState("");
-  const[latitude,setLatitude]=useState(0);
-  const[longitude,setLongitude]=useState(0);
-  const [location, setLocation] = useState({
-    latitude: 0,
-    longitude: 0,
-  });
-  const [markerInfo, setMarkerInfo] = useState({
-    name: "",
-    lat: 0,
-    long: 0,
-  });
-  const [testArray,setTestArray]=useState([]);
-
-  const hsContext = useContext(AppContext);
-  //const tsContext = useContext(AppContext);
   const [task, setTask] = useState(' ');
   const [clockIn, setClock] = useState(true);
-  const [color,setColor]=useState('green');
   const [buttonText, setButtonText] = useState("Clock in");
-  const [requiredText, setRequiredText] = useState(null);
   const [requiredText2, setRequiredText2] = useState(null);
   const [selectedValue, setSelectedValue]=useState("");
   const [other,setOther]=useState(false);
   const [otherText,setOtherText] =useState("");
   const [time,setTime]=useState(0);
   const [totalHoursWorked, setTotalHoursWorked] = useState(0.0);
-
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
@@ -73,8 +44,7 @@ export default function HomeScreen() {
   
   const tsContext = useContext(AppContext);
   
-
-  //useEffect to get the jobsite data?
+  //gets the current day
   function getDay()
   {
     var month = new Date().getMonth()
@@ -86,9 +56,6 @@ export default function HomeScreen() {
   }
  
   const[gate,setGate]=useState(true);
-
-  const[testGate,setTestGate]=useState(true);
-
   
   const[dbData,setdbData] = useState();
   useEffect(()=>{
@@ -111,12 +78,7 @@ export default function HomeScreen() {
   },[gate]) 
 
   
- function clockInClockOut()
-{
-  setClock(!clockIn)
-  return clockIn ? setButtonText("Clock in")  : setButtonText("Clock out")
-
-}
+ 
 //formats the time
 
   useEffect(() => {
@@ -144,106 +106,57 @@ function timeCheck(hours, min)
     return  12 + ":" + min + ":" +"00 "+ "am"
   }
 }
-module.exports = timeCheck(13,0)
+
+
   
   function clocking(value)
   {
     //when they clock in, store their time
-    
     if(value)
     {
       setButtonText("Clock out")
       var hours = new Date().getHours()
       var min = new Date().getMinutes()
-      //console.log("clock in")
-      clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite,task,latitude,longitude)
       //stores the total minutes work for later
-      hours = (hours)*60 + min;
-      setTime(hours);
-
+      let dbHours = (hours)*60 + min;
+      setTime(dbHours);
+      console.log(timeCheck(hours,min))
+      // clock users information into database
+      clockInFunc(tsContext.currentName,tsContext.currentId,getDay(),timeCheck(hours,min),jobSite,task,0,0);
       (async () =>{
-        // let yourLat=(await getOurCoords())[0];
-        // let yourLong=(await getOurCoords())[1];
-        setLatitude((await getOurCoords())[0]);
-        setLongitude((await getOurCoords())[1]);
-        console.log("YOUR LATITIUDE: " + latitude);
-        console.log("YOUR LONGITUDE: " + longitude);
-        //setLocation({latitude: yourLat, longitude: yourLong});
-
-        if(selectedValue == "Other") {                
-          let arr = [];
-          for(let i=1; i<4;i++) {
-            console.log("i is: " + i);
-            let tsheet = await getTimesheetsByID(i);
-            console.log(tsheet);
-            let inputName = tsheet[0].name;
-            let inputLong = tsheet[0].longitude;
-            let inputLat = tsheet[0].latitude;
-            const marker = {name: inputName, lat: inputLat, long:inputLong};
-            console.log("THIS IS MARKER");
-            console.log(marker);
-            setMarkerInfo(marker);
-            arr.push(marker);
-            //hsContext.setTCInfo([markerInfo]);
-            console.log("timecard info: ");
-            //console.log( hsContext.timecardInfo);
-            //hsContext.setTCInfo([markerInfo]);
-            //let tmp = (hsContext.timecardInfo);
-          }
-          hsContext.setTCInfo(arr);
-          // let tsheet = await getTimesheetsByID(2);
-          // console.log(tsheet);
-      }})()
+        // gets your longitude and latitude when you clock in
+        let lat=((await getOurCoords())[0]);
+        let long=((await getOurCoords())[1]);
+        // update database with your coordinates
+        cinUpdateCoords(tsContext.currentId, lat, long);
+      })()
     }
+    // clock out
     else
     {
       setButtonText("Clock in")
-      var hours = new Date().getHours()
-      var min = new Date().getMinutes()
-      var dbhours = hours*60 + min
+      // gets hours and minutes and calculates total time
+      let hours = new Date().getHours()
+      let min = new Date().getMinutes()
+      let dbhours = hours*60 + min
       dbhours =(dbhours-time)/60
+      
       //rounds hours to 2 decimal places
       dbhours = Number((dbhours).toFixed(2));
-      //console.log("clocking out")
-      //clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours,latitude,longitude)
+      // clocks out person and uploads to database
+      clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours, 0, 0);
       (async () =>{
-        setLatitude((await getOurCoords())[0]);
-        setLongitude((await getOurCoords())[1]);
-        console.log("YOUR LATITIUDE: " + latitude);
-        console.log("YOUR LONGITUDE: " + longitude);
-        clockOutFunc(tsContext.currentId,timeCheck(hours,min),dbhours, latitude, longitude)
-        console.log("clocking out")
-         let arr = [];
-         for(let i=1; i<4;i++) {
-           console.log("i is: " + i);
-           let tsheet = await getTimesheetsByID(i);
-           console.log(tsheet);
-           let inputName = tsheet[0].name;
-           let inputLong = tsheet[0].longitude;
-           let inputLat = tsheet[0].latitude;
-           const marker = {name: inputName, lat: inputLat, long:inputLong};
-           console.log("THIS IS MARKER");
-           console.log(marker);
-           setMarkerInfo(marker);
-           arr.push(marker);
-           //hsContext.setTCInfo([markerInfo]);
-           console.log("timecard info: ");
-           //console.log( hsContext.timecardInfo);
-           //hsContext.setTCInfo([markerInfo]);
-           //let tmp = (hsContext.timecardInfo);
-         }
-         hsContext.setTCInfo(arr);
+        // get their coordinates when they clock out
+        let coutLat = ((await getOurCoords())[0]);
+        let coutLong = ((await getOurCoords())[1]);
+        // upload coordinates to database
+        coutUpdateCoords(tsContext.currentId, coutLat, coutLong);
       })()
     }
           
   }
  
-function clockInClockOut()
-{
-  setClock(!clockIn);
-  return clockIn ? setButtonText("Clock in")  : setButtonText("Clock out")
-}
-
+//a function to make sure the user fulfills all the require
 function inputCheck()
 {
   if(jobSite != null && requiredText2!=null)
@@ -271,16 +184,15 @@ function inputCheck()
       return false;
     }
 }
+//activates the clocking in stuff when the clock button is pressed
 const onClock = () =>{
   if(inputCheck())
   {
-    setGate(!gate)
-    setClock(!clockIn)
-    clocking(clockIn)
+    setGate(!gate)//update flatlist
+    setClock(!clockIn)//current clock in or clock out states
+    clocking(clockIn)//does the actual clocking in/ clocking out function
   }
-  else{
-  //console.log("no")
-  }
+  
 
 };
 
@@ -312,13 +224,17 @@ return (
       setValue={setValueTask}
       setItems={setItemsTask}
       onChangeValue={tsk => {
+
+        //checks to see if the user satisfied the select task requirement
         if(tsk === "") {
           setRequiredText2(null);
         }
+        //activates the textfield so users can manually input a task that doesnt appear on the select menu
         if(tsk === "Other") {
           setRequiredText2(null);
           setOther(true);
           setOtherText("Please Enter Work");
+
         } else {
           setTask(tsk);
           setOther(false);
@@ -328,9 +244,7 @@ return (
       }}
     />
     
-      <View style = {{flexDirection:"row",
-                      justifyContent:"space-evenly",
-                      alignItems: 'center'}}>
+      <View style = {{flexDirection:"row", justifyContent:"space-evenly", alignItems: 'center'}}>
       
       <TextInput
         editable={other}
@@ -367,6 +281,8 @@ return (
       <Text style ={{fontSize:20, color:'green'}}>{buttonText}</Text>
     </TouchableOpacity>
     
+
+    {/* the flat list column banners */}
     <View>
     <View style={{flexDirection: 'row',
                 justifyContent: 'space-between',
@@ -378,19 +294,20 @@ return (
      <Text style={styles.timeText}>OUT</Text>
      <View style={{flexDirection: 'row', alignItems: 'center'}}>
      <Text style={styles.timeText}>TIME</Text>
+     {/*refresh buttop*/}
      <TouchableOpacity
-                      style={{alignItems:"center", marginLeft: 10}}
-                      onPress={()=> {
-                        setGate(!gate)
+        style={{alignItems:"center", marginLeft: 10}}
+        onPress={()=> {
+          setGate(!gate)
 
-                      }}
-                    >
-                    <Ionicons name={'ios-refresh-circle'} size={40} style={{color:'#FFF'}}/>
-                    </TouchableOpacity>
-                    </View>
+        }}
+      >
+    <Ionicons name={'ios-refresh-circle'} size={40} style={{color:'#FFF'}}/>
+    </TouchableOpacity>
+    </View>
      </View>
      </View>
-
+      {/* the flatlist itself */}
     <FlatList
       data={dbData}
       
@@ -415,10 +332,6 @@ return (
 const styles = StyleSheet.create({
   container: {
   flex:1,
-  //backgroundColor: "#ab0e0e",
-  //alignItems: "center",
-  //justifyContent: 'center',
-
   },
   input: {
       borderWidth:1,
